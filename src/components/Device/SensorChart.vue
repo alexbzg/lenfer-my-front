@@ -1,9 +1,12 @@
 <template>
-  <div class="sensor_data_chart">
-    <h4>{{device_type_title}} {{title}}</h4>
-	<line-chart v-if="ready" :chart_data="chart_data" :options="chart_options">
-	</line-chart>
-  </div>
+    <div class="sensor_data_chart">
+        <h4>{{device_type_title}} {{title}}</h4>
+
+        <div class="lk_sensor_graf">
+            <line-chart v-if="ready" :chart_data="chart_data" :options="chart_options">
+            </line-chart>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -13,13 +16,17 @@ import LineChart from '../LineChart'
 const SENSOR_TYPE_SETTINGS = {
   temperature: {
     dataset: {
-       backgroundColor: 'rgba(255, 99, 132, 0.2)',
+       gradients: {
+         backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(255, 99, 132, 0.1)'],
+       },
        borderColor: 'rgba(255, 99, 132, 1)'
     }
   },
   humidity: {
     dataset: {
-       backgroundColor: 'rgba(99, 255, 132, 0.2)',
+       gradients: {
+         backgroundColor: ['rgba(99, 255, 132, 0.6)', 'rgba(99, 255, 132, 0.1)'],
+       },
        borderColor: 'rgba(99, 255, 132, 1)'
     }
   }
@@ -34,7 +41,7 @@ export default {
       device_type_title: null,
       title: null,
       sensor_type: null,
-      ready: false,      
+      ready: false,
       chart_data: {
         datasets: [
           {
@@ -46,7 +53,7 @@ export default {
         ]
       },
       chart_options: {
-		responsive:true,
+		responsive: true,
 		maintainAspectRatio: false,
         legend: {
           display: false
@@ -56,8 +63,8 @@ export default {
             type: 'time',
             time: {
               displayFormats: {
-                hour: 'hh:mm',
-				minute: 'hh:mm'
+                hour: 'HH:mm',
+				minute: 'HH:mm'
               }
             }
           }],
@@ -116,9 +123,6 @@ export default {
 }
 </script>
 
-<style scoped>
-  .sensor_data_chart {
-    max-width: 1600px;
-    margin:  150px auto;
-  }
+<style>
+
 </style>

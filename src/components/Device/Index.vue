@@ -1,5 +1,6 @@
 <template>
   <div class="device_index">
+
       <h3>{{type}} {{title}}</h3>
       <sensor-chart v-for="id in sensors" :sensor_id="id" :key="id">
       </sensor-chart>
