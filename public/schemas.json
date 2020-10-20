@@ -1,0 +1,81 @@
+{"login": {
+    "type": "object",
+    "properties": {
+        "login": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 16
+        },
+        "password": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 32
+        }
+    }, 
+    "required": ["login", "password"]
+},
+"passwordRecoveryRequest": {
+    "type": "object",
+    "properties": {
+        "login": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 16
+        }
+    }, 
+    "required": ["login"]
+},
+"post_sensors_data": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 1
+        },
+        "device_id": {
+            "type":"integer"
+        },
+        "data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "sensor_id": {
+                        "type": "integer"
+                    },
+                    "tstamp": {
+                        "type": "string",
+                        "minLength" : 1
+                    },
+                    "value": {
+                        "type": "number"
+                    }
+                },
+                "required": ["sensor_id", "tstamp", "value"]
+            },
+            "minItems": 1
+        }
+    },
+    "required": ["token", "data", "device_id"]
+},
+"register_device": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 1
+        },
+        "device_hash": {
+            "type": "string",
+            "minLength": 6
+        },
+        "login": {
+            "type": "string",
+            "minLength": 1
+        }
+    },
+    "required": ["token", "device_hash", "login"]
+}
+
+}
+

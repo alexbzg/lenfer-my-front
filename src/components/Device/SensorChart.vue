@@ -124,7 +124,7 @@ export default {
               y: x.value
             })
           }
-          
+
           this.chart_options.scales.yAxes[0].ticks.min = data_min - 10
           this.chart_options.scales.yAxes[0].ticks.max = data_max + 10
           this.ready = true
