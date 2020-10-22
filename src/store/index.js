@@ -52,3 +52,13 @@ const store = new Vuex.Store({
 store.commit(INIT_MUTATION)
 
 export default store
+
+export function userDataPost(url, data) {
+  const userData = {
+    login: store.getters.userLogin,
+    token: store.getters.userToken,
+    ...data
+  }
+  return dataPost(url, userData)
+}
+
