@@ -2,52 +2,75 @@
   <div class="device_index">
 
       <div class="controller_info">
-        <span class="info_title">{{type}} {{title}}</span>
-        <span class="info_data">Дата вывода <span>27 июня 2020</span></span>
-        <span class="info_data">Дата заселения <span>1 июля 2020</span></span>
-        <span class="info_data">Птица <span>Бройлеры</span></span>
+        <span class="info_title">{{title ? title : type}}</span>        
+        <span class="info_data" v-for="(prop, idx) in props_titles" :key="idx">
+            {{prop.title}} <span>{{props_display[idx]}}</span>
+        </span><br/>
+        <span class="edit_props" @click="edit_props = !edit_props">Изменить</span>
+        <device-props v-if="edit_props" :title="title" :props_titles="props_titles" 
+            :props_values="props_values" @close="close_props">
+        </device-props>
+        <modal v-if="edit_props_response" @close="edit_props_response = null">
+            <h3 slot="header">Свойства устройства</h3>
+            <div slot="body">
+                {{edit_props_response}}
+            </div>
+        </modal>
       </div>
 
       <table class="controller_table">
         <tr>
           <td class="top">таблица работы</td>
           <td class="top">День содержания</td>
-          <td class="top">Температура</td>
-          <td class="top">Влажность</td>
-          <td class="top">Качество воздуха</td>
+          <td class="top" v-for="entry in sensors_state" :key="entry.type">
+              {{$options.PARAM_TITLES[entry.type]}}
+          </td>
           <td class="top">Освещение</td>
           <td class="top">Время кормления</td>
         </tr>
         <tr>
           <td>Шаблон #1</td>
           <td>5</td>
-          <td>36.6</td>
-          <td>75</td>
-          <td>-</td>
+          <td  v-for="entry in sensors_state" :key="entry.type">{{entry.value}}</td>
           <td></td>
           <td></td>
         </tr>
       </table>
 
-      <sensor-chart v-for="id in sensors" :sensor_id="id" :key="id">
+      <sensor-chart v-for="sensor in sensors" :sensor_id="sensor.id" :key="sensor.id">
       </sensor-chart>
   </div>
 </template>
 
 <script>
 import {get} from '../../api'
+import {userDataPost} from '../../store'
+import {display_date} from '../../utils'
 
 import SensorChart from './SensorChart'
+import DeviceProps from './Props'
+import Modal from '../Modal'
+
+const PARAM_TITLES = {
+  temperature: 'Teмпература',
+  humidity: 'Влажность'
+}
 
 export default {
+  PARAM_TITLES: PARAM_TITLES,
   name: 'DeviceIndex',
-  components: {SensorChart},
+  components: {SensorChart, DeviceProps, Modal},
   props: ['device_id'],
   data () {
     return {
       sensors: null,
       type: null,
-      title: null
+      title: null,
+      edit_props: false,
+      edit_props_response: false,
+      props_titles: [],
+      props_values: [],
+      sensors_state: []
     }
   },
   async mounted () {
@@ -56,8 +79,45 @@ export default {
         this.sensors = response.data.sensors
         this.type = response.data.device_type
         this.title = response.data.title
+        this.props_titles = response.data.props_titles
+        this.props_values = response.data.props_values
+        this.sensors_state = response.data.sensors.filter(x => x.is_master)
       })
+  },
+  methods: {
+    close_props (title, props) {
+      this.edit_props = false
+      if (title) {
+          userDataPost('device',
+            {id: this.device_id, 
+              title: title,
+              props: props})
+            .then(() => {
+              this.title = title
+              this.props_values = props
+            })
+            .catch(error => {
+               this.edit_props_response = error.message
+            })
+      }
+     
+    }
+  },
+  computed: {
+    props_display () {
+      const r = []
+      const length = this.props_values.length
+      for (let co = 0; co < length; co++) {
+        if (this.props_titles[co].type === 'date') {
+          r.push(display_date(new Date(this.props_values[co])))
+        } else {
+          r.push(this.props_values[co])
+        }
+      }
+      return r
+    }
   }
+
 }
 </script>
 

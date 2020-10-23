@@ -75,7 +75,30 @@
         }
     },
     "required": ["token", "device_hash", "login"]
+},
+"post_device_props": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 1
+        },
+        "title": {
+            "type": "string",
+            "minLength": 1
+        },
+        "login": {
+            "type": "string",
+            "minLength": 1
+        },
+        "props": {
+            "type": "array"
+        }
+    },
+    "required": ["token", "title", "login", "props"]
+
 }
+
 
 }
 
