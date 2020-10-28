@@ -30,113 +30,88 @@ a{
 .btn{
 	background-color: #3194fe;
 	color: #fff;
-	border-radius: 20px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
 	padding: 5px 20px;
 	text-decoration: none;
 }
 
 
-
-#top_menu{
-	height: 70px;
-	margin: 0 auto;
-	text-align: right;
+table#top_menu{
+	margin: 0;
+	padding: 0;
+	width: 100%;
 	background-color:#fff;
-	padding: 20px 40px 0px 50px;
-	position: relative;
 	border-bottom: 1px solid #ddd;
 	box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
 }
-#top_menu a{
-	margin-right: 40px;
-	color: #333;
-	font-weight: bold;
-}
-#top_menu a#home_link{
-	position: absolute;
-	top: 5px;
-	left: 50px;
-}
-
-#index_list{
-	width: 80%;
-	margin: 50px auto;
-}
-
-.index_block{
-	width: 350px;
-	height: 450px;
-	display: inline-block;
-	padding: 10px 0;
-	margin: 20px;
-	border: 1px solid #ddd;
-	border-radius: 10px;
-	background-color: #fff;
+table#top_menu td{
+	padding: 0;
 	vertical-align: top;
-	box-shadow: 0 .125rem .25rem rgba(0,0,0,.1);
 }
-.index_block_title{
-	font-size: 20px;
+table#top_menu td#logo{
+	width:250px;
+	padding-left: 50px;
+	text-align: left;
+}
+table#top_menu td#device_list{
+	text-align: center;
+	padding-top: 15px;
+}
+table#top_menu td#device_list a{
+	margin-right: 30px;
 	font-weight: bold;
-	background-color: #eee;
-	border-top: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
 }
-.index_block_text{
-	padding: 0 10px 10px 10px;
-}
-.index_more_info{
-	padding-right: 10px;
-	font-size: 12px;
-	font-weight: bold;
+
+table#top_menu td#menu_links{
+	width:250px;
+	padding: 15px 20px 0 0;
 	text-align: right;
 }
+table#top_menu td#menu_links a{
+	color: #333;
+	margin-right: 30px;
+}
+
+
+/* ==================================== L O G I N =======================================*/
+
+#login_form{
+	display: inline-block;
+	width: 500px;
+	height: 300px;
+	margin: 100px auto;
+	padding: 10px 0;
+	text-align: center;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	vertical-align: top;
+	box-shadow: 0 .125rem .25rem rgba(0,0,0,.1);
+	background-color: #fff;
+}
+
+input#login_input, input#password_input{
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px 20px;
+	margin-bottom: 20px;
+}
+
+input#login_btn{
+	font-size: 18px;
+}
+
+
+
+
+
+
 
 
 
 
 
 /*========================================= Л И Ч Н Ы Й   К А Б И Н Е Т ==========================*/
-
-#lk_top_menu{
-	margin: 0 auto;
-	clear: both;
-	text-align: right;
-	background-color:#fff;
-	padding: 20px 0px 0px 0px;
-	position: relative;
-	border-bottom: 1px solid #ddd;
-	box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-}
-#lk_top_menu a{
-	color: #333;
-	font-weight: bold;
-}
-#lk_top_menu a#lk_home_link{
-	position: absolute;
-	top: 5px;
-	left: 50px;
-}
-#lk_top_menu a#lk_setup_link{
-	position: absolute;
-	top: 15px;
-	right: 50px;
-}
-
-#device_list{
-	margin: 0 auto 10px auto;
-	width: 60%;
-	text-align: center;
-}
-#device_list span{
-	margin-right: 40px;
-	color: #333;
-	font-weight: bold;
-	text-decoration: underline;
-	cursor: pointer;
-	color: #009;
-}
-
 
 
 
@@ -158,9 +133,9 @@ a{
 
 .controller_info{
 	display: inline-block;
-	margin: 50px 0 20px 0;
-	padding: 15px;
-	border: 1px solid #ddd;
+	margin: 20px 0 20px 0;
+	padding: 10px 30px;
+	border: 1px solid #eee;
 	border-radius: 10px;
 	background-color: #fff;
 	color: #333;

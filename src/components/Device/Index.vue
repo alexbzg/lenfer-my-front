@@ -2,22 +2,12 @@
   <div class="device_index">
 
       <div class="controller_info">
-        <span class="info_title">{{title ? title : type}}</span>        
+        <span class="info_title">{{title ? title : type}}</span>
         <span class="info_data" v-for="(prop, idx) in props_titles" :key="idx">
             {{prop.title}} <span>{{props_display[idx]}}</span>
-        </span><br/>
-        <span class="edit_props" @click="edit_props = !edit_props">Изменить</span>
-        <device-props v-if="edit_props" :title="title" :props_titles="props_titles" 
-            :props_values="props_values" @close="close_props">
-        </device-props>
-        <modal v-if="edit_props_response" @close="edit_props_response = null">
-            <h3 slot="header">Свойства устройства</h3>
-            <div slot="body">
-                {{edit_props_response}}
-            </div>
-        </modal>
+        </span>
       </div>
-
+<!--
       <table class="controller_table">
         <tr>
           <td class="top">таблица работы</td>
@@ -36,7 +26,7 @@
           <td></td>
         </tr>
       </table>
-
+-->
       <sensor-chart v-for="sensor in sensors" :sensor_id="sensor.id" :key="sensor.id">
       </sensor-chart>
   </div>
@@ -89,7 +79,7 @@ export default {
       this.edit_props = false
       if (title) {
           userDataPost('device',
-            {id: this.device_id, 
+            {id: this.device_id,
               title: title,
               props: props})
             .then(() => {
@@ -100,13 +90,13 @@ export default {
                this.edit_props_response = error.message
             })
       }
-     
+
     }
   },
   computed: {
     props_display () {
       const r = []
-      const length = this.props_values.length
+      const length = this.props_titles.length
       for (let co = 0; co < length; co++) {
         if (this.props_titles[co].type === 'date') {
           r.push(display_date(new Date(this.props_values[co])))
