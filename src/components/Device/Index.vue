@@ -7,6 +7,7 @@
             {{prop.title}} <span>{{props_display[idx]}}</span>
         </span>
       </div>
+      <br/>
 <!--
       <table class="controller_table">
         <tr>
@@ -27,19 +28,19 @@
         </tr>
       </table>
 -->
-      <sensor-chart v-for="sensor in sensors" :sensor_id="sensor.id" :key="sensor.id">
-      </sensor-chart>
+        <div v-for="(sensors, type) in sensors_by_type" :key="type" class="sensor_data_chart">
+            <h4>{{$options.PARAM_TITLES[type]}}</h4>
+            <sensor-chart :sensors="sensors">
+            </sensor-chart>
+        </div>
   </div>
 </template>
 
 <script>
 import {get} from '../../api'
-import {userDataPost} from '../../store'
 import {display_date} from '../../utils'
 
 import SensorChart from './SensorChart'
-import DeviceProps from './Props'
-import Modal from '../Modal'
 
 const PARAM_TITLES = {
   temperature: 'Teмпература',
@@ -49,15 +50,13 @@ const PARAM_TITLES = {
 export default {
   PARAM_TITLES: PARAM_TITLES,
   name: 'DeviceIndex',
-  components: {SensorChart, DeviceProps, Modal},
+  components: {SensorChart},
   props: ['device_id'],
   data () {
     return {
-      sensors: null,
+      sensors: [],
       type: null,
       title: null,
-      edit_props: false,
-      edit_props_response: false,
       props_titles: [],
       props_values: [],
       sensors_state: []
@@ -74,25 +73,6 @@ export default {
         this.sensors_state = response.data.sensors.filter(x => x.is_master)
       })
   },
-  methods: {
-    close_props (title, props) {
-      this.edit_props = false
-      if (title) {
-          userDataPost('device',
-            {id: this.device_id,
-              title: title,
-              props: props})
-            .then(() => {
-              this.title = title
-              this.props_values = props
-            })
-            .catch(error => {
-               this.edit_props_response = error.message
-            })
-      }
-
-    }
-  },
   computed: {
     props_display () {
       const r = []
@@ -103,6 +83,16 @@ export default {
         } else {
           r.push(this.props_values[co])
         }
+      }
+      return r
+    }, 
+    sensors_by_type () {
+      const r = {}
+      for (const sensor of this.sensors) {
+        if (!r[sensor.type]) {
+          r[sensor.type] = []
+        }
+        r[sensor.type].push(sensor)
       }
       return r
     }

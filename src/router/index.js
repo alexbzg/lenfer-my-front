@@ -5,6 +5,7 @@ Vue.use(Router)
 
 import Login from './../components/Login'
 import Device from './../components/Device/Index'
+import Settings from './../components/Settings/Index'
 
 const router = new Router({
 //  mode: 'history',
@@ -19,7 +20,13 @@ const router = new Router({
       name: 'Device',
       component: Device,
       props: true
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
     }
+
   ]
 })
 
