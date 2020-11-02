@@ -10,6 +10,7 @@ const STORAGE_KEY_USER = 'user'
 
 const INIT_MUTATION = 'initMttn'
 export const SET_USER_MUTATION = 'setUserMttn'
+export const UPDATE_USER_MUTATION = 'updUserMttn'
 
 export const LOGIN_ACTION = 'loginActn'
 
@@ -38,6 +39,11 @@ const store = new Vuex.Store({
           payload.remember ? 'local' : 'session')
         state.remember = payload.remember
       }
+    },
+    [UPDATE_USER_MUTATION] (state, payload) {
+      Object.assign(state.user, payload)
+      storage.save(STORAGE_KEY_USER, state.user,
+        payload.remember ? 'local' : 'session')
     }
   },
   actions: {

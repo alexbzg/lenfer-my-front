@@ -35,6 +35,14 @@ a{
 	padding: 5px 20px;
 	text-decoration: none;
 }
+input{
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 10px 20px;
+}
+
+
+
 
 
 table#top_menu{
@@ -132,26 +140,21 @@ input#login_btn{
 
 
 .controller_info{
-	display: inline-block;
-	margin: 20px 0 20px 0;
-	padding: 10px 30px;
-	border: 1px solid #eee;
-	border-radius: 10px;
-	background-color: #fff;
+	padding: 30px 30px 10px 30px;
 	color: #333;
+	text-align: left;
+	line-height: 24px;
 }
 .info_title{
 	font-weight: bold;
 	font-size: 24px;
-	margin-right: 50px;
 }
 .info_data{
-	margin-left: 30px;
-	font-size: 14px;
+	font-size: 12px;
+	color: #777;
 }
 .info_data span{
 	font-weight: bold;
-	font-size: 16px;
 }
 
 
@@ -199,4 +202,32 @@ table.controller_table td.top{
 	padding: 0px 20px 20px 20px;
 
 
+}
+
+
+
+
+
+
+
+
+
+
+
+/*========================================= S E T T I N G S ==========================*/
+
+
+
+.settings {
+    width: 90%;
+    max-width: 1600px;
+    margin: 20px auto 50px auto;
+    background-color: #fff;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	min-height: 300px;
+}
+.settings_menu a{
+	margin: 0 10px;
+	color: ;
 }

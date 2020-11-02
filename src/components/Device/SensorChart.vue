@@ -138,8 +138,8 @@ export default {
             
             ready[co] = true
             if (!ready.filter(item => !item).length) {
-              this.chart_options.scales.yAxes[0].ticks.min = data_min - 10
-              this.chart_options.scales.yAxes[0].ticks.max = data_max + 10
+              this.chart_options.scales.yAxes[0].ticks.min = Math.floor(data_min/5)*5
+              this.chart_options.scales.yAxes[0].ticks.max = Math.floor(data_max/5)*5 + 5
               this.ready = true
             }
 

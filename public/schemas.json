@@ -96,8 +96,31 @@
         }
     },
     "required": ["token", "title", "login", "props"]
-
+},
+"post_user_settings": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 1
+        },
+        "password": {
+            "type": "string",
+            "minLength": 8
+        },
+        "login": {
+            "type": "string",
+            "minLength": 1
+        },
+        "email": {
+            "type": "string",
+            "format": "email"
+        }
+    },
+    "required": ["token", "password", "login", "email"]
 }
+
+
 
 
 }

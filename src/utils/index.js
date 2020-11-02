@@ -4,3 +4,8 @@ export const RU_MONTH = ["января", "февраля", "марта", "апр
 export function display_date (date_obj) {
   return `${date_obj.getDate()} ${RU_MONTH[date_obj.getMonth()]}`
 }
+
+export function isEmpty (obj) {
+  return Object.keys(obj).length === 0
+}
+

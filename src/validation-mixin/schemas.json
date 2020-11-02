@@ -1,0 +1,614 @@
+{ 
+"login": {
+    "type": "object",
+    "properties": {
+        "callsign": { 
+            "type": "string",
+            "pattern":  "$reCallsignBase$",
+            "minLength": 3
+        },
+        "password": {
+            "type": "string",
+            "minLength": 8
+        }
+    },
+    "required": [ "callsign", "password" ]
+},
+"register": {
+    "type": "object",
+    "properties": {
+        "callsign": { 
+            "type": "string",
+            "pattern":  "$reCallsignBase$",
+            "minLength": 3
+        },
+        "password": {
+            "type": "string",
+            "minLength": 8
+        },
+        "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+        },
+        "recaptcha": {
+            "type": "string",
+            "minLength": 1
+        }
+    },
+    "required": [ "callsign", "password", "email", "recaptcha" ]
+},
+"passwordRequest": {
+    "type": "object",
+    "properties": {
+        "callsign": { 
+            "type": "string",
+            "pattern":  "$reCallsignBase$",
+            "minLength": 3
+        },
+        "recaptcha": {
+            "type": "string",
+            "minLength": 1
+        }
+    },
+    "required": [ "callsign", "recaptcha" ]
+},
+"passwordChange": {
+    "type": "object",
+    "properties": {
+        "token": { 
+            "type": "string",
+            "minLength": 3
+        },
+        "password": {
+            "type": "string",
+            "minLength": 8
+        }
+    },
+    "required": [ "token", "password" ]
+},
+"contactSupport": {
+    "type": "object",
+    "properties": {
+         "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+        },
+        "recaptcha": {
+            "type": "string",
+            "minLength": 1
+        },
+        "token": { 
+            "type": "string",
+            "minLength": 3
+        },
+         "text": { 
+            "type": "string",
+            "minLength": 20
+        }
+    },
+    "required": ["text"],
+    "anyOf": [
+        { "required": ["email", "recaptcha"] },
+        { "required": ["token"] }
+    ]
+},
+"adif": {
+    "type": "object",
+    "properties": {
+        "token": { 
+            "type": "string",
+            "minLength": 3
+        },
+        "files": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": { 
+                        "type": "string",
+                        "minLength": 3
+                    },
+                    "file": {}
+                },
+                "required": ["name", "file"]
+            },
+            "minItems": 1
+        },
+        "stationCallsignFieldEnable": {
+        }
+    },
+    "allOf": [
+        {"anyOf": [ 
+            { 
+                "properties": {
+                    "stationCallsign": {
+                        "type": "string",
+                        "pattern": "$reCallsignFull$"
+                    },
+                    "stationCallsignFieldEnable": {
+                        "enum": [false]
+                    }
+                },
+                "required":["stationCallsign", "stationCallsignFieldEnable"]
+            },
+            { 
+                "properties": {
+                    "stationCallsignField": {
+                        "type": "string",
+                        "minLength": 3
+                    },
+                    "stationCallsignFieldEnable": {
+                        "enum": [true]
+                    }
+                },                
+                "required":["stationCallsignField", "stationCallsignFieldEnable"]
+            }
+        ]},
+        {"anyOf":[
+            {
+                "properties": {
+                    "rdaField":{
+                        "type": "string",
+                        "minLength": 3
+                    },
+                    "rdaFieldEnable": {
+                        "enum": [true]
+                    }
+                },
+                "required": ["rdaField", "rdaFieldEnable"]
+            },
+            {
+                "properties": {
+                    "rdaFieldEnable": {
+                        "enum": [false]
+                    },
+                    "files": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "rda": {
+                                    "enum": "$rdaValues$"
+                                }
+                            },
+                            "required": ["rda"]
+                        }
+                    }
+                },
+                "required": ["files", "rdaFieldEnable"]
+            }
+        ]}
+    ],
+    "required": ["token", "files", "stationCallsignFieldEnable"]
+},
+"uploadsSearch": {
+    "type": "object",
+    "properties": {
+        "rda": {
+            "anyOf": [
+                {"type": "null"},
+                {"enum": "$rdaValues$"}
+            ]
+        },
+        "station": {
+            "anyOf": [
+                {"type": "null"},
+                {
+                    "type": "string",
+                    "pattern": "(:?\\*|^(:?[A-Z\\d]+\\/)?[A-Z]+\\d+[A-Z]+(:?\\/[A-Z\\d]+)*$)"
+                }
+            ]
+        },
+        "uploader": {
+            "anyOf": [
+                {"type": "null"},
+                {
+                    "type": "string",
+                    "pattern": "(:?\\*|^(:?[A-Z\\d]+\\/)?[A-Z]+\\d+[A-Z]+(:?\\/[A-Z\\d]+)*$)"
+                }
+            ]
+        }
+    },
+    "not": {
+        "allOf": [
+            {"properties": {"rda": {"type": "null"}}},
+            {"properties": {"station": {"type": "null"}}},
+            {"properties": {"uploader": {"type": "null"}}},
+            {"properties": {"uploadDate": {"type": "null"}}}
+        ]
+    }
+},
+"cfmQslQso": {
+    "type": "object",
+    "properties": {
+        "qso": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "callsign": {
+                        "type": "string",
+                        "pattern": "[A-Z]+\\d+[A-Z]+"
+                    },
+                    "newCallsign": {
+                        "type": "string",
+                        "pattern": "[A-Z]+\\d+[A-Z]+"
+                    },
+                    "stationCallsign": {
+                        "type": "string",
+                        "pattern": "$reCallsignFull$"
+                    },
+                    "rda": {"enum": "$rdaValues$"},
+                    "time": {
+                        "type": "string",
+                        "pattern": "\\d\\d\\d\\d"
+                    },
+                    "band": {
+                        "enum": ["1.8", "3.5", "7", "10", "14", "18", "21", "24", "28"]
+                    },
+                    "mode": {
+                        "enum": ["CW", "SSB", "DIGI"]
+                    }
+                },
+                "required": ["callsign", "stationCallsign", "rda", "band", "mode", "date", 
+                    "time"]
+            },
+            "minItems": 1
+        },
+        "image": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "minLength": 5
+                },
+                "file": {}
+            },
+            "required": ["name", "file"]
+        },
+        "imageBack": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "minLength": 5
+                },
+                "file": {}
+            },
+            "required": ["name", "file"]
+        }
+    },
+    "required": ["qso", "image"]
+},
+"ann": {
+    "type": "object",
+    "oneOf": [
+        {
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "minLength": 8
+                },
+                "new": {
+                    "type": "object",
+                    "properties": {
+                        "text": {
+                            "type": "string",
+                            "minLength": 10
+                        },
+                        "period": {
+                            "type": "string",
+                            "minLength": 5
+                        },
+                        "caption": {
+                            "type": "string",
+                            "minLength": 5
+                        }
+                    },
+                    "required": ["caption", "text", "period"],
+                    "additionalProperties": false
+                }
+            },
+            "required": ["new", "token"],
+            "additionalProperties": false
+        },
+        {
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "minLength": 8
+                },
+                "delete": {
+                    "type": "number"
+                }
+            },
+            "required": ["delete", "token"],
+            "additionalProperties": false
+        }
+    ]
+},
+"extLoggers": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 3
+        },
+        "update": {
+            "type": "object",
+            "properties": {
+                "loginData": {
+                    "type": "object"
+                },
+                "logger": {
+                    "enum": ["LoTW", "eQSL"]
+                }
+            },
+            "required": ["loginData", "logger"]
+        },
+        "delete": {
+            "type":"number"
+        }
+    },
+    "required": ["token"]
+},
+"extLoggersLoginDefault": {
+    "type": "object",
+    "properties": {
+        "login": {
+            "type": "string",
+            "minLength": 1
+        },
+        "password": {
+            "type": "string",
+            "minLength": 1
+        }
+    },
+    "required": ["login", "password"]
+},
+"extLoggersLoginHamLOG": {
+    "type": "object",
+    "properties": {
+        "email": {
+            "type": "string",
+            "minLength": 1
+        },
+        "password": {
+            "type": "string",
+            "minLength": 1
+        }
+    },
+    "required": ["email", "password"]
+},
+"extLoggersLoginEQSL": {
+    "type": "object",
+    "properties": {
+        "Callsign": {
+            "type": "string",
+            "minLength": 1
+        },
+        "EnteredPassword": {
+            "type": "string",
+            "minLength": 1
+        }
+    },
+    "required": ["Callsign", "EnteredPassword"]
+},
+
+"callsignsRda": {
+    "type": "object",
+    "oneOf": [
+        {
+            "properties": {
+                "callsign": {
+                    "type": "string",
+                    "pattern": "$reCallsignFull$"
+                },
+                "rda": {
+                    "enum": "$rdaValues$"
+                },
+                "token": { 
+                    "type": "string",
+                    "minLength": 3
+                }
+            },
+            "anyOf": [
+                {
+                    "required": ["callsign"]
+                },
+                {
+                    "required": ["rda"]
+                }
+            ],
+            "additionalProperties": false
+        },
+        {
+            "properties": {
+                "token": { 
+                    "type": "string",
+                    "minLength": 3
+                }
+            },
+            "required": ["token"],
+            "addtionalProperties": false,
+            "oneOf":[ 
+                {
+                    "properties": {
+                        "delete": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": ["delete"]
+                },
+                {
+                    "properties": {
+                        "meta": {
+                            "type": "object",
+                            "properties": {
+                                "disableAutocfm": {
+                                    "type": "boolean"
+                                },
+                                "comments": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["disableAutocfm", "comments"]
+                        },
+                        "callsign": {
+                            "type": "string",
+                            "pattern": "$reCallsignFull$"
+                        }
+                    },
+                    "required": ["meta", "token", "callsign"]
+                },
+                {
+                    "properties": {
+                        "conflict": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": ["conflict"]
+                },
+                {
+                    "properties": {
+                        "new": {
+                            "type": "object",
+                            "properties": {
+                                "rda":{
+                                    "oneOf": [
+                                        {
+                                            "enum": "$rdaValues$"
+                                        },
+                                        {
+                                            "enum": ["***"]
+                                        }
+                                    ]
+                                }
+                            },
+                            "required": ["rda"]
+                        },
+                        "callsign": {
+                            "type": "string",
+                            "pattern": "$reCallsignFull$"
+                        }
+                    },
+                    "required": ["new", "token", "callsign"]
+                }
+            ]
+        }
+    ]
+},
+"cfmRequestQso": {
+    "type": "object",
+    "properties": {
+        "token": { 
+            "type": "string",
+            "minLength": 3
+        },
+        "qso": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "callsign": {
+                        "type": "string",
+                        "pattern": "$reCallsignFull$"
+                    },
+                    "stationCallsign": {
+                        "type": "string",
+                        "pattern": "$reCallsignFull$"
+                    },
+                    "rda": {"enum": "$rdaValues$"},
+                    "time": {
+                        "type": "string",
+                        "pattern": "\\d\\d\\d\\d"
+                    },
+                    "band": {
+                        "enum": ["1.8", "3.5", "7", "10", "14", "18", "21", "24", "28"]
+                    },
+                    "mode": {
+                        "enum": ["CW", "SSB", "DIGI"]
+                    },
+                    "correspondent": {
+                        "type": "string",
+                        "pattern": "$reCallsignBase$"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    }
+                },
+                "required": ["callsign", "stationCallsign", "rda", "band", "mode", "date", 
+                    "time", "recRST", "sentRST", "correspondent", "email"]
+            }
+        }
+    },
+    "required": ["qso", "token"]
+},
+"qslAdmin":{
+    "type": "array",
+    "minItems": 1,
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "number"},
+            "qslId": {"type": "number"},
+            "state": {"type": "boolean"},
+            "comment": {
+                "oneOf": [
+                    {"type": "string"},
+                    {"type": "null"}
+                ]
+            }
+        },
+        "required": ["id", "state", "qslId"]
+    }
+},
+"oldCallsigns": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 3
+        },
+        "callsigns": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": "$reCallsignBase$"
+            }
+        }
+    },
+    "required": ["token", "callsigns"]
+},
+"chat": {
+    "type": "object",
+    "properties": {
+        "token": { 
+            "type": "string",
+            "minLength": 3
+        },
+        "callsign": {
+            "type": "string",
+            "pattern": "$reCallsignFull$"
+        },
+        "message": {
+            "type": "string",
+            "minLength": 1
+        },
+        "delete": {
+            "type": "number"
+        },
+        "exit": {
+            "type": "boolean"
+        }
+    },
+    "anyOf": [
+        {"required": ["token"]},
+        {"required": ["callsign"]}
+    ]
+}
+}

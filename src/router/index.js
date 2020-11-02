@@ -3,9 +3,10 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-import Login from './../components/Login'
-import Device from './../components/Device/Index'
-import Settings from './../components/Settings/Index'
+import Login from '../components/Login'
+import Device from '../components/Device/Index'
+import Settings from '../components/Settings/Index'
+import SettingsProfile from '../components/Settings/Profile'
 
 const router = new Router({
 //  mode: 'history',
@@ -25,6 +26,13 @@ const router = new Router({
       path: '/settings',
       name: 'Settings',
       component: Settings,
+      children: [
+        {
+          path: 'profile',
+          name: 'SettingsProfile',
+          component: SettingsProfile
+        }
+      ]
     }
 
   ]

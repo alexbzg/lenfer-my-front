@@ -2,12 +2,11 @@
   <div class="device_index">
 
       <div class="controller_info">
-        <span class="info_title">{{title ? title : type}}</span>
+        <span class="info_title">{{title ? title : type}}</span><br/>
         <span class="info_data" v-for="(prop, idx) in props_titles" :key="idx">
             {{prop.title}} <span>{{props_display[idx]}}</span>
         </span>
       </div>
-      <br/>
 <!--
       <table class="controller_table">
         <tr>
@@ -85,7 +84,7 @@ export default {
         }
       }
       return r
-    }, 
+    },
     sensors_by_type () {
       const r = {}
       for (const sensor of this.sensors) {
