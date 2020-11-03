@@ -48,7 +48,7 @@
                         "minLength" : 1
                     },
                     "value": {
-                        "type": "number"
+                        "type": ["number", "null"]
                     }
                 },
                 "required": ["sensor_id", "tstamp", "value"]

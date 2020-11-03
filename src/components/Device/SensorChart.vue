@@ -84,8 +84,8 @@ export default {
     const sensors_idxs = {}
     const ready = this.sensors.map(() => false)
     const sensors_count = this.sensors.length
-    let data_min = null
-    let data_max = null
+    const data_min = this.sensors.map(() => null)
+    const data_max = this.sensors.map(() => null)
 
     for (let co=0; co < sensors_count; co++) {
 
@@ -118,10 +118,12 @@ export default {
 
             for (const x of data) {
 
-              if (data_min === null || data_min > x.value)
-                data_min = x.value
-              if (data_max === null || data_max < x.value)
-                data_max = x.value
+              if (data_min[co] === null || data_min[co] > x.value) {
+                data_min[co] = x.value
+              }
+              if (data_max[co] === null || data_max[co] < x.value) {
+                data_max[co] = x.value
+              }
               const x_date = new Date(x.tstamp)
               if (prev_date && x_date - prev_date > 600000) {
                 dataset.data.push({
@@ -138,8 +140,8 @@ export default {
             
             ready[co] = true
             if (!ready.filter(item => !item).length) {
-              this.chart_options.scales.yAxes[0].ticks.min = Math.floor(data_min/5)*5
-              this.chart_options.scales.yAxes[0].ticks.max = Math.floor(data_max/5)*5 + 5
+              this.chart_options.scales.yAxes[0].ticks.min = Math.floor(Math.min(...data_min)/5)*5
+              this.chart_options.scales.yAxes[0].ticks.max = Math.floor(Math.max(...data_max)/5)*5 + 5
               this.ready = true
             }
 

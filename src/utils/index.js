@@ -9,3 +9,11 @@ export function isEmpty (obj) {
   return Object.keys(obj).length === 0
 }
 
+export function debugLog (msg) {
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line
+    console.log(msg)
+  }
+}
+
+
