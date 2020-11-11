@@ -6,7 +6,7 @@
             <router-link to="/settings/">Устройства</router-link>
         </div>
 
-        <router-view></router-view>
+        <router-view :devices="devices"></router-view>
   </div>
 </template>
 
@@ -14,6 +14,7 @@
 
 export default {
   name: 'SettingsIndex',
+  props: ['devices'],
   data () {
     return {}
   }

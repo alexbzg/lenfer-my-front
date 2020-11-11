@@ -23,7 +23,7 @@
           </tr>
         </table>
 
-        <router-view @login="on_login"></router-view>
+        <router-view @login="on_login" :devices="devices"></router-view>
     </div>
 </template>
 
@@ -31,34 +31,31 @@
 
 import './style.css'
 
-import {userDataPost, SET_USER_MUTATION} from './store'
+import {mapState} from 'vuex'
+
+import {SET_USER_MUTATION} from './store'
 
 export default {
   name: 'app',
   data () {
     return {
-      devices: [],
     }
   },
   async mounted () {
     if (this.userLogin) {
-      this.load_devices()
+      this.default_device()
     } else {
       this.login()
     }
   },
   methods: {
-    async load_devices () {
-      userDataPost('users_devices', {})
-        .then(data => {
-          this.devices = data
-          if (this.devices.length) {
-            const device_route = '/device/' + this.devices[0].id
-            if (device_route !== this.$router.currentRoute.path) {
-              this.$router.push(device_route)
-            }
-          }
-        })
+    default_device () {
+      if (this.devices.length) {
+        const device_route = '/device/' + this.devices[0].id
+        if (this.$router.currentRoute.path === '/') {
+          this.$router.push(device_route)
+        }
+      }
     },
     logout () {
       this.$store.commit(SET_USER_MUTATION, {user: null})
@@ -68,12 +65,18 @@ export default {
       this.$router.push('/login')
     },
     on_login () {
-      this.load_devices()
+      this.default_device()
     }
   },
   computed: {
+    ...mapState(['devices']),
     userLogin () {
       return this.$store.getters.userLogin
+    }
+  },
+  watch: {
+    devices () {
+      this.default_device()
     }
   }
 }

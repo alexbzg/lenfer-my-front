@@ -62,15 +62,21 @@ export default {
     }
   },
   async mounted () {
-    get('/api/device/' + this.device_id)
-      .then(response => {
-        this.sensors = response.data.sensors
-        this.type = response.data.device_type
-        this.title = response.data.title
-        this.props_titles = response.data.props_titles
-        this.props_values = response.data.props_values
-        this.sensors_state = response.data.sensors.filter(x => x.is_master)
-      })
+    this.load_device()
+  },
+  methods: {
+    load_device () {
+      this.sensors = []
+      get('/api/device/' + this.device_id)
+        .then(response => {
+          this.sensors = response.data.sensors
+          this.type = response.data.device_type
+          this.title = response.data.title
+          this.props_titles = response.data.props_titles
+          this.props_values = response.data.props_values
+          this.sensors_state = response.data.sensors.filter(x => x.is_master)
+        })
+    }
   },
   computed: {
     props_display () {
@@ -94,6 +100,11 @@ export default {
         r[sensor.type].push(sensor)
       }
       return r
+    }
+  },
+  watch: {
+    device_id () {
+      this.load_device()
     }
   }
 
