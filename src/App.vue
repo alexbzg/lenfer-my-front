@@ -23,7 +23,7 @@
           </tr>
         </table>
 
-        <router-view @login="on_login" :devices="devices"></router-view>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -42,41 +42,23 @@ export default {
     }
   },
   async mounted () {
-    if (this.userLogin) {
-      this.default_device()
-    } else {
+    if (!this.userLogin) {
       this.login()
     }
   },
   methods: {
-    default_device () {
-      if (this.devices.length) {
-        const device_route = '/device/' + this.devices[0].id
-        if (this.$router.currentRoute.path === '/') {
-          this.$router.push(device_route)
-        }
-      }
-    },
     logout () {
       this.$store.commit(SET_USER_MUTATION, {user: null})
       this.login()
     },
     login () {
       this.$router.push('/login')
-    },
-    on_login () {
-      this.default_device()
     }
   },
   computed: {
     ...mapState(['devices']),
     userLogin () {
       return this.$store.getters.userLogin
-    }
-  },
-  watch: {
-    devices () {
-      this.default_device()
     }
   }
 }
