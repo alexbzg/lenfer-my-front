@@ -1,9 +1,10 @@
 <template>
-  <div class="settings">
+  <div class="settings_index">
 
         <div class="settings_menu">
-            <router-link to="/settings/profile/">Профиль</router-link>
             <router-link to="/settings/">Устройства</router-link>
+            <router-link to="/settings/register_device">Добавить устройство</router-link>
+            <router-link to="/settings/profile/">Профиль</router-link>
         </div>
 
         <router-view :devices="devices"></router-view>

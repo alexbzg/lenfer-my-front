@@ -8,6 +8,7 @@ import Device from '../components/Device/Index'
 import Settings from '../components/Settings/Index'
 import SettingsProfile from '../components/Settings/Profile'
 import SettingsDevices from '../components/Settings/Devices'
+import SettingsRegisterDevice from '../components/Settings/Register_device'
 
 const router = new Router({
 //  mode: 'history',
@@ -37,7 +38,13 @@ const router = new Router({
           path: '/',
           name: 'SettingsDevices',
           component: SettingsDevices,
+        },
+        {
+          path: 'register_device',
+          name: 'SettingsRegisterDevice',
+          component: SettingsRegisterDevice,
         }
+
       ]
     }
 

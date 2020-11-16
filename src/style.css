@@ -218,16 +218,85 @@ table.controller_table td.top{
 
 
 
-.settings {
-    width: 90%;
+.settings_index {
+    width: 60%;
     max-width: 1600px;
     margin: 20px auto 50px auto;
     background-color: #fff;
 	border-radius: 10px;
 	border: 1px solid #ddd;
 	min-height: 300px;
+	padding: 20px;
 }
 .settings_menu a{
-	margin: 0 10px;
-	color: ;
+	margin: 0 20px;
+	color: #333;
 }
+
+.settings_devices{
+	margin: 50px auto;
+
+}
+.settings_devices .device{
+	margin-bottom: 30px;
+}
+
+.device_table{
+	margin: 0 auto;
+	padding: 0;
+	border-collapse: collapse;
+}
+.device_table td{
+	padding: 0 10px;
+	line-height: 16px;
+	vertical-align: middle;
+}
+.device_table td.title{
+	font-weight: bold;
+}
+.device_table td.type{
+	vertical-align: top;
+	color: #999;
+	font-size: 12px;
+}
+.device_table td.edit{
+	vertical-align: top;
+	color: #009;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+
+.settings{
+	width: 80%;
+	margin: 20px auto 50px auto;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	padding: 20px;
+	line-height: 1em;
+}
+
+.settings .title, .settings .defauft{
+	font-size: 14px;
+	color: #777;
+}
+.settings input:not([type='submit']){
+	width: 300px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+	padding: 5px;
+	margin-bottom: 30px;
+}
+
+.settings .prop input{
+	width: 200px;
+}
+
+
+.settings h4{
+	text-decoration: underline;
+	margin-bottom: 10px;
+}
+
+

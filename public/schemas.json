@@ -84,8 +84,7 @@
             "minLength": 1
         },
         "title": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
         },
         "login": {
             "type": "string",
@@ -95,8 +94,29 @@
             "type": "array"
         }
     },
-    "required": ["token", "title", "login", "props"]
+    "required": ["token", "login"]
 },
+"post_sensor_props": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 1
+        },
+        "title": {
+            "type": "string"
+        },
+        "login": {
+            "type": "string",
+            "minLength": 1
+        },
+        "is_master": {
+            "type": "boolean"
+        }
+    },
+    "required": ["token", "login", "is_master"]
+},
+
 "post_user_settings": {
     "type": "object",
     "properties": {
