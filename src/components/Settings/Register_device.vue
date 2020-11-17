@@ -1,9 +1,9 @@
 <template>
     <div class="add_device">
         введите код устройства
-        <input type="text" :class="{error: register_device_hash.length < 6}" 
-            v-model="register_device_hash"/> 
-        <input type="submit" @click="register_device" :disabled="register_device_hash.length < 6 || pending"
+        <input type="text" :class="{error: register_device_hash.length < 6}"
+            v-model="register_device_hash"/>
+        <input class="btn" type="submit" @click="register_device" :disabled="register_device_hash.length < 6 || pending"
             value="Отправить"/>
         <modal v-if="modal.show" @close="modal.show = false">
             <h3 slot="header">{{modal.header}}</h3>
@@ -35,9 +35,9 @@ export default {
   methods: {
     async register_device () {
       userDataPost('device/register', {device_hash: this.register_device_hash})
-        .then(() => { 
+        .then(() => {
           this.register_device_hash = ''
-          this.$store.dispatch(LOAD_DEVICES_ACTION) 
+          this.$store.dispatch(LOAD_DEVICES_ACTION)
         })
         .catch(error => {
           this.modal = {

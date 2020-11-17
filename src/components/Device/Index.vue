@@ -27,8 +27,8 @@
         </tr>
       </table>
 -->
-        <div v-for="(sensors_param, param) in device.sensors_params" :key="param" class="sensor_data_chart">
-            <h4>{{$options.SENSORS_PARAMS_TITLES[param]}}</h4>
+        <div v-for="sensors_param in sensors_charts" :key="sensors_param.id" class="sensor_data_chart">
+            <h4>{{sensors_param.title}}</h4>
             <sensor-chart :sensors="sensors_param.sensors">
             </sensor-chart>
         </div>
@@ -37,18 +37,18 @@
 
 <script>
 import load_device from '../../device'
-import {SENSORS_PARAMS_TITLES} from '../../utils'
+import {SENSORS_PARAMS} from '../../definitions'
 
 import SensorChart from './SensorChart'
 
 export default {
-  SENSORS_PARAMS_TITLES: SENSORS_PARAMS_TITLES,
   name: 'DeviceIndex',
   components: {SensorChart},
   props: ['device_id'],
   data () {
     return {
-      device: {}
+      device: {},
+      sensors_charts: []
     }
   },
   async mounted () {
@@ -57,9 +57,20 @@ export default {
   methods: {
     async load_device () {
       this.device = {}
+      this.sensors_charts = []
       load_device(this.device_id)
         .then(device => {
           this.device = device
+          this.sensors_charts = []
+          const sp_length = SENSORS_PARAMS.length
+          for (let co = 0; co < sp_length; co++) {
+            if (SENSORS_PARAMS[co].id in this.device.sensors_params) {
+              this.sensors_charts.push({
+                ...SENSORS_PARAMS[co],
+                sensors: this.device.sensors_params[SENSORS_PARAMS[co].id].sensors
+              })
+            }
+          }
         })
     }
   },

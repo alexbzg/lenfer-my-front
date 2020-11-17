@@ -55,6 +55,11 @@ export default {
       chart_options: {
 		responsive: true,
 		maintainAspectRatio: false,
+        tooltips: {
+          mode: 'index',
+          intersect: false,
+          position: 'nearest'
+        },
         legend: {
           display: false
         },

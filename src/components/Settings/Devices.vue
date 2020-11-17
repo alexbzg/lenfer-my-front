@@ -28,16 +28,17 @@
                         locale="ru" :masks="{input: 'DD MMMM'}"></date-picker>
                 </div>
                 <h4>Названия датчиков устройства на графиках</h4>
-                <div class="sensors_param" v-for="(param_entry, param) in edit_device.sensors_params" :key="param">
-                    <span class="title">{{$options.SENSORS_PARAMS_TITLES[param]}}</span>
-                    <div class="master" v-if="param_entry.sensors.length > 1">
-<!--                         <select v-model="param_entry.master">
+                <div class="sensors_param" v-for="param_entry in edit_device.sensors_settings" 
+                    :key="param_entry.id">
+                    <span class="title">{{param_entry.title}}</span>
+                    <!--div class="master" v-if="param_entry.sensors.length > 1">
+                         <select v-model="param_entry.master">
                              <option v-for="sensor in param_entry.sensors"
                                 :value="sensor" :key="sensor.id">
                                 {{sensor.title ? sensor.title : sensor.default_title}}
                              </option>
-                         </select> -->
-                    </div>
+                         </select> 
+                    </div-->
                     <div v-for="sensor in param_entry.sensors" class="sensor" :key="sensor.id">
                         <span class="default">{{sensor.default_title}}</span><br/>
                         <input type="text" v-model="sensor.title"/>
@@ -65,10 +66,9 @@ import Modal from '../Modal'
 
 import {userDataPost, LOAD_DEVICES_ACTION} from '../../store'
 import load_device from '../../device'
-import {SENSORS_PARAMS_TITLES} from '../../utils'
+import {SENSORS_PARAMS} from '../../definitions'
 
 export default {
-  SENSORS_PARAMS_TITLES: SENSORS_PARAMS_TITLES,
   name: 'SettingsDevicesIndex',
   components: {Modal, DatePicker},
   data () {
@@ -99,6 +99,16 @@ export default {
           .then(device => {
             this.edit_device = device
             this.device_cache = JSON.parse(JSON.stringify(device))
+            this.edit_device.sensors_settings = []
+            const sp_length = SENSORS_PARAMS.length
+            for (let co = 0; co < sp_length; co++) {
+              if (SENSORS_PARAMS[co].id in device.sensors_params) {
+                device.sensors_settings.push({
+                  ...SENSORS_PARAMS[co],
+                  sensors: device.sensors_params[SENSORS_PARAMS[co].id].sensors
+                })
+              }
+            }
           })
           .finally(() => {
             this.pending = false

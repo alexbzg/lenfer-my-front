@@ -16,8 +16,4 @@ export function debugLog (msg) {
   }
 }
 
-export const SENSORS_PARAMS_TITLES = {
-  temperature: 'Teмпература',
-  humidity: 'Влажность'
-}
 

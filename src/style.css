@@ -195,8 +195,7 @@ table.controller_table td.top{
 
 
 .sensor_data_chart{
-	width: 49%;
-	display: inline-block;
+
 }
 .lk_sensor_graf {
 	padding: 0px 20px 20px 20px;
@@ -299,4 +298,9 @@ table.controller_table td.top{
 	margin-bottom: 10px;
 }
 
+
+
+.add_device{
+	margin: 50px auto;
+}
 
