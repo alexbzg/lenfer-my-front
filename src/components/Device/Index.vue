@@ -37,7 +37,7 @@
 
 <script>
 import load_device from '../../device'
-import {SENSORS_PARAMS} from '../../definitions'
+import {DEVICE_PARAMS} from '../../definitions'
 
 import SensorChart from './SensorChart'
 
@@ -62,12 +62,12 @@ export default {
         .then(device => {
           this.device = device
           this.sensors_charts = []
-          const sp_length = SENSORS_PARAMS.length
+          const sp_length = DEVICE_PARAMS.length
           for (let co = 0; co < sp_length; co++) {
-            if (SENSORS_PARAMS[co].id in this.device.sensors_params) {
+            if (DEVICE_PARAMS[co].id in this.device.sensors_params) {
               this.sensors_charts.push({
-                ...SENSORS_PARAMS[co],
-                sensors: this.device.sensors_params[SENSORS_PARAMS[co].id].sensors
+                ...DEVICE_PARAMS[co],
+                sensors: this.device.sensors_params[DEVICE_PARAMS[co].id].sensors
               })
             }
           }

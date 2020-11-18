@@ -49,10 +49,6 @@
                 <input class="btn" type="submit" value="Отмена" @click="open_device(null)"/>
             </div>
         </div>
-        <modal v-if="modal.show" @close="modal.show = false">
-            <h3 slot="header">{{modal.header}}</h3>
-            <div slot="body">{{modal.body}}</div>
-        </modal>
 
     </div>
 </template>
@@ -62,15 +58,14 @@
 import {mapState} from 'vuex'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 
-import Modal from '../Modal'
 
 import {userDataPost, LOAD_DEVICES_ACTION} from '../../store'
 import load_device from '../../device'
-import {SENSORS_PARAMS} from '../../definitions'
+import {DEVICE_PARAMS} from '../../definitions'
 
 export default {
   name: 'SettingsDevicesIndex',
-  components: {Modal, DatePicker},
+  components: {DatePicker},
   data () {
     return {
       edit_device: null,
@@ -100,12 +95,12 @@ export default {
             this.edit_device = device
             this.device_cache = JSON.parse(JSON.stringify(device))
             this.edit_device.sensors_settings = []
-            const sp_length = SENSORS_PARAMS.length
+            const sp_length = DEVICE_PARAMS.length
             for (let co = 0; co < sp_length; co++) {
-              if (SENSORS_PARAMS[co].id in device.sensors_params) {
+              if (DEVICE_PARAMS[co].id in device.sensors_params) {
                 device.sensors_settings.push({
-                  ...SENSORS_PARAMS[co],
-                  sensors: device.sensors_params[SENSORS_PARAMS[co].id].sensors
+                  ...DEVICE_PARAMS[co],
+                  sensors: device.sensors_params[DEVICE_PARAMS[co].id].sensors
                 })
               }
             }
@@ -159,11 +154,7 @@ export default {
         } else {
           p = userDataPost(query.url, query.data)
             .catch(error => {
-              this.modal = {
-                show: true,
-                header: 'Изменение устройства',
-                body: error.message
-              }
+              this.$emit('show-modal', 'Изменение устройства', error.message)
             })
             .finally(() => {
               this.pending = false

@@ -5,22 +5,16 @@
             v-model="register_device_hash"/>
         <input class="btn" type="submit" @click="register_device" :disabled="register_device_hash.length < 6 || pending"
             value="Отправить"/>
-        <modal v-if="modal.show" @close="modal.show = false">
-            <h3 slot="header">{{modal.header}}</h3>
-            <div slot="body">{{modal.body}}</div>
-        </modal>
     </div>
 </template>
 
 <script>
 
-import Modal from '../Modal'
 
 import {userDataPost, LOAD_DEVICES_ACTION} from '../../store'
 
 export default {
   name: 'SettingsRegisterDevice',
-  components: {Modal},
   data () {
     return {
       register_device_hash: '',
@@ -40,11 +34,7 @@ export default {
           this.$store.dispatch(LOAD_DEVICES_ACTION)
         })
         .catch(error => {
-          this.modal = {
-            show: true,
-            header: 'Регистрация устройства',
-            body: error.message
-          }
+          this.$emit('show-modal', 'Регистрация устройства', error.message)
         })
         .finally(() => {
           this.pending = false

@@ -8,6 +8,7 @@ import Device from '../components/Device/Index'
 import Settings from '../components/Settings/Index'
 import SettingsProfile from '../components/Settings/Profile'
 import SettingsDevices from '../components/Settings/Devices'
+import SettingsSchedules from '../components/Settings/Schedules'
 import SettingsRegisterDevice from '../components/Settings/Register_device'
 
 const router = new Router({
@@ -43,7 +44,13 @@ const router = new Router({
           path: 'register_device',
           name: 'SettingsRegisterDevice',
           component: SettingsRegisterDevice,
+        },
+        {
+          path: 'schedules',
+          name: 'SettingsSchedules',
+          component: SettingsSchedules,
         }
+
 
       ]
     }

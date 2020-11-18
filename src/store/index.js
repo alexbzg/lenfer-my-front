@@ -13,15 +13,18 @@ const INIT_MUTATION = 'initMttn'
 export const SET_USER_MUTATION = 'setUserMttn'
 export const UPDATE_USER_MUTATION = 'updUserMttn'
 const SET_DEVICES_MUTATION = 'setDevicesMttn'
+const SET_SCHEDULES_MUTATION = 'setSchedulessMttn'
 
 export const LOGIN_ACTION = 'loginActn'
 export const LOAD_DEVICES_ACTION = 'loadDeviceActn'
+export const LOAD_SCHEDULES_ACTION = 'loadSchedulesActn'
 
 const store = new Vuex.Store({
   state: {
     user: null,
     remember: true,
-    devices: []
+    devices: [],
+    schedules: []
   },
   getters: {
     userLogin: state => {
@@ -50,6 +53,9 @@ const store = new Vuex.Store({
         router.addRoutes([{path: '/', redirect: '/device/' + payload[0].id}])
       }
     },
+    [SET_SCHEDULES_MUTATION] (state, payload) {
+      state.schedules = payload
+    },
     [UPDATE_USER_MUTATION] (state, payload) {
       Object.assign(state.user, payload)
       storage.save(STORAGE_KEY_USER, state.user,
@@ -67,6 +73,10 @@ const store = new Vuex.Store({
     [LOAD_DEVICES_ACTION] ({commit}) {
       return userDataPost('users_devices')
         .then(data => { commit(SET_DEVICES_MUTATION, data) })
+    }, 
+    [LOAD_SCHEDULES_ACTION] ({commit}) {
+      return userDataPost('users_device_schedules')
+        .then(data => { commit(SET_SCHEDULES_MUTATION, data) })
     }
   },
   strict: process.env.NODE_ENV !== 'production'
@@ -74,6 +84,7 @@ const store = new Vuex.Store({
 
 store.commit(INIT_MUTATION)
 store.dispatch(LOAD_DEVICES_ACTION)
+store.dispatch(LOAD_SCHEDULES_ACTION)
 
 export default store
 

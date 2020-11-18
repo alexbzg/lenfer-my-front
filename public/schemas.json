@@ -96,6 +96,39 @@
     },
     "required": ["token", "login"]
 },
+"post_device_schedule": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 1
+        },
+        "title": {
+            "type": "string"
+        },
+        "device_type_id": {
+            "type": "integer"
+        },
+        "login": {
+            "type": "string",
+            "minLength": 1
+        },
+        "items": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "day_no": {
+                        "type": "integer"
+                    }
+                },
+                "required": ["day_no"]
+            }
+        }
+    },
+    "required": ["token", "login", "device_type_id"]
+},
+
 "post_sensor_props": {
     "type": "object",
     "properties": {

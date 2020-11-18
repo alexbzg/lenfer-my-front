@@ -19,8 +19,12 @@
                     <div class="modal-footer">
                         <slot name="footer">
                         <!--default footer-->
-                            <button class="modal-default-button" @click="$emit('close')">
+                            <button class="modal-default-button" @click="$emit('close', true)">
                                 OK
+                            </button>
+                            <button class="modal-cancel-button" @click="$emit('close', false)"
+                                v-if="cancel_button">
+                                Отмена
                             </button>
                         </slot>
                     </div>
@@ -33,6 +37,7 @@
 <script>
 
 export default {
+  props: ["cancel_button"],
   name: "Modal"
 }
 
