@@ -4,29 +4,20 @@
             <div class="modal-wrapper">
                 <div class="modal-container">
 
-                    <div class="modal-header">
-                        <slot name="header">
-                        <!--default header-->
-                        </slot>
+                    <div class="modal-header" v-html="title">
                     </div>
 
-                    <div class="modal-body">
-                        <slot name="body">
-                        <!--default body-->
-                        </slot>
+                    <div class="modal-body" v-html="message">
                     </div>
 
                     <div class="modal-footer">
-                        <slot name="footer">
-                        <!--default footer-->
-                            <button class="modal-default-button" @click="$emit('close', true)">
-                                OK
-                            </button>
-                            <button class="modal-cancel-button" @click="$emit('close', false)"
-                                v-if="cancel_button">
-                                Отмена
-                            </button>
-                        </slot>
+                        <button class="modal-default-button" @click="$emit('confirm')">
+                            OK
+                        </button>
+                        <button class="modal-cancel-button" @click="$emit('cansel')"
+                            v-if="cancel_button">
+                            Отмена
+                        </button>
                     </div>
                 </div>
             </div>
@@ -37,7 +28,7 @@
 <script>
 
 export default {
-  props: ["cancel_button"],
+  props: ["title", "message", "cancel_button"],
   name: "Modal"
 }
 
@@ -81,7 +72,7 @@ export default {
   margin: 20px 0;
 }
 
-.modal-default-button {
+.modal-default-button .modal-cancel-button {
   float: right;
 }
 

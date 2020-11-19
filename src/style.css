@@ -304,3 +304,35 @@ table.controller_table td.top{
 	margin: 50px auto;
 }
 
+
+
+
+
+
+
+
+#settings_schedules{
+	margin-top: 30px;
+}
+
+#new_schedule_button{
+	margin-bottom: 20px;
+}
+#settings_schedules .schedule{
+	text-align: left;
+	cursor: pointer;
+	text-decoration: underline;
+	color: #009;
+	margin: 10px 0;
+}
+#settings_schedules .schedule span{
+	color: #777;
+	font-size: 12px;
+}
+
+td#schedules_index{
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+
+}

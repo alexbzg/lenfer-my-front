@@ -10,7 +10,7 @@
 
 <script>
 
-
+import messageBox from '../../message-box'
 import {userDataPost, LOAD_DEVICES_ACTION} from '../../store'
 
 export default {
@@ -34,7 +34,7 @@ export default {
           this.$store.dispatch(LOAD_DEVICES_ACTION)
         })
         .catch(error => {
-          this.$emit('show-modal', 'Регистрация устройства', error.message)
+          messageBox('Регистрация устройства', error.message)
         })
         .finally(() => {
           this.pending = false
