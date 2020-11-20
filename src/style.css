@@ -330,9 +330,22 @@ table.controller_table td.top{
 	font-size: 12px;
 }
 
+table#settings_schedules_table{
+	width: 90%;
+	margin: 0 auto;
+}
+
 td#schedules_index{
+	width: 30%;
 	padding: 20px;
 	border: 1px solid #ddd;
 	border-radius: 10px;
 
+}
+
+td#active_schedule{
+	width: 70%;
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
 }

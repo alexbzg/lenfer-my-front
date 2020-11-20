@@ -14,7 +14,7 @@ export class Schedule {
     const cur = this.days
     if (cur < val) {
       for (let co = cur; co < val; co++) {
-        this.items.push(this.create_item(co + 1))
+        this.items.push(this.create_day(co + 1))
       }
     } else if (cur >  val) {
       this.items.splice(val)
@@ -22,13 +22,13 @@ export class Schedule {
   }
 
   create_day (no) {
-    const item = {day_no: no}
+    const item = {day_no: no, params:{}}
     for (const param of this.params) {
       let param_item = {}
       if (param.type === 'float_delta') {
         param_item = {value: null, delta: null}
       }
-      item[param.id] = param_item
+      item.params[param.id] = param_item
     }
     return item
   }
@@ -41,10 +41,11 @@ export class Schedule {
     if (this._device_type_id !== val) {
       this._device_type_id = val
       this.params = []
-      if (val in this.devices_types) {
+      const device_type = this.devices_types.find(item => item.id === val)
+      if (device_type) {
         for (const param of DEVICE_PARAMS) {
-          if (param.id in this.devices_types[val].schedule_params) {
-            this.params.push({...param, ...this.devices_types[val].schedule_params[param.id]})
+          if (param.id in device_type.schedule_params) {
+            this.params.push({...param, ...device_type.schedule_params[param.id]})
           }
         }
       }

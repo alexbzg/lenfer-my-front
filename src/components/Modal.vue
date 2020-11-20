@@ -14,7 +14,7 @@
                         <button class="modal-default-button" @click="$emit('confirm')">
                             OK
                         </button>
-                        <button class="modal-cancel-button" @click="$emit('cansel')"
+                        <button class="modal-cancel-button" @click="$emit('cancel')"
                             v-if="cancel_button">
                             Отмена
                         </button>
