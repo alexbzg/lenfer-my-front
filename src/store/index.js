@@ -88,12 +88,12 @@ store.dispatch(LOAD_SCHEDULES_ACTION)
 
 export default store
 
-export function userDataPost(url, data) {
+export function userDataPost(url, data, method='POST') {
   const userData = {
     login: store.getters.userLogin,
     token: store.getters.userToken,
     ...data
   }
-  return dataPost(url, userData)
+  return dataPost(url, userData, method)
 }
 

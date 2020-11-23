@@ -31,8 +31,11 @@ function onError (error) {
   throw e
 }
 
-export function post (URL, data) {
-  return axios.post(API_URL + URL, data)
+export function post (URL, data, method='POST') {
+  return axios({
+    url: API_URL + URL, 
+    data: data,
+    method: method})
     .catch(onError)
 }
 
@@ -44,8 +47,8 @@ export function get (URL) {
     .catch(onError)
 }
 
-export function dataPost(url, data) {
-  return post (url, data)
+export function dataPost(url, data, method='POST') {
+  return post (url, data, method)
     .then(response => {
       return response.data
     })

@@ -1,11 +1,4 @@
 <template>
-    <div class="add_device">
-        введите код устройства
-        <input type="text" :class="{error: register_device_hash.length < 6}"
-            v-model="register_device_hash"/>
-        <input class="btn" type="submit" @click="register_device" :disabled="register_device_hash.length < 6 || pending"
-            value="Отправить"/>
-    </div>
 </template>
 
 <script>
@@ -27,19 +20,6 @@ export default {
     }
   },
   methods: {
-    async register_device () {
-      userDataPost('device/register', {device_hash: this.register_device_hash})
-        .then(() => {
-          this.register_device_hash = ''
-          this.$store.dispatch(LOAD_DEVICES_ACTION)
-        })
-        .catch(error => {
-          messageBox('Регистрация устройства', error.message)
-        })
-        .finally(() => {
-          this.pending = false
-        })
-    }
   }
 }
 </script>

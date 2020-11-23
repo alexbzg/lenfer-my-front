@@ -3,10 +3,14 @@ import {DEVICE_PARAMS} from '../definitions'
 
 export class Schedule {
   constructor (params, devices_types) {
+    params = params || {}
     this.devices_types = devices_types
     this.id = params.id || null
-    this.items = params.items || []
-    this._device_type_id = params.device_type_id || null
+    this.items = []
+    this.device_type_id = params.device_type_id || null
+    if (params.items) {
+      this.items = params.items
+    }
     this.title = params.title || null
   }
 
@@ -24,7 +28,7 @@ export class Schedule {
   create_day (no) {
     const item = {day_no: no, params:{}}
     for (const param of this.params) {
-      let param_item = {}
+      let param_item = {value: null}
       if (param.type === 'float_delta') {
         param_item = {value: null, delta: null}
       }

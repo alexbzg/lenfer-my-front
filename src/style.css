@@ -34,11 +34,15 @@ a{
 	border: 1px solid #ccc;
 	padding: 5px 20px;
 	text-decoration: none;
+	margin-right: 20px;
+	cursor: pointer;
+	font-size: 16px;
 }
-input{
+input, select, option{
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	padding: 10px 20px;
+	margin-bottom: 10px;
 }
 
 
@@ -233,46 +237,48 @@ table.controller_table td.top{
 }
 
 .settings_devices{
-	margin: 50px auto;
+	margin: 30px auto;
 
 }
-.settings_devices .device{
-	margin-bottom: 30px;
-}
 
-.device_table{
+
+
+
+table#settings_devices_table{
+	width: 90%;
 	margin: 0 auto;
-	padding: 0;
-	border-collapse: collapse;
 }
-.device_table td{
-	padding: 0 10px;
-	line-height: 16px;
-	vertical-align: middle;
+table#settings_devices_table td{
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	text-align: left;
+	vertical-align: top;
+	line-height: 1em;
 }
-.device_table td.title{
+
+table#settings_devices_table td.title{
+	width: 200px;
 	font-weight: bold;
-}
-.device_table td.type{
-	vertical-align: top;
-	color: #999;
-	font-size: 12px;
-}
-.device_table td.edit{
-	vertical-align: top;
-	color: #009;
-	text-decoration: underline;
 	cursor: pointer;
 }
+table#settings_devices_table td.title .device_title{
+	margin-top: 10px;
+	color: #009;
+	text-decoration: underline;
+}
+table#settings_devices_table td.title .device_type{
+	color: #999;
+	text-decoration: none;
+	margin-bottom: 20px;
+	font-size: 12px;
+	font-weight: normal;
+}
+
 
 
 .settings{
-	width: 80%;
-	margin: 20px auto 50px auto;
-	border-radius: 10px;
-	border: 1px solid #ddd;
-	padding: 20px;
-	line-height: 1em;
+	text-align: center;
 }
 
 .settings .title, .settings .defauft{
@@ -295,6 +301,7 @@ table.controller_table td.top{
 
 .settings h4{
 	text-decoration: underline;
+	margin-top: 30px;
 	margin-bottom: 10px;
 }
 
@@ -311,6 +318,13 @@ table.controller_table td.top{
 
 
 
+
+
+/* ==================================    Т А Б Л И Ц Ы  ========================================*/
+
+
+
+
 #settings_schedules{
 	margin-top: 30px;
 }
@@ -321,6 +335,7 @@ table.controller_table td.top{
 #settings_schedules .schedule{
 	text-align: left;
 	cursor: pointer;
+	font-weight: bold;
 	text-decoration: underline;
 	color: #009;
 	margin: 10px 0;
@@ -328,6 +343,8 @@ table.controller_table td.top{
 #settings_schedules .schedule span{
 	color: #777;
 	font-size: 12px;
+	font-weight: normal;
+	text-decoration: none;
 }
 
 table#settings_schedules_table{
@@ -348,4 +365,50 @@ td#active_schedule{
 	padding: 20px;
 	border: 1px solid #ddd;
 	border-radius: 10px;
+	text-align: left;
 }
+
+td#active_schedule span{
+	display: inline-block;
+	width: 180px;
+	text-align: right;
+	padding-right: 10px;
+	font-size: 14px;
+	color: #777;
+}
+
+td#active_schedule #new_schedule_title{
+	width: 300px;
+	font-weight: bold;
+}
+
+td#active_schedule #new_schedule_days{
+	width: 20px;
+	font-weight: bold;
+	text-align: center;
+}
+
+
+table#schedule_days{
+	margin: 30px auto;
+	border-collapse: collapse;
+}
+table#schedule_days th{
+	font-size: 14px;
+	color: #777;
+}
+table#schedule_days td, table#schedule_days th{
+	padding: 5px 20px;
+	border-bottom: 1px solid #ccc;
+	text-align: center;
+}
+
+table#schedule_days input{
+	margin: 0;
+	border: 1px solid #eee;
+	font-size: 18px;
+	font-weight: bold;
+	width: 30px;
+	text-align: center;
+}
+

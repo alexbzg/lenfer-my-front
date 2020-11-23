@@ -5,6 +5,10 @@ export function display_date (date_obj) {
   return `${date_obj.getDate()} ${RU_MONTH[date_obj.getMonth()]}`
 }
 
+export function display_datetime (date_obj) {
+  return `${date_obj.getDate()}.${date_obj.getMonth()}.${date_obj.getYear()} ${date_obj.getHour()}:${date_obj.getMinute()}`
+}
+
 export function isEmpty (obj) {
   return Object.keys(obj).length === 0
 }

@@ -8,7 +8,9 @@ class Device {
     this.id = id
     this.sensors = params.sensors
     this.type = params.device_type
+    this.type_id = params.device_type_id
     this.title = params.title
+    this.schedule_id = params.schedule_id
     this.props_titles = params.props_titles
 
     this.props_values = []

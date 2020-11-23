@@ -1,55 +1,67 @@
 <template>
     <div class="settings_devices">
-        <div class="device" v-for="device in devices" :key="device.id">
-          <table class="device_table">
+          <table id="settings_devices_table">
             <tr>
               <td class="title">
-                {{device.title}}
+                <input type="submit" value="Добавить устройство" 
+                    @click="register_device = !register_device"
+                    id="new_schedule_button" class="btn" /><br/>
+                <div v-for="device in devices" :key="device.id"
+                    @click="open_device(device)">
+                    <div class="device_title">{{device.title}}</div>
+                    <div class="device_type">{{device.type_title}} / {{device.hash}}</div>
+                </div>
               </td>
-              <td rowspan="2" class="edit" @click="open_device(device)">
-                Настройки
-              </td>
-            </tr>
-            <tr>
-              <td class="type">
-                {{device.type_title}} / Код устройства
+              <td class="settings_widow">
+                <div class="add_device" v-if="register_device">
+                    введите код устройства
+                    <input type="text" :class="{error: register_device_hash.length < 6}"
+                        v-model="register_device_hash"/>
+                    <input class="btn" type="submit" @click="register_device_post" 
+                        :disabled="register_device_hash.length < 6 || pending"
+                        value="Отправить"/>
+                </div>
+                <div class="settings" v-if="edit_device">
+                    <div class="title">
+                        <span class="title">Название устройства на сайте</span><br/>
+                        <input type="text" v-model="edit_device.title"/>
+                    </div>
+                    <div class="prop" v-for="(prop, idx) in edit_device.props_titles" :key="idx">
+                        <span class="title">{{prop.title}}</span><br/>
+                        <template v-if="prop.type === 'date'">
+                            <date-picker v-model="edit_device.props_values[idx]" locale="ru" 
+                                :masks="{input: 'DD MMMM'}"></date-picker><br/>
+                        </template>
+                    </div>
+                    Таблица работы
+                    <select v-model="edit_device.schedule_id">
+                        <option v-for="schedule in schedules" :key="schedule.id" 
+                            :value="schedule.id">{{schedule.title}}</option>
+                    </select>
+                    <h4>Названия датчиков устройства на графиках</h4>
+                    <div class="sensors_param" v-for="param_entry in edit_device.sensors_settings"
+                        :key="param_entry.id">
+                        <span class="title">{{param_entry.title}}</span>
+                        <!--div class="master" v-if="param_entry.sensors.length > 1">
+                            <select v-model="param_entry.master">
+                                <option v-for="sensor in param_entry.sensors"
+                                    :value="sensor" :key="sensor.id">
+                                    {{sensor.title ? sensor.title : sensor.default_title}}
+                                </option>
+                            </select>
+                        </div-->
+                        <div v-for="sensor in param_entry.sensors" class="sensor" :key="sensor.id">
+                            <span class="default">{{sensor.default_title}}</span><br/>
+                            <input type="text" v-model="sensor.title"/>
+                        </div>
+                    </div>
+                    <input class="btn" type="submit" value="Сохранить"
+                        :disabled="pending" @click="post_device"/>
+                    <input class="btn" type="submit" value="Отмена" @click="open_device(null)"/>
+                </div>
               </td>
             </tr>
           </table>
-
-            <div class="settings" v-if="edit_device && edit_device.id === device.id">
-                <div class="title">
-                    <span class="title">Название устройства на сайте</span><br/>
-                    <input type="text" v-model="edit_device.title"/>
-                </div>
-                <div class="prop" v-for="(prop, idx) in edit_device.props_titles" :key="idx">
-                    <span class="title">{{prop.title}}</span><br/>
-                    <date-picker v-model="edit_device.props_values[idx]" v-if="prop.type === 'date'"
-                        locale="ru" :masks="{input: 'DD MMMM'}"></date-picker>
-                </div>
-                <h4>Названия датчиков устройства на графиках</h4>
-                <div class="sensors_param" v-for="param_entry in edit_device.sensors_settings" 
-                    :key="param_entry.id">
-                    <span class="title">{{param_entry.title}}</span>
-                    <!--div class="master" v-if="param_entry.sensors.length > 1">
-                         <select v-model="param_entry.master">
-                             <option v-for="sensor in param_entry.sensors"
-                                :value="sensor" :key="sensor.id">
-                                {{sensor.title ? sensor.title : sensor.default_title}}
-                             </option>
-                         </select> 
-                    </div-->
-                    <div v-for="sensor in param_entry.sensors" class="sensor" :key="sensor.id">
-                        <span class="default">{{sensor.default_title}}</span><br/>
-                        <input type="text" v-model="sensor.title"/>
-                    </div>
-                </div>
-                <input class="btn" type="submit" value="Сохранить"
-                    :disabled="pending" @click="post_device"/>
-                <input class="btn" type="submit" value="Отмена" @click="open_device(null)"/>
-            </div>
-        </div>
-
     </div>
 </template>
 
@@ -58,7 +70,7 @@
 import {mapState} from 'vuex'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 
-
+import messageBox from '../../message-box'
 import {userDataPost, LOAD_DEVICES_ACTION} from '../../store'
 import load_device from '../../device'
 import {DEVICE_PARAMS} from '../../definitions'
@@ -68,17 +80,22 @@ export default {
   components: {DatePicker},
   data () {
     return {
+      register_device: false,
+      register_device_hash: '',
       edit_device: null,
       pending: false,
-      modal: {
-        show: false,
-        header: '',
-        body: ''
-      }
     }
   },
   computed: {
-    ...mapState(['devices'])
+    ...mapState(['devices']),
+    schedules () {
+      if (this.edit_device) {
+        return this.$store.state.schedules.filter(
+          schedule => schedule.device_type_id === this.edit_device.type_id)
+      } else {
+        return []
+      }
+    }
   },
   methods: {
     async open_device (device) {
@@ -88,7 +105,7 @@ export default {
 
       if ((!device && this.edit_device) || (this.edit_device && this.edit_device.id === device.id)) {
         this.edit_device = null
-      } else {
+      } else if (device) {
         this.pending = true
         load_device(device.id)
           .then(device => {
@@ -111,12 +128,13 @@ export default {
       }
     },
     async post_device () {
-      let device_update = this.edit_device.title !== this.device_cache.title
+      let device_update = this.edit_device.title !== this.device_cache.title ||
+        this.edit_device.schedule_id !== this.device_cache.schedule_id
       const queries = []
       if (!device_update) {
-        const device_props_length = this.edit_device.props_titles.count
+        const device_props_length = this.edit_device.props_titles.length
         for (let co = 0; co < device_props_length; co++) {
-          if (this.edit_device.props_values[co] !== this.device_cash.props_values[co]) {
+          if (this.edit_device.props_values[co] !== this.device_cache.props_values[co]) {
             device_update = true
             break
           }
@@ -127,6 +145,7 @@ export default {
           url: 'device/' + this.edit_device.id,
           data: {
             title: this.edit_device.title,
+            schedule_id: this.edit_device.schedule_id,
             props: this.edit_device.props_values
           }
         })
@@ -146,26 +165,45 @@ export default {
           })
         }
       }
-      this.pending = false
-      let p = null
-      for (const query of queries) {
-        if (p) {
-          p.then(() => userDataPost(query.url, query.data))
-        } else {
-          p = userDataPost(query.url, query.data)
-            .catch(error => {
-              this.$emit('show-modal', 'Изменение устройства', error.message)
-            })
-            .finally(() => {
-              this.pending = false
-            })
+      if (queries.length) {
+        this.pending = false
+        let p = null
+
+        for (const query of queries) {
+            if (p) {
+            p.then(() => userDataPost(query.url, query.data))
+            } else {
+            p = userDataPost(query.url, query.data)
+                .catch(error => {
+                messageBox('Изменение устройства', error.message)
+                })
+                .finally(() => {
+                this.pending = false
+                })
+            }
         }
-      }
-      p.then(() => {
+        p.then(() => {
+            this.open_device(null)
+            this.$store.dispatch(LOAD_DEVICES_ACTION)
+        })
+      } else {
         this.open_device(null)
-        this.$store.dispatch(LOAD_DEVICES_ACTION)
-      })
+      }
+    },
+    async register_device_post () {
+      userDataPost('device/register', {device_hash: this.register_device_hash})
+        .then(() => {
+          this.register_device_hash = ''
+          this.$store.dispatch(LOAD_DEVICES_ACTION)
+        })
+        .catch(error => {
+          messageBox('Регистрация устройства', error.message)
+        })
+        .finally(() => {
+          this.pending = false
+        })
     }
+
   }
 }
 </script>

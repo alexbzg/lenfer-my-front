@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 import Modal from "../components/Modal.vue"
 
-export default function (title, message, cancel_button) {
+export default async function (title, message, cancel_button) {
   return new Promise((resolve, reject) => {
     const dialog = new Vue({
       methods: {
