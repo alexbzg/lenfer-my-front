@@ -128,6 +128,7 @@ input#login_btn{
 
 
 .device_index {
+	position: relative;
     width: 90%;
     max-width: 1600px;
     margin: 20px auto 50px auto;
@@ -148,6 +149,8 @@ input#login_btn{
 	color: #333;
 	text-align: left;
 	line-height: 24px;
+	width: 200px;
+	position: fixed;
 }
 .info_title{
 	font-weight: bold;
@@ -166,8 +169,7 @@ input#login_btn{
 
 table.controller_table{
 	border-collapse: collapse;
-	margin: 0px auto 50px auto;
-	cursor: pointer;
+	margin: 20px auto 50px auto;
 }
 table.controller_table td{
 	padding: 5px 20px;
@@ -175,9 +177,11 @@ table.controller_table td{
 	color: #555;
 	font-weight: bold;
 }
-table.controller_table td.top{
+table.controller_table th{
+	padding: 5px 20px;
 	font-weight: normal;
 	font-size: 14px;
+	line-height: 14px;
 	border-bottom: 1px solid #eee;
 }
 

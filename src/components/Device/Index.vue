@@ -1,30 +1,36 @@
 <template>
-  <div class="device_index">
+  <div class="device_index" v-if="device">
 
         <div class="controller_info">
-            <span class="info_title">{{device.title ? device.title : device.type}}</span><br/>
-            <span class="info_data" v-for="(prop, idx) in device.props_titles" :key="idx">
-                {{prop.title}} <span>{{device.props_display[idx]}}</span>
-            </span>
+            <span class="info_title">{{device.title ? device.title : device.type}}</span>
         </div>
         
 
         <table class="controller_table">
-            <tr>
-                <th></th>
-                <th v-for="param in sensors_charts" :key="param.id">
+            <tr id="header">
+                <th id="schedule">Таблица работы</th>
+                <th id="schedule_start">Дата вывода</th>
+                <th id="schedule_day">День содержания</th>
+                <th v-for="param in sensors_charts" :key="param.id" class="parameter">
                     {{param.title}}
                     <template v-if="param.unit">
                         ({{param.unit}})
                     </template>
                 </th>
             </tr>
-            <!--tr v-if="schedule">
-                <td>
-                    Таблица работы {{schedule.title}} <br/>
-                    День содержания {{schedule.today.no}}
+            <tr id="schedule_data">
+                <td id="schedule">
+                    <template v-if="schedule">{{schedule.title}}</template>
                 </td>
-                <td v-for="param in sensors_charts" :key="param.id">
+                <td id="schedule_start">
+                    <template v-if="device.props_display">
+                        {{device.props_display[0]}}
+                    </template>
+                </td>
+                <td id="schedule_start">
+                    <template v-if="schedule">{{schedule.today.no}}</template>
+                </td>
+                <td v-for="param in sensors_charts" :key="param.id" class="parameter">
                     <template v-if="schedule.today.params">
                         {{schedule.today.params[param.id].value}}
                     </template>
@@ -32,14 +38,16 @@
                         Н/Д
                     </template>
                 </td>
-            </tr-->
-            <!--tr>
-                <td></td>
+            </tr>
+            <tr id="current_data">
+                <td id="schedule"></td>
+                <td id="schedule_start"></td>
+                <td id="schedule_start"></td>
                 <td v-for="param in sensors_charts" :key="param.id">
                     {{param.value}}
                     <span class="time">{{param.tstamp}}</span>
                 </td>
-            </tr-->
+            </tr>
         </table>
         
         <div v-for="sensors_param in sensors_charts" :key="sensors_param.id" class="sensor_data_chart">
@@ -79,35 +87,35 @@ export default {
         .then(device => {
           this.device = device
           this.sensors_charts = []
-          const sp_length = DEVICE_PARAMS.length
           if (device.schedule_id) {
             const schedule = this.$store.state.schedules.find(
               schedule => schedule.id === device.schedule_id)
             if (schedule) {
               this.schedule = {title: schedule.title}
-              const start = new Date(device.props_values[0])
+              const start = device.props_values[0]
               const now = new Date()
               if (now > start) {
                 const day = Math.floor((now - start) / (1000 * 60 * 60 * 24))
                 if (day < schedule.days) {
-                  this.schedule.today = schedule.days[day]
+                  this.schedule.today = schedule.items[day]
                 }
               }
               if (!this.schedule.today) {
                 this.schedule.today = {
                   no: 'Н/Д',
-                  params: {}
+                  params: null
                 }
               }
             }
           }
+          const sp_length = DEVICE_PARAMS.length
           for (let co = 0; co < sp_length; co++) {
             if (DEVICE_PARAMS[co].id in this.device.sensors_params) {
               this.sensors_charts.push({
                 ...DEVICE_PARAMS[co],
                 sensors: this.device.sensors_params[DEVICE_PARAMS[co].id].sensors,
                 value: this.device.sensors_params[DEVICE_PARAMS[co].id].master.value,
-                tstamp: this.device.sensors_params[DEVICE_PARAMS[co].id].master.tstamp 
+                tstamp: display_datetime(new Date(this.device.sensors_params[DEVICE_PARAMS[co].id].master.tstamp))
               })
             }
           }

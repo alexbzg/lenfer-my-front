@@ -4,8 +4,9 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import storage from '../storage'
-import {dataPost} from '../api'
+import {get, dataPost} from '../api'
 import router from '../router'
+import {Schedule} from '../schedule'
 
 const STORAGE_KEY_USER = 'user'
 
@@ -13,18 +14,21 @@ const INIT_MUTATION = 'initMttn'
 export const SET_USER_MUTATION = 'setUserMttn'
 export const UPDATE_USER_MUTATION = 'updUserMttn'
 const SET_DEVICES_MUTATION = 'setDevicesMttn'
+const SET_DEVICES_TYPES_MUTATION = 'setDevicesTypesMttn'
 const SET_SCHEDULES_MUTATION = 'setSchedulessMttn'
 
 export const LOGIN_ACTION = 'loginActn'
 export const LOAD_DEVICES_ACTION = 'loadDeviceActn'
 export const LOAD_SCHEDULES_ACTION = 'loadSchedulesActn'
+const LOAD_DEVICES_TYPES_ACTION = 'loadDevicesTypesActn'
 
 const store = new Vuex.Store({
   state: {
     user: null,
     remember: true,
     devices: [],
-    schedules: []
+    schedules: [],
+    devices_types: []
   },
   getters: {
     userLogin: state => {
@@ -53,8 +57,11 @@ const store = new Vuex.Store({
         router.addRoutes([{path: '/', redirect: '/device/' + payload[0].id}])
       }
     },
+    [SET_DEVICES_TYPES_MUTATION] (state, payload) {
+      state.devices_types = payload
+    },
     [SET_SCHEDULES_MUTATION] (state, payload) {
-      state.schedules = payload
+      state.schedules = payload.map(item => new Schedule(item, state.devices_types))
     },
     [UPDATE_USER_MUTATION] (state, payload) {
       Object.assign(state.user, payload)
@@ -74,8 +81,12 @@ const store = new Vuex.Store({
       return userDataPost('users_devices')
         .then(data => { commit(SET_DEVICES_MUTATION, data) })
     }, 
+    [LOAD_DEVICES_TYPES_ACTION] ({commit}) {
+      return get('/api/devices_types')
+        .then(response => { commit(SET_DEVICES_TYPES_MUTATION, response.data) })
+    },
     [LOAD_SCHEDULES_ACTION] ({commit}) {
-      return userDataPost('users_device_schedules')
+      userDataPost('users_device_schedules')
         .then(data => { commit(SET_SCHEDULES_MUTATION, data) })
     }
   },
@@ -84,7 +95,8 @@ const store = new Vuex.Store({
 
 store.commit(INIT_MUTATION)
 store.dispatch(LOAD_DEVICES_ACTION)
-store.dispatch(LOAD_SCHEDULES_ACTION)
+store.dispatch(LOAD_DEVICES_TYPES_ACTION)
+  .then(() => { store.dispatch(LOAD_SCHEDULES_ACTION) })
 
 export default store
 
