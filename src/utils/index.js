@@ -6,7 +6,7 @@ export function display_date (date_obj) {
 }
 
 export function display_datetime (date_obj) {
-  return `${date_obj.getDate()}.${date_obj.getMonth()} ${date_obj.getHours()}:${date_obj.getMinutes()}`
+  return `${date_obj.getDate()} ${RU_MONTH[date_obj.getMonth()]} ${date_obj.getHours()}:${date_obj.getMinutes()}`
 }
 
 export function isEmpty (obj) {

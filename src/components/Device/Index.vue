@@ -28,7 +28,7 @@
                     </template>
                 </td>
                 <td id="schedule_start">
-                    <template v-if="schedule">{{schedule.today.no}}</template>
+                    <template v-if="schedule">{{schedule.today.day_no}}</template>
                 </td>
                 <td v-for="param in sensors_charts" :key="param.id" class="parameter">
                     <template v-if="schedule.today.params">
@@ -101,10 +101,7 @@ export default {
                 }
               }
               if (!this.schedule.today) {
-                this.schedule.today = {
-                  no: 'Н/Д',
-                  params: null
-                }
+                this.schedule.today = {day_no: 'Н/Д'}
               }
             }
           }

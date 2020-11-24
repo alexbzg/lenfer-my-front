@@ -169,7 +169,7 @@ input#login_btn{
 
 table.controller_table{
 	border-collapse: collapse;
-	margin: 20px auto 50px auto;
+	margin: 20px auto 30px auto;
 }
 table.controller_table td{
 	padding: 5px 20px;
@@ -182,7 +182,18 @@ table.controller_table th{
 	font-weight: normal;
 	font-size: 14px;
 	line-height: 14px;
+	color: #777;
 	border-bottom: 1px solid #eee;
+}
+table.controller_table td span{
+	display: block;
+	font-size: 10px;
+	color: #777;
+	font-weight: normal;
+}
+table.controller_table td.current{
+	padding-top: 10px;
+	color: #000;
 }
 
 
