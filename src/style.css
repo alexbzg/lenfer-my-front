@@ -18,14 +18,14 @@ html, body{
 	height: 100%;
 	padding: 0;
 	margin: 0;
-	font-size: 18px;
+	font-size: 16px;
 	line-height: 1.8em;
     vertical-align: top;
     background-color: #f0f0f0;
     text-align: center;
 }
 a{
-	color: #009;
+	color: #007;
 }
 .btn{
 	background-color: #3194fe;
@@ -69,6 +69,7 @@ table#top_menu td#logo{
 table#top_menu td#device_list{
 	text-align: center;
 	padding-top: 15px;
+	font-size: 18px;
 }
 table#top_menu td#device_list a{
 	margin-right: 30px;
@@ -172,28 +173,37 @@ table.controller_table{
 	margin: 20px auto 30px auto;
 }
 table.controller_table td{
-	padding: 5px 20px;
+	padding: 10px 25px;
 	line-height: 14px;
 	color: #555;
 	font-weight: bold;
 }
 table.controller_table th{
-	padding: 5px 20px;
+	padding: 5px 25px;
 	font-weight: normal;
 	font-size: 14px;
 	line-height: 14px;
-	color: #777;
+	color: #999;
 	border-bottom: 1px solid #eee;
+}
+table.controller_table td#schedule{
+	text-decoration: underline;
+	cursor: pointer;
+	font-weight: normal;
+}
+table.controller_table td#schedule_start{
+	font-weight: normal;
+}
+
+table.controller_table tr#current_data td{
+	padding-top: 10px;
+	border-top: 1px solid #eee;
 }
 table.controller_table td span{
 	display: block;
 	font-size: 10px;
-	color: #777;
+	color: #999;
 	font-weight: normal;
-}
-table.controller_table td.current{
-	padding-top: 10px;
-	color: #000;
 }
 
 

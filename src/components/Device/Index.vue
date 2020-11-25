@@ -4,13 +4,13 @@
         <div class="controller_info">
             <span class="info_title">{{device.title ? device.title : device.type}}</span>
         </div>
-        
+
 
         <table class="controller_table">
             <tr id="header">
                 <th id="schedule">Таблица работы</th>
                 <th id="schedule_start">Дата вывода</th>
-                <th id="schedule_day">День содержания</th>
+                <th id="schedule_day">День</th>
                 <th v-for="param in sensors_charts" :key="param.id" class="parameter">
                     {{param.title}}
                     <template v-if="param.unit">
@@ -20,21 +20,23 @@
             </tr>
             <tr id="schedule_data">
                 <td id="schedule">
-                    <template v-if="schedule">{{schedule.title}}</template>
+                    <router-link :to="'/settings/schedules/' + device.schedule_id" v-if="schedule">
+                        {{schedule.title}}
+                    </router-link>
                 </td>
                 <td id="schedule_start">
                     <template v-if="device.props_display">
                         {{device.props_display[0]}}
                     </template>
                 </td>
-                <td id="schedule_start">
+                <td id="schedule_day">
                     <template v-if="schedule">{{schedule.today.day_no}}</template>
                 </td>
                 <td v-for="param in sensors_charts" :key="param.id" class="parameter">
-                    <template v-if="schedule.today.params">
+                    <template v-if="schedule && schedule.today.params">
                         {{schedule.today.params[param.id].value}}
                     </template>
-                    <template v-if="!schedule.today.params">
+                    <template v-if="!schedule || !schedule.today.params">
                         Н/Д
                     </template>
                 </td>
@@ -49,7 +51,7 @@
                 </td>
             </tr>
         </table>
-        
+
         <div v-for="sensors_param in sensors_charts" :key="sensors_param.id" class="sensor_data_chart">
             <h4>{{sensors_param.title}}</h4>
             <sensor-chart :sensors="sensors_param.sensors">
@@ -72,7 +74,6 @@ export default {
   data () {
     return {
       device: {},
-      schedule: null,
       sensors_charts: []
     }
   },
@@ -87,24 +88,6 @@ export default {
         .then(device => {
           this.device = device
           this.sensors_charts = []
-          if (device.schedule_id) {
-            const schedule = this.$store.state.schedules.find(
-              schedule => schedule.id === device.schedule_id)
-            if (schedule) {
-              this.schedule = {title: schedule.title}
-              const start = device.props_values[0]
-              const now = new Date()
-              if (now > start) {
-                const day = Math.floor((now - start) / (1000 * 60 * 60 * 24))
-                if (day < schedule.days) {
-                  this.schedule.today = schedule.items[day]
-                }
-              }
-              if (!this.schedule.today) {
-                this.schedule.today = {day_no: 'Н/Д'}
-              }
-            }
-          }
           const sp_length = DEVICE_PARAMS.length
           for (let co = 0; co < sp_length; co++) {
             if (DEVICE_PARAMS[co].id in this.device.sensors_params) {
@@ -119,6 +102,30 @@ export default {
         })
     },
     display_datetime: display_datetime
+  },
+  computed: {
+    schedule () {
+      let r = null
+      if (this.device && this.device.schedule_id) {
+        const schedule = this.$store.state.schedules.find(
+          schedule => schedule.id === this.device.schedule_id)
+        if (schedule) {
+          r = {title: schedule.title}
+          const start = this.device.props_values[0]
+          const now = new Date()
+          if (now > start) {
+            const day = Math.floor((now - start) / (1000 * 60 * 60 * 24))
+            if (day < schedule.days) {
+              r.today = schedule.items[day]
+            }
+          }
+          if (!r.today) {
+           r.today = {day_no: 'Н/Д'}
+          }
+        }
+      }
+      return r
+    }
   },
   watch: {
     device_id () {
