@@ -8,46 +8,34 @@
 
         <table class="controller_table">
             <tr id="header">
-                <th id="schedule">Таблица работы</th>
-                <th id="schedule_start">Дата вывода</th>
-                <th id="schedule_day">День</th>
+                <th class="schedule_day">День</th>
                 <th v-for="param in sensors_charts" :key="param.id" class="parameter">
                     {{param.title}}
-                    <template v-if="param.unit">
-                        ({{param.unit}})
-                    </template>
                 </th>
+                <th id="schedule">Таблица работы</th>
             </tr>
-            <tr id="schedule_data">
+            <tr>
+                <td class="schedule_day">
+                    <template v-if="schedule">{{schedule.today.day_no}}</template>
+                </td>
+                <td v-for="param in sensors_charts" :key="param.id" class="parameter">
+                    <span class="current_data">
+                        {{param.value}}<template v-if="param.unit">{{param.unit}}</template>
+                    </span>
+                    <span class="schedule_data">
+                      (<template 
+                          v-if="schedule && 
+                          schedule.today.params">{{schedule.today.params[param.id].value}}<template 
+                              v-if="param.unit">{{param.unit}}</template>
+                      </template>
+                      <template v-if="!schedule || !schedule.today.params"> - </template>)
+                    </span>
+                    <br/><span class="current_time">{{param.tstamp}}</span>
+                </td>
                 <td id="schedule">
                     <router-link :to="'/settings/schedules/' + device.schedule_id" v-if="schedule">
                         {{schedule.title}}
                     </router-link>
-                </td>
-                <td id="schedule_start">
-                    <template v-if="device.props_display">
-                        {{device.props_display[0]}}
-                    </template>
-                </td>
-                <td id="schedule_day">
-                    <template v-if="schedule">{{schedule.today.day_no}}</template>
-                </td>
-                <td v-for="param in sensors_charts" :key="param.id" class="parameter">
-                    <template v-if="schedule && schedule.today.params">
-                        {{schedule.today.params[param.id].value}}
-                    </template>
-                    <template v-if="!schedule || !schedule.today.params">
-                        Н/Д
-                    </template>
-                </td>
-            </tr>
-            <tr id="current_data">
-                <td id="schedule"></td>
-                <td id="schedule_start"></td>
-                <td id="schedule_start"></td>
-                <td v-for="param in sensors_charts" :key="param.id">
-                    {{param.value}}
-                    <span class="time">{{param.tstamp}}</span>
                 </td>
             </tr>
         </table>
