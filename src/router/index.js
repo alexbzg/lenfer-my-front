@@ -44,7 +44,12 @@ const router = new Router({
           name: 'SettingsSchedules',
           component: SettingsSchedules,
           props: true
-        }
+        },
+        {
+          path: 'schedules',
+          name: 'SettingsSchedules',
+          component: SettingsSchedules,
+        }        
       ]
     }
 

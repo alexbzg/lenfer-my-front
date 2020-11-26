@@ -171,9 +171,9 @@ input#login_btn{
 
 table.controller_table{
 	border-collapse: collapse;
-	margin: 20px auto 30px auto;
-	font-size: 18px;
-	line-height: 1em;
+	margin: 20px auto;
+	font-size: 20px;
+	line-height: 18px;
 	color: #777;
 }
 table.controller_table th{
@@ -191,8 +191,8 @@ table.controller_table td.schedule_day, table.controller_table td span.current_d
 	color: #333;
 }
 table.controller_table td span.current_time{
+	font-size: 10px;
 	color: #333;
-	font-size: 12px;
 	font-weight: normal;
 }
 table.controller_table td span.schedule_data{
@@ -201,12 +201,11 @@ table.controller_table td span.schedule_data{
 }
 table.controller_table td#schedule a{
 	color: #777;
+	text-decoration: underline;
 	font-weight: normal;
-	text-decoration: none;
 	font-size: 14px
 }
 table.controller_table td#schedule a:hover{
-	text-decoration: underline;
 	color: #333;
 }
 table.controller_table td#schedule_start{

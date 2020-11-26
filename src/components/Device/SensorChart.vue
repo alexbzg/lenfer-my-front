@@ -24,6 +24,12 @@ const SENSOR_TYPE_SETTINGS = {
          backgroundColor: ['rgba(200, 99, 132, 0.6)', 'rgba(200, 99, 132, 0.1)'],
        },
        borderColor: 'rgba(200, 99, 132, 1)'
+    },
+    {
+       gradients: {
+         backgroundColor: ['rgba(155, 99, 132, 0.6)', 'rgba(155, 99, 132, 0.1)'],
+       },
+       borderColor: 'rgba(155, 99, 132, 1)'
     }]
   },
   humidity: {
@@ -56,7 +62,7 @@ export default {
 		responsive: true,
 		maintainAspectRatio: false,
         tooltips: {
-          mode: 'index',
+          mode: 'x',
           intersect: false,
           position: 'nearest'
         },
