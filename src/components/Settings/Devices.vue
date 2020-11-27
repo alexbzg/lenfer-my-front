@@ -3,8 +3,8 @@
           <table id="settings_devices_table">
             <tr>
               <td class="title">
-                <input type="submit" value="Добавить устройство" 
-                    @click="register_device = !register_device"
+                <input type="submit" value="Добавить устройство"
+                    @click="register_device = !register_device; edit_device = false"
                     id="new_schedule_button" class="btn" /><br/>
                 <div v-for="device in devices" :key="device.id"
                     @click="open_device(device)">
@@ -12,12 +12,12 @@
                     <div class="device_type">{{device.type_title}} / {{device.hash}}</div>
                 </div>
               </td>
-              <td class="settings_widow">
+              <td class="settings_window">
                 <div class="add_device" v-if="register_device">
-                    введите код устройства
+                    Введите код устройства<br/>
                     <input type="text" :class="{error: register_device_hash.length < 6}"
-                        v-model="register_device_hash"/>
-                    <input class="btn" type="submit" @click="register_device_post" 
+                        v-model="register_device_hash"/><br/>
+                    <input class="btn" type="submit" @click="register_device_post"
                         :disabled="register_device_hash.length < 6 || pending"
                         value="Отправить"/>
                 </div>
@@ -29,32 +29,34 @@
                     <div class="prop" v-for="(prop, idx) in edit_device.props_titles" :key="idx">
                         <span class="title">{{prop.title}}</span><br/>
                         <template v-if="prop.type === 'date'">
-                            <date-picker v-model="edit_device.props_values[idx]" locale="ru" 
+                            <date-picker v-model="edit_device.props_values[idx]" locale="ru"
                                 :masks="{input: 'DD MMMM'}"></date-picker><br/>
                         </template>
                     </div>
-                    Таблица работы
+                    <span class="title">Таблица работы</span><br/>
                     <select v-model="edit_device.schedule_id">
-                        <option v-for="schedule in schedules" :key="schedule.id" 
+                        <option v-for="schedule in schedules" :key="schedule.id"
                             :value="schedule.id">{{schedule.title}}</option>
                     </select>
-                    <h4>Названия датчиков устройства на графиках</h4>
-                    <div class="sensors_param" v-for="param_entry in edit_device.sensors_settings"
-                        :key="param_entry.id">
-                        <span class="title">{{param_entry.title}}</span>
-                        <!--div class="master" v-if="param_entry.sensors.length > 1">
-                            <select v-model="param_entry.master">
-                                <option v-for="sensor in param_entry.sensors"
-                                    :value="sensor" :key="sensor.id">
-                                    {{sensor.title ? sensor.title : sensor.default_title}}
-                                </option>
-                            </select>
-                        </div-->
-                        <div v-for="sensor in param_entry.sensors" class="sensor" :key="sensor.id">
-                            <span class="default">{{sensor.default_title}}</span><br/>
-                            <input type="text" v-model="sensor.title"/>
-                        </div>
-                    </div>
+
+                    <table id="device_sensor_setup" class="sensors_param">
+                        <tr>
+                            <th>Подключен</th>
+                            <th>Датчик</th>
+                            <th>Название датчика на графике</th>
+                        </tr>
+                        <tr class="sensor" v-for="(entry, title) in edit_device.sensors_titles" 
+                            :key="title">
+                            <td class="sensor_checkbox">
+                                <input type="checkbox" v-model="entry.enabled"/>
+                            </td>
+                            <td class="sensor">{{title}}</td>
+                            <td class="sensor_graf_title">
+                                <input type="text" v-model="entry.title"/>
+                            </td>
+                         </tr>
+                    </table>
+
                     <input class="btn" type="submit" value="Сохранить"
                         :disabled="pending" @click="post_device"/>
                     <input class="btn" type="submit" value="Отмена" @click="open_device(null)"/>
@@ -102,6 +104,7 @@ export default {
       if (this.pending) {
         return
       }
+      this.register_device = false
 
       if ((!device && this.edit_device) || (this.edit_device && this.edit_device.id === device.id)) {
         this.edit_device = null
@@ -155,12 +158,16 @@ export default {
         const sensor = this.edit_device.sensors[co]
         const sensor_cache = this.device_cache.sensors[co]
         sensor.is_master = this.edit_device.sensors_params[sensor.type].master == sensor
-        if (sensor.title !== sensor_cache.title || sensor.is_master !== sensor_cache.is_master) {
+        sensor.title = this.edit_device.sensors_titles[sensor.default_title].title
+        sensor.enabled = this.edit_device.sensors_titles[sensor.default_title].enabled
+        if (sensor.title !== sensor_cache.title || sensor.is_master !== sensor_cache.is_master ||
+          sensor.enabled !== sensor_cache.enabled) {
           queries.push({
             url: 'sensor/' + sensor.id,
             data: {
               title: sensor.title,
-              is_master: sensor.is_master
+              is_master: sensor.is_master,
+              enabled: sensor.enabled
             }
           })
         }

@@ -45,6 +45,7 @@ const SENSOR_TYPE_SETTINGS = {
 const DATASET_TMPLT = {
   borderWidth: 3,
   pointRadius: 0,
+  pointHitRadius: 0.4,
   spanGaps: false
 }
 
@@ -59,12 +60,17 @@ export default {
         datasets: []
       },
       chart_options: {
+        vertical_cursor: {
+          style: 'grey',
+          width: 1
+        },
 		responsive: true,
 		maintainAspectRatio: false,
         tooltips: {
           mode: 'x',
           intersect: false,
-          position: 'nearest'
+          position: 'nearest',
+          itemSort: (a, b) => b.value - a.value
         },
         legend: {
           display: false

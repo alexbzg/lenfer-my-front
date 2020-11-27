@@ -39,11 +39,17 @@ a{
 	cursor: pointer;
 	font-size: 16px;
 }
+option{
+	display: inline-block;
+}
 input, select, option{
 	border: 1px solid #ccc;
 	border-radius: 5px;
-	padding: 10px 20px;
+	padding: 5px 20px;
 	margin-bottom: 10px;
+	font-weight: bold;
+	font-size: 16px;
+	text-align: center;
 }
 
 
@@ -75,6 +81,12 @@ table#top_menu td#device_list{
 table#top_menu td#device_list a{
 	margin-right: 30px;
 	font-weight: bold;
+	background-color: #eee;
+	border-radius: 5px;
+	border: 1px solid #ddd;
+	padding: 5px 20px;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 table#top_menu td#menu_links{
@@ -152,7 +164,7 @@ input#login_btn{
 	text-align: left;
 	line-height: 24px;
 	width: 200px;
-	position: fixed;
+	position: absolute;
 }
 .info_title{
 	font-weight: bold;
@@ -192,12 +204,12 @@ table.controller_table td.schedule_day, table.controller_table td span.current_d
 }
 table.controller_table td span.current_time{
 	font-size: 10px;
-	color: #333;
 	font-weight: normal;
 }
 table.controller_table td span.schedule_data{
 	font-size: 14px;
 	font-weight: normal;
+	margin-left: 10px;
 }
 table.controller_table td#schedule a{
 	color: #777;
@@ -254,7 +266,7 @@ table.controller_table td#schedule_start{
 
 
 .settings_index {
-    width: 60%;
+    width: 900px;
     max-width: 1600px;
     margin: 20px auto 50px auto;
     background-color: #fff;
@@ -290,7 +302,7 @@ table#settings_devices_table td{
 }
 
 table#settings_devices_table td.title{
-	width: 200px;
+	width: 150px;
 	font-weight: bold;
 	cursor: pointer;
 }
@@ -309,39 +321,71 @@ table#settings_devices_table td.title .device_type{
 
 
 
+
+
 .settings{
 	text-align: center;
-}
-
-.settings .title, .settings .defauft{
-	font-size: 14px;
+	font-size: 12px;
 	color: #777;
 }
-.settings input:not([type='submit']){
+.settings .title input{
 	width: 300px;
-	text-align: center;
-	font-weight: bold;
-	font-size: 18px;
-	padding: 5px;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 }
-
 .settings .prop input{
 	width: 200px;
+	padding: 5px;
+	margin-bottom: 20px;
+}
+
+table#device_sensor_setup{
+	border-collapse: collapse;
+	margin: 50px auto;
+	border-bottom: 1px solid #eee;
+}
+table#device_sensor_setup th{
+	border: none;
+	line-height: 14px;
+	padding: 5px 0;
+	text-align: center;
+	border-bottom: 1px solid #eee;
+}
+table#device_sensor_setup td{
+	border: none;
+	line-height: 14px;
+	padding: 10px 5px;
+	text-align: center;
+	font-size: 16px;
+	vertical-align: middle;
+}
+
+table#device_sensor_setup input{
+	margin: 0;
 }
 
 
-.settings h4{
-	text-decoration: underline;
-	margin-top: 30px;
-	margin-bottom: 10px;
-}
+
+
+
 
 
 
 .add_device{
-	margin: 50px auto;
+	text-align: center;
+	font-size: 12px;
+	color: #777;
 }
+.add_device input{
+	margin-right: 0;
+}
+
+
+
+
+
+/* input:not([type='submit']) */
+
+
 
 
 
@@ -409,12 +453,13 @@ td#active_schedule span{
 	color: #777;
 }
 
-td#active_schedule #new_schedule_title{
-	width: 300px;
+td#active_schedule input#new_schedule_title{
+	width: 250px;
 	font-weight: bold;
+	text-align: left;
 }
 
-td#active_schedule #new_schedule_days{
+td#active_schedule input#new_schedule_days{
 	width: 20px;
 	font-weight: bold;
 	text-align: center;
@@ -424,15 +469,19 @@ td#active_schedule #new_schedule_days{
 table#schedule_days{
 	margin: 30px auto;
 	border-collapse: collapse;
+	text-align: center;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
 }
 table#schedule_days th{
 	font-size: 14px;
+	line-height: 14px;
 	color: #777;
+	border-bottom: 1px solid #eee;
+	padding: 0px 20px 10px 20px;
 }
-table#schedule_days td, table#schedule_days th{
+table#schedule_days td{
 	padding: 5px 20px;
-	border-bottom: 1px solid #ccc;
-	text-align: center;
 }
 
 table#schedule_days input{
@@ -442,5 +491,13 @@ table#schedule_days input{
 	font-weight: bold;
 	width: 30px;
 	text-align: center;
+	padding: 5px;
+}
+table#schedule_days input.param_delta{
+	font-weight: normal;
+	color: #777;
 }
 
+#settings_schedules #btns{
+	text-align: center;
+}

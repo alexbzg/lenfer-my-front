@@ -79,12 +79,16 @@ export default {
           const sp_length = DEVICE_PARAMS.length
           for (let co = 0; co < sp_length; co++) {
             if (DEVICE_PARAMS[co].id in this.device.sensors_params) {
-              this.sensors_charts.push({
-                ...DEVICE_PARAMS[co],
-                sensors: this.device.sensors_params[DEVICE_PARAMS[co].id].sensors,
-                value: this.device.sensors_params[DEVICE_PARAMS[co].id].master.value,
-                tstamp: display_datetime(new Date(this.device.sensors_params[DEVICE_PARAMS[co].id].master.tstamp))
-              })
+              const sensors = this.device.sensors_params[
+                  DEVICE_PARAMS[co].id].sensors.filter(item => item.enabled)
+              if (sensors.length) {
+                this.sensors_charts.push({
+                  ...DEVICE_PARAMS[co],
+                  sensors: sensors,
+                  value: this.device.sensors_params[DEVICE_PARAMS[co].id].master.value,
+                  tstamp: display_datetime(new Date(this.device.sensors_params[DEVICE_PARAMS[co].id].master.tstamp))
+                })
+              }
             }
           }
         })
