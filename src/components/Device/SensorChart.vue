@@ -79,6 +79,8 @@ export default {
           xAxes: [{
             type: 'time',
             time: {
+              unit: 'hour',
+              stepSize: 1,           
               tooltipFormat: 'HH:mm',
               displayFormats: {
                 hour: 'HH:mm',
