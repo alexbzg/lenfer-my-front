@@ -19,18 +19,18 @@
                     <template v-if="schedule">{{schedule.today.day_no}}</template>
                 </td>
                 <td v-for="param in sensors_charts" :key="param.id" class="parameter">
-                    <span class="current_data">
+                    <span class="current_data" >
                         {{param.value}}<template v-if="param.unit">{{param.unit}}</template>
                     </span>
-                    <span class="schedule_data"> 
-                      <template 
-                          v-if="schedule && 
-                          schedule.today.params"> {{schedule.today.params[param.id].value}}<template 
+                    <span class="schedule_data">
+                      <template
+                          v-if="schedule &&
+                          schedule.today.params"> {{schedule.today.params[param.id].value}}<template
                               v-if="param.unit">{{param.unit}}</template>
                       </template>
-                      <template v-if="!schedule || !schedule.today.params"> - </template>
+                      <template v-if="!schedule || !schedule.today.params"></template>
                     </span>
-                    <br/><span class="current_time">{{param.tstamp}}</span>
+                    <br/><span class="current_time" :class="{timeout: param.timeout}">{{param.tstamp}}</span>
                 </td>
                 <td id="schedule">
                     <router-link :to="'/settings/schedules/' + device.schedule_id" v-if="schedule">
@@ -78,15 +78,18 @@ export default {
           this.sensors_charts = []
           const sp_length = DEVICE_PARAMS.length
           for (let co = 0; co < sp_length; co++) {
+            const now = new Date()
             if (DEVICE_PARAMS[co].id in this.device.sensors_params) {
               const sensors = this.device.sensors_params[
                   DEVICE_PARAMS[co].id].sensors.filter(item => item.enabled)
               if (sensors.length) {
+                const tstamp = new Date(this.device.sensors_params[DEVICE_PARAMS[co].id].master.tstamp)
                 this.sensors_charts.push({
                   ...DEVICE_PARAMS[co],
                   sensors: sensors,
                   value: this.device.sensors_params[DEVICE_PARAMS[co].id].master.value,
-                  tstamp: display_datetime(new Date(this.device.sensors_params[DEVICE_PARAMS[co].id].master.tstamp))
+                  tstamp: display_datetime(tstamp),
+                  timeout: now - tstamp > 1800000
                 })
               }
             }
@@ -112,7 +115,7 @@ export default {
             }
           }
           if (!r.today) {
-           r.today = {day_no: 'Н/Д'}
+           r.today = {day_no: ''}
           }
         }
       }

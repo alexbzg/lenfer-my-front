@@ -206,6 +206,17 @@ table.controller_table td span.current_time{
 	font-size: 10px;
 	font-weight: normal;
 }
+
+.timeout{
+	display: inline-block;
+	background: url(/images/flashing.gif);
+	color: #faffb2;
+	padding: 3px 10px;
+	line-height: 10px;
+}
+
+
+
 table.controller_table td span.schedule_data{
 	font-size: 14px;
 	font-weight: normal;
@@ -250,9 +261,6 @@ table.controller_table td#schedule_start{
 
 
 }
-
-
-
 
 
 
