@@ -6,11 +6,18 @@ export function display_date (date_obj) {
 }
 
 export function display_datetime (date_obj) {
-  return `${date_obj.getDate()} ${RU_MONTH[date_obj.getMonth()]} ${date_obj.getHours()}:${date_obj.getMinutes()}`
+  return `${date_obj.getDate()} ${RU_MONTH[date_obj.getMonth()]} ${string_pad(date_obj.getHours())}:${string_pad(date_obj.getMinutes())}`
 }
 
 export function isEmpty (obj) {
   return Object.keys(obj).length === 0
+}
+
+export function string_pad (val, pad_char="0", pad_to_length=2) {
+  while (val.length < pad_to_length) {
+    val = pad_char + val
+  }
+  return val
 }
 
 export function debugLog (msg) {

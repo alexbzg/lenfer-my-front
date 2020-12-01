@@ -8,16 +8,13 @@
 
         <table class="controller_table">
             <tr id="header">
-                <th class="schedule_day">День</th>
                 <th v-for="param in sensors_charts" :key="param.id" class="parameter">
                     {{param.title}}
                 </th>
+                <th class="schedule_day">День</th>
                 <th id="schedule">Таблица работы</th>
             </tr>
             <tr>
-                <td class="schedule_day">
-                    <template v-if="schedule">{{schedule.today.day_no}}</template>
-                </td>
                 <td v-for="param in sensors_charts" :key="param.id" class="parameter">
                     <span class="current_data" >
                         {{param.value}}<template v-if="param.unit">{{param.unit}}</template>
@@ -31,6 +28,9 @@
                       <template v-if="!schedule || !schedule.today.params"></template>
                     </span>
                     <br/><span class="current_time" :class="{timeout: param.timeout}">{{param.tstamp}}</span>
+                </td>
+                <td class="schedule_day">
+                    <template v-if="schedule">{{schedule.today.day_no}}</template>
                 </td>
                 <td id="schedule">
                     <router-link :to="'/settings/schedules/' + device.schedule_id" v-if="schedule">
@@ -115,7 +115,7 @@ export default {
             }
           }
           if (!r.today) {
-           r.today = {day_no: ''}
+           r.today = {day_no: '-'}
           }
         }
       }
