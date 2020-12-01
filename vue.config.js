@@ -7,6 +7,17 @@ module.exports = {
 	        ignored: /static/
 	    }
     },
+    pluginOptions: {
+        webpackBundleAnalyzer: {
+            openAnalyzer: false,
+            reportFilename: '../public/report.html'
+        }
+    },
+    configureWebpack: {
+        externals: {
+            moment: 'moment'
+        }
+    },
 	chainWebpack: config => {
         config
             .plugin('html')

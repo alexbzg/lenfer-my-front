@@ -3,12 +3,12 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-import Login from '../components/Login'
+const Login = (() => import('../components/Login'))
 import Device from '../components/Device/Index'
-import Settings from '../components/Settings/Index'
-import SettingsProfile from '../components/Settings/Profile'
-import SettingsDevices from '../components/Settings/Devices'
-import SettingsSchedules from '../components/Settings/Schedules'
+const Settings = (() => import('../components/Settings/Index'))
+const SettingsProfile = (() => import ('../components/Settings/Profile'))
+const SettingsDevices = (() => import('../components/Settings/Devices'))
+const SettingsSchedules = (() => import('../components/Settings/Schedules'))
 
 const router = new Router({
 //  mode: 'history',

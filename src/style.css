@@ -31,14 +31,25 @@ a{
 .btn{
 	background-color: #3194fe;
 	color: #fff;
-	border-radius: 5px;
-	border: 1px solid #ccc;
+	border-radius: 7px;
+	border: 1px solid #fff;
 	padding: 5px 20px;
 	text-decoration: none;
 	margin-right: 20px;
 	cursor: pointer;
 	font-size: 16px;
 }
+.btn.cancel{
+	background-color: #999;
+}
+.btn.delete{
+	background-color: #c55;
+	margin-top: 50px;
+}
+
+
+
+
 option{
 	display: inline-block;
 }
@@ -205,6 +216,7 @@ table.controller_table td.schedule_day, table.controller_table td span.current_d
 table.controller_table td span.current_time{
 	font-size: 10px;
 	font-weight: normal;
+	display: none;
 }
 
 .timeout{
@@ -283,6 +295,12 @@ table.controller_table td#schedule_start{
 	min-height: 300px;
 	padding: 20px;
 }
+
+
+
+
+
+
 .settings_menu a{
 	margin: 0 20px;
 	color: #333;
@@ -292,6 +310,10 @@ table.controller_table td#schedule_start{
 	margin: 30px auto;
 
 }
+
+
+
+
 
 
 
@@ -438,7 +460,7 @@ table#settings_schedules_table{
 
 td#schedules_index{
 	width: 30%;
-	padding: 20px;
+	padding: 10px 20px;
 	border: 1px solid #ddd;
 	border-radius: 10px;
 
@@ -446,7 +468,7 @@ td#schedules_index{
 
 td#active_schedule{
 	width: 70%;
-	padding: 20px;
+	padding:  10px 20px;
 	border: 1px solid #ddd;
 	border-radius: 10px;
 	text-align: left;
@@ -471,6 +493,10 @@ td#active_schedule input#new_schedule_days{
 	width: 20px;
 	font-weight: bold;
 	text-align: center;
+}
+td#active_schedule input#ok_days{
+	padding: 5px 7px;
+	margin-left: 10px;
 }
 
 
@@ -508,4 +534,12 @@ table#schedule_days input.param_delta{
 
 #settings_schedules #btns{
 	text-align: center;
+	margin-top: 50px;
 }
+
+
+
+
+
+
+

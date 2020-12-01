@@ -45,7 +45,7 @@
                             <th>Датчик</th>
                             <th>Название датчика на графике</th>
                         </tr>
-                        <tr class="sensor" v-for="(entry, title) in edit_device.sensors_titles" 
+                        <tr class="sensor" v-for="(entry, title) in edit_device.sensors_titles"
                             :key="title">
                             <td class="sensor_checkbox">
                                 <input type="checkbox" v-model="entry.enabled"/>
@@ -59,7 +59,7 @@
 
                     <input class="btn" type="submit" value="Сохранить"
                         :disabled="pending" @click="post_device"/>
-                    <input class="btn" type="submit" value="Отмена" @click="open_device(null)"/>
+                    <input class="btn cancel" type="submit" value="Отмена" @click="open_device(null)"/>
                 </div>
               </td>
             </tr>
