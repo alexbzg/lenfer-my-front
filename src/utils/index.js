@@ -14,6 +14,7 @@ export function isEmpty (obj) {
 }
 
 export function string_pad (val, pad_char="0", pad_to_length=2) {
+  val = val.toString()
   while (val.length < pad_to_length) {
     val = pad_char + val
   }

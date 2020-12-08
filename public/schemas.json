@@ -72,6 +72,39 @@
     },
     "required": ["token", "data", "device_id"]
 },
+
+"post_devices_log": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 1
+        },
+        "device_id": {
+            "type":"integer"
+        },
+        "entries": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "log_tstamp": {                    
+                        "type": "string",
+                        "minLength" : 1
+                    },
+                    "txt": {
+                        "type": "string",
+                        "minLength" : 1
+                    }
+                },
+                "required": ["log_tstamp", "txt"]
+            },
+            "minItems": 1
+        }
+    },
+    "required": ["token", "entries", "device_id"]
+},
+
 "register_device": {
     "type": "object",
     "properties": {

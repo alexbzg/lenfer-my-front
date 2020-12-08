@@ -31,7 +31,7 @@ a{
 .btn{
 	background-color: #3194fe;
 	color: #fff;
-	border-radius: 7px;
+	border-radius: 5px;
 	border: 1px solid #fff;
 	padding: 5px 20px;
 	text-decoration: none;
@@ -219,7 +219,7 @@ table.controller_table td span.current_time{
 	display: none;
 }
 
-.timeout{
+table.controller_table td span.current_time.timeout{
 	display: inline-block;
 	background: url(/images/flashing.gif);
 	color: #faffb2;
