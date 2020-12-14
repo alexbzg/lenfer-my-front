@@ -26,20 +26,18 @@
                         <span class="title">Название устройства на сайте</span><br/>
                         <input type="text" v-model="edit_device.title"/>
                     </div>
-                    <div class="prop" v-for="(prop, idx) in edit_device.props_titles" :key="idx">
-                        <span class="title">{{prop.title}}</span><br/>
-                        <template v-if="prop.type === 'date'">
-                            <date-picker v-model="edit_device.props_values[idx]" locale="ru"
-                                :masks="{input: 'DD MMMM'}"></date-picker><br/>
-                        </template>
-                    </div>
-                    <span class="title">Таблица работы</span><br/>
-                    <select v-model="edit_device.schedule_id">
-                        <option v-for="schedule in schedules" :key="schedule.id"
-                            :value="schedule.id">{{schedule.title}}</option>
-                    </select>
+                    <device-props :props_headers="edit_device.props_titles" 
+                        v-model="edit_device.props_values">
+                    </device-props>
+                    <template v-if="edit_device.enable_schedule">
+                        <span class="title">Таблица работы</span><br/>
+                        <select v-model="edit_device.schedule_id">
+                            <option v-for="schedule in schedules" :key="schedule.id"
+                                :value="schedule.id">{{schedule.title}}</option>
+                        </select>
+                    </template>
 
-                    <table id="device_sensor_setup" class="sensors_param">
+                    <table id="device_sensor_setup" class="sensors_param" v-if="edit_device.sensors">
                         <tr>
                             <th>Подключен</th>
                             <th>Датчик</th>
@@ -70,7 +68,8 @@
 <script>
 
 import {mapState} from 'vuex'
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+
+import DeviceProps from './DeviceProps'
 
 import messageBox from '../../message-box'
 import {userDataPost, LOAD_DEVICES_ACTION} from '../../store'
@@ -79,7 +78,7 @@ import {DEVICE_PARAMS} from '../../definitions'
 
 export default {
   name: 'SettingsDevicesIndex',
-  components: {DatePicker},
+  components: {DeviceProps},
   data () {
     return {
       register_device: false,
@@ -89,7 +88,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['devices']),
+    ...mapState(['devices', 'devices_types']),
     schedules () {
       if (this.edit_device) {
         return this.$store.state.schedules.filter(
@@ -113,6 +112,9 @@ export default {
         load_device(device.id)
           .then(device => {
             this.edit_device = device
+            const device_type = this.devices_types.find(
+              type => type.id === this.edit_device.type_id)
+            this.edit_device.enable_schedule = Boolean(device_type.schedule_params)
             this.device_cache = JSON.parse(JSON.stringify(device))
             this.edit_device.sensors_settings = []
             const sp_length = DEVICE_PARAMS.length
@@ -177,21 +179,21 @@ export default {
         let p = null
 
         for (const query of queries) {
-            if (p) {
+          if (p) {
             p.then(() => userDataPost(query.url, query.data))
-            } else {
+          } else {
             p = userDataPost(query.url, query.data)
-                .catch(error => {
+              .catch(error => {
                 messageBox('Изменение устройства', error.message)
-                })
-                .finally(() => {
+              })
+              .finally(() => {
                 this.pending = false
-                })
+               })
             }
         }
         p.then(() => {
-            this.open_device(null)
-            this.$store.dispatch(LOAD_DEVICES_ACTION)
+          this.open_device(null)
+          this.$store.dispatch(LOAD_DEVICES_ACTION)
         })
       } else {
         this.open_device(null)

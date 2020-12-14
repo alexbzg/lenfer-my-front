@@ -47,6 +47,7 @@ a{
 	margin-top: 50px;
 }
 
+/* input:not([type='submit']) */
 
 
 
@@ -62,6 +63,24 @@ input, select, option{
 	font-size: 16px;
 	text-align: center;
 }
+input.btn[type="button"][disabled]{
+	color: #83befe;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -540,6 +559,80 @@ table#schedule_days input.param_delta{
 
 
 
+/* =======================  SE T T I N G S   P R O F I L E  ===================================*/
+
+table#setting_login{
+	margin: 50px auto;
+	border-collapse: collapse;
+	text-align: center;
+	padding-bottom: 10px;
+}
+table#setting_login th{
+	font-size: 12px;
+	line-height: 14px;
+	color: #999;
+	padding: 0px 20px;
+}
+table#setting_login td{
+	padding: 5px 5px;
+}
 
 
+#settings_link{
+	width: 80%;
+	margin: 0 auto;
+	padding: 10px;
+	margin-bottom: 50px;
+	line-height: 12px;
+}
+#settings_link span.note{
+	color: #777;
+}
+#settings_link span.note span{
+	font-size: 12px;
+	font-style: italic;
+	color: #aaa;
+}
+#settings_link span#link{
+	border-bottom: 1px solid #009;
+	padding-bottom: 1px;
+	color: #009;
+	font-weight: bold;
+}
+
+
+#settings_link input#input_link_nickname{
+	width: 150px;
+	font-weight: bold;
+	border-radius: 0px;
+	border: none;
+	border-bottom: 1px solid #009;
+	padding: 0;
+	text-align: left;
+	font-size: 16px;
+	color: #333;
+	margin: 0 20px 10px 0;
+}
+#settings_link a{
+	color: #009;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+table#setting_link_devices{
+	margin: 30px auto;
+	text-align: center;
+	border-collapse: collapse;
+}
+table#setting_link_devices th{
+	font-size: 12px;
+	line-height: 12px;
+	color: #777;
+	padding: 5px 20px;
+	border-bottom: 1px solid #ccc;
+	vertical-align: bottom;
+}
+table#setting_link_devices td{
+	padding: 5px 0;
+}
 

@@ -29,21 +29,23 @@ class Device {
 
     this.sensors_params = {}
     this.sensors_titles = {}
-	for (const sensor of this.sensors) {
-      if (!this.sensors_params[sensor.type]) {
-        this.sensors_params[sensor.type] = {sensors: []}
-      }
-      if (!this.sensors_titles[sensor.default_title]) {
-        this.sensors_titles[sensor.default_title] = {
-          sensors: [],
-          enabled: sensor.enabled,
-          title: sensor.title
+    if (this.sensors) {
+      for (const sensor of this.sensors) {
+        if (!this.sensors_params[sensor.type]) {
+          this.sensors_params[sensor.type] = {sensors: []}
         }
-      }
-      this.sensors_titles[sensor.default_title].sensors.push(sensor)
-      this.sensors_params[sensor.type].sensors.push(sensor)
-      if (sensor.is_master) {
-        this.sensors_params[sensor.type].master = sensor
+        if (!this.sensors_titles[sensor.default_title]) {
+          this.sensors_titles[sensor.default_title] = {
+            sensors: [],
+            enabled: sensor.enabled,
+            title: sensor.title
+          }
+        }
+        this.sensors_titles[sensor.default_title].sensors.push(sensor)
+        this.sensors_params[sensor.type].sensors.push(sensor)
+        if (sensor.is_master) {
+          this.sensors_params[sensor.type].master = sensor
+        }
       }
     }
     
@@ -54,7 +56,7 @@ class Device {
 export default function load_device(id) {
   return get('/api/device/' + id)
     .then(response => {
-        return new Device(response.data, id)
+      return new Device(response.data, id)
     })
 }
 
