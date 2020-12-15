@@ -29,7 +29,7 @@
         <table id="setting_link_devices">
           <tr>
             <th>Устройство</th>
-            <th>Показывать на странице</th>
+            <th>Показывать по ссылке</th>
           </tr>
           <tr>
             <td>Брудер</td>

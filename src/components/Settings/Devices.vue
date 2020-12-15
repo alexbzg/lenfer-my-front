@@ -27,6 +27,8 @@
                         <input type="text" v-model="edit_device.title"/>
                     </div>
                     <device-props :props_headers="edit_device.props_titles" 
+                        :device_type_id="edit_device.type_id"
+                        @validated="edit_device_props_validated"
                         v-model="edit_device.props_values">
                     </device-props>
                     <template v-if="edit_device.enable_schedule">
@@ -99,6 +101,9 @@ export default {
     }
   },
   methods: {
+    edit_device_props_validated (validation_data) {
+      this.edit_device.props_validation = validation_data
+    },
     async open_device (device) {
       if (this.pending) {
         return
@@ -133,6 +138,12 @@ export default {
       }
     },
     async post_device () {
+      for (const field in this.edit_device.props_validation) {
+        if (this.edit_device.props_validation[field]) {
+          messageBox('Изменение устройства', this.edit_device.props_validation[field])
+          return
+        }
+      }
       let device_update = this.edit_device.title !== this.device_cache.title ||
         this.edit_device.schedule_id !== this.device_cache.schedule_id
       const queries = []
