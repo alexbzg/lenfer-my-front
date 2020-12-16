@@ -32,7 +32,7 @@ a{
 	background-color: #3194fe;
 	color: #fff;
 	border-radius: 5px;
-	border: 1px solid #fff;
+	border: 1px solid #777;
 	padding: 5px 20px;
 	text-decoration: none;
 	margin-right: 20px;
@@ -331,6 +331,13 @@ table.controller_table td#schedule_start{
 }
 
 
+#new_schedule_button{
+	cursor: pointer;
+	margin-top: 30px;
+	padding: 3px 10px;
+	font-weight: normal;
+}
+
 
 
 
@@ -367,6 +374,7 @@ table#settings_devices_table td.title .device_type{
 	font-size: 12px;
 	font-weight: normal;
 }
+
 
 
 table#settings_devices_table table.seconds_picker{
@@ -471,6 +479,9 @@ table#timers_setup input{
 	margin: 0;
 	font-size: 18px;
 }
+table#timers_setup input[type='number'] {
+	padding-right: 3px;
+}
 table#timers_setup img{
 	width: 20px;
 	cursor: pointer;
@@ -478,8 +489,18 @@ table#timers_setup img{
 #feeder_timers button{
 	cursor: pointer;
 }
+.add_timer{
+	cursor: pointer;
+	padding: 3px 10px;
+	font-weight: normal;
+	border: 1px solid #bbb;
+	border-radius: 5px;
+}
 
-
+table#timers_setup td.error input{
+	background-color: #fde7e8;
+	border-color: #f3424d;
+}
 
 
 
@@ -615,7 +636,7 @@ table#schedule_days input.param_delta{
 
 
 
-/* =======================  SE T T I N G S   P R O F I L E  ===================================*/
+/* =======================  S E T T I N G S   P R O F I L E  ===================================*/
 
 table#setting_login{
 	margin: 50px auto;
@@ -639,7 +660,7 @@ table#setting_login td{
 	margin: 0 auto;
 	padding: 10px;
 	margin-bottom: 50px;
-	line-height: 12px;
+	line-height: 14px;
 }
 #settings_link span.note{
 	color: #777;

@@ -13,6 +13,9 @@
                 <template v-if="prop.type === 'seconds'">
                     <seconds-edit v-model="value[idx]"></seconds-edit>
                 </template>
+                <template v-if="prop.type === 'integer'">
+                    <input type="number" v-model="value[idx]"/>
+                </template>
                 <template v-if="'items' in prop">
                     <div v-for="(item, item_idx) in value[idx]" class="prop_item" :key="item_idx">
                         <device-props :props_headers="prop.items" :value="item">

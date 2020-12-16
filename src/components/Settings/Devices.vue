@@ -3,14 +3,14 @@
           <table id="settings_devices_table">
             <tr>
               <td class="title">
-                <input type="submit" value="Добавить устройство"
-                    @click="register_device = !register_device; edit_device = false"
-                    id="new_schedule_button" class="btn" /><br/>
                 <div v-for="device in devices" :key="device.id"
                     @click="open_device(device)">
                     <div class="device_title">{{device.title}}</div>
                     <div class="device_type">{{device.type_title}} / {{device.hash}}</div>
                 </div>
+                <input type="submit" value="Добавить устройство"
+                    @click="register_device = !register_device; edit_device = false"
+                    id="new_schedule_button" />
               </td>
               <td class="settings_window">
                 <div class="add_device" v-if="register_device">
@@ -26,7 +26,7 @@
                         <span class="title">Название устройства на сайте</span><br/>
                         <input type="text" v-model="edit_device.title"/>
                     </div>
-                    <device-props :props_headers="edit_device.props_titles" 
+                    <device-props :props_headers="edit_device.props_titles"
                         :device_type_id="edit_device.type_id"
                         @validated="edit_device_props_validated"
                         v-model="edit_device.props_values">
