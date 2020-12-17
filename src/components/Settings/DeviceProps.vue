@@ -89,6 +89,20 @@ export default {
       }
       return r
     }
+  },
+  watch: {
+    value: {
+      deep: true,
+      handler () {
+        const props_count = this.props_headers.length
+        for (let co = 0; co < props_count; co++) {
+          if (this.props_headers[co].type === 'integer' &&  
+            this.value[co] !== parseInt(Number(this.value[co]))) {
+            this.value[co] = parseInt(Number(this.value[co]))
+          }
+        }
+      }
+    }
   }
 }
 
