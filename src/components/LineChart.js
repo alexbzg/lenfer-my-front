@@ -38,7 +38,7 @@ export default {
             ctx.stroke()
             ctx.restore()
          }
-       }
+        }
       })
     }
     this.renderChart(chart_data, this.options)

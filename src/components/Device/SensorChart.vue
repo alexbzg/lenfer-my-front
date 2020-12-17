@@ -1,8 +1,7 @@
 <template>
-    <div class="lk_sensor_graf">
-        <line-chart v-if="ready" :chart_data="chart_data" :options="chart_options">
-        </line-chart>
-    </div>
+    <line-chart css-classes="lk_sensor_graf" v-if="ready" 
+        :chart_data="chart_data" :options="chart_options">
+    </line-chart>
 </template>
 
 <script>
