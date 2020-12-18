@@ -6,7 +6,7 @@
         </div>
 
 
-        <table class="controller_table">
+        <table class="controller_table" v-if="device && device.type !== 'Feeder'">
             <tr id="header">
                 <th v-for="param in sensors_charts" :key="param.id" class="parameter">
                     {{param.title}}
@@ -45,11 +45,29 @@
             <sensor-chart :sensors="sensors_param.sensors">
             </sensor-chart>
         </div>
+
+        <table id="log" v-if="log && log.length">
+            <tr class="head">
+                <th class="server_tstamp">Время (сервер)</th>
+                <th class="device_tstamp">Время (устройcтво)</th>
+                <th class="text">Запись</th>
+            </tr>
+            <tr v-for="(entry, idx) in log" :key="idx">
+                <td class="server_tstamp">{{entry.rcvd_tstamp}}</td>
+                <td class="device_tstamp">{{entry.log_tstamp}}</td>
+                <td class="txt">{{entry.txt}}</td>
+            </tr>
+        </table>
+           
+
     </div>
 </template>
 
 <script>
+import strftime from 'strftime'
+
 import load_device from '../../device'
+import {dataPost} from '../../api'
 import {DEVICE_PARAMS} from '../../definitions'
 import {display_datetime} from '../../utils'
 
@@ -62,6 +80,7 @@ export default {
   data () {
     return {
       device: {},
+      log: null,
       sensors_charts: []
     }
   },
@@ -71,6 +90,7 @@ export default {
   methods: {
     async load_device () {
       this.device = {}
+      this.log = null
       this.sensors_charts = []
       load_device(this.device_id)
         .then(device => {
@@ -94,6 +114,21 @@ export default {
               }
             }
           }
+          
+          if (this.device.type === 'Feeder') {
+            const end = new Date()
+            const begin = new Date()
+            begin.setDate(begin.getDate() - 1)
+            dataPost('devices_log', {
+              device_id: this.device_id,
+              begin: strftime('%Y-%m-%d %H:%M:%S', begin),
+              end:  strftime('%Y-%m-%d %H:%M:%S', end)
+            })
+              .then(data => {
+                this.log = data
+              })
+          }
+
         })
     },
     display_datetime: display_datetime
@@ -131,5 +166,5 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 </style>

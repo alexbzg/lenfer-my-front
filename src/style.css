@@ -300,6 +300,43 @@ table.controller_table td#schedule_start{
 
 
 
+table#log{
+	margin: 50px auto;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+}
+table#log th{
+	border-bottom: 1px solid #ddd;
+	font-weight: bold;
+}
+table#log td{
+	border-bottom: 1px solid #ddd;
+	padding: 0 30px;
+}
+table#log td.txt{
+	text-align: left;
+
+}
+table#log td.server_tstamp, table#log td.device_tstamp {
+	color: #777;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*========================================= S E T T I N G S ==========================*/
 
 
