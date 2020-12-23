@@ -81,12 +81,21 @@ import {DEVICE_PARAMS} from '../../definitions'
 export default {
   name: 'SettingsDevicesIndex',
   components: {DeviceProps},
+  props: ['device_id'],
   data () {
     return {
       register_device: false,
       register_device_hash: '',
       edit_device: null,
       pending: false,
+    }
+  },
+  async mounted () {
+    if (this.device_id) {
+      const device = this.devices.find(item => item.id === parseInt(this.device_id))
+      if (device) {
+        this.open_device(device)
+      }
     }
   },
   computed: {

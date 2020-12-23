@@ -26,7 +26,6 @@ const router = new Router({
     },
     {
       path: '/settings',
-      name: 'Settings',
       component: Settings,
       children: [
         {
@@ -35,9 +34,15 @@ const router = new Router({
           component: SettingsProfile
         },
         {
-          path: '/',
+          path: 'devices/:device_id',
           name: 'SettingsDevices',
           component: SettingsDevices,
+          props: true
+        },
+        {
+          path: '/',
+          name: 'SettingsDevices',
+          component: SettingsDevices
         },
         {
           path: 'schedules/:schedule_id',

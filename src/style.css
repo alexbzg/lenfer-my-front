@@ -298,10 +298,33 @@ table.controller_table td#schedule_start{
 
 
 
+a{
+	text-decoration: none;
+}
+div#timers{
+	margin: 30px auto;
+	text-decoration: none;
+}
+
+table#timers{
+	margin: 0px auto;
+	border-collapse: collapse;
+}
+table#timers th{
+	border-bottom: 1px solid #ddd;
+	font-weight: bold;
+}
+table#timers td{
+	border-top: 1px solid #ddd;
+	padding: 0 30px;
+}
+
+
+
 
 
 table#log{
-	margin: 50px auto;
+	margin: 20px auto;
 	border: 1px solid #ddd;
 	border-radius: 10px;
 }

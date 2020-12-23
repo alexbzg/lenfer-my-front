@@ -6,7 +6,7 @@
         </div>
 
 
-        <table class="controller_table" v-if="device && device.type !== 'Feeder'">
+        <table class="controller_table" v-if="device_type && device_type.schedule_params">
             <tr id="header">
                 <th v-for="param in sensors_charts" :key="param.id" class="parameter">
                     {{param.title}}
@@ -46,6 +46,17 @@
             </sensor-chart>
         </div>
 
+        <router-link :to="'/settings/devices/' + device_id" v-if="device_props && device_props.length">
+            <template v-for="(prop, idx) in device_props">
+                <component v-if="prop.title.id in custom_props" :is="custom_props[prop.title.id]"
+                    :prop="prop" :key="idx"></component>
+                <div v-else :key="idx">
+                    <span class="prop_title">{{prop.title.title}}</span>
+                    <span class="prop_value">{{prop.value}}</span>
+                </div>
+            </template>
+        </router-link>
+
         <table id="log" v-if="log && log.length">
             <tr class="head">
                 <th class="server_tstamp">Время (сервер)</th>
@@ -72,6 +83,10 @@ import {DEVICE_PARAMS} from '../../definitions'
 import {display_datetime} from '../../utils'
 
 import SensorChart from './SensorChart'
+
+const SHOW_LOG_DEVICE_TYPES = ["Feeder"]
+
+const CUSTOM_PROPS = {timers: () => import('./Timers')}
 
 export default {
   name: 'DeviceIndex',
@@ -115,7 +130,7 @@ export default {
             }
           }
           
-          if (this.device.type === 'Feeder') {
+          if (SHOW_LOG_DEVICE_TYPES.includes(this.device.type)) {
             const end = new Date()
             const begin = new Date()
             begin.setDate(begin.getDate() - 1)
@@ -134,6 +149,39 @@ export default {
     display_datetime: display_datetime
   },
   computed: {
+
+    device_type () {
+      let r = null
+      if (this.device) {
+        const device_type = this.$store.state.devices_types.find(
+          item => item.id === this.device.type_id)
+        if (device_type) {
+          r = device_type
+        }
+      }
+      return r
+    },
+
+    device_props () {
+      let r = []
+      if (this.device_type) {
+        const props_length = this.device.props_titles.length
+        for (let co = 0; co < props_length; co++) {
+          if (this.device.props_titles[co].display) {
+            r.push({
+              'title': this.device.props_titles[co],
+              'value': this.device.props_values[co]
+            })
+          }
+        }
+      }
+      return r
+    },
+
+    custom_props () {
+      return CUSTOM_PROPS
+    },
+
     schedule () {
       let r = null
       if (this.device && this.device.schedule_id) {

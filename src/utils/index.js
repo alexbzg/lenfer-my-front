@@ -32,4 +32,10 @@ export function debugLog (msg) {
   }
 }
 
+export function seconds_to_timestring (val) {
+  const value = val || 0
+  const hr = Math.floor(value/3600)
+  const mn = Math.floor((value - hr*3600)/60)
+  return `${string_pad(hr)}:${string_pad(mn)}`
+}
 

@@ -134,33 +134,36 @@ export default {
         })
           .then(data => {
 
-            for (const x of data) {
+            if (data.length) {
 
-              if (data_min[co] === null || data_min[co] > x.value) {
-                data_min[co] = x.value
-              }
-              if (data_max[co] === null || data_max[co] < x.value) {
-                data_max[co] = x.value
-              }
-              const x_date = new Date(x.tstamp)
-              if (prev_date && x_date - prev_date > 600000) {
+              for (const x of data) {
+
+                if (data_min[co] === null || data_min[co] > x.value) {
+                  data_min[co] = x.value
+                }
+                if (data_max[co] === null || data_max[co] < x.value) {
+                  data_max[co] = x.value
+                }
+                const x_date = new Date(x.tstamp)
+                if (prev_date && x_date - prev_date > 600000) {
+                  dataset.data.push({
+                    x: new Date(x_date.getTime() + 300000),
+                    y: NaN
+                  })
+                }
+                prev_date = x_date
                 dataset.data.push({
-                  x: new Date(x_date.getTime() + 300000),
-                  y: NaN
+                  x: new Date(x.tstamp),
+                  y: x.value
                 })
               }
-              prev_date = x_date
-              dataset.data.push({
-                x: new Date(x.tstamp),
-                y: x.value
-              })
-            }
             
-            ready[co] = true
-            if (!ready.filter(item => !item).length) {
-              this.chart_options.scales.yAxes[0].ticks.min = Math.floor(Math.min(...data_min)/5)*5
-              this.chart_options.scales.yAxes[0].ticks.max = Math.floor(Math.max(...data_max)/5)*5 + 5
-              this.ready = true
+              ready[co] = true
+              if (!ready.filter(item => !item).length) {
+                this.chart_options.scales.yAxes[0].ticks.min = Math.floor(Math.min(...data_min)/5)*5
+                this.chart_options.scales.yAxes[0].ticks.max = Math.floor(Math.max(...data_max)/5)*5 + 5
+                this.ready = true
+              }
             }
 
         })
