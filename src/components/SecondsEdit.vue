@@ -2,15 +2,19 @@
     <masked-input
       type="text"
       v-model="edit_value"
-      :mask="[/\d/, /\d/, ':',  /\d/, /\d/]">
+      placeholderChar="0"
+      :mask="$options.MASK">
     </masked-input>
 </template>
 
 <script>
 import {seconds_to_timestring} from '../utils'
-import MaskedInput from 'vue-text-mask'
+import MaskedInput, {conformToMask} from 'vue-text-mask'
+
+const MASK = [/\d/, /\d/, ':',  /\d/, /\d/]
 
 export default {
+  MASK: MASK,
   name: "SecondsEdit",
   components: {MaskedInput},
   props: ["value"],
@@ -20,9 +24,10 @@ export default {
         return seconds_to_timestring(this.value)
       },
       set (value) {
+        const conformed_value = conformToMask(value, MASK, {placeholderChar: '0'}).conformedValue
         this.$emit('input', 
-          Number(value.substring(0,2))*3600 + 
-            Number(value.substring(3,5))*60)
+          Number(conformed_value.substring(0,2))*3600 + 
+            Number(conformed_value.substring(3,5))*60)
       }
     }
   }

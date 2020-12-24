@@ -40,40 +40,47 @@ export default {
   name: "FeederTimers",
   extends: DeviceProps,
   components: {SecondsEdit},
-  methods: {
-    new_item () {
-      return new Array(this.props_headers.items.length).fill(0)
-    }
-  },
   data () {
     return {
+      timers_order: this.order_timers(),
       validation_errors: {}
     }
   },
   computed: {
-    timers_order () {
-      let r = []
-      if (this.value) {
-        r = [...this.value].sort((a, b) => {
-          if (a[0] < b[0]){
-            return -1
-          }
-          if (a[0] > b[0]){
-            return 1
-          }
-          if (a[1] < b[1]){
-            return -1
-          }
-          if (a[1] > b[1]){
-            return 1
-          }
-          return 0
-        }).map(item => this.value.indexOf(item))        
+    timers_count () {
+      return this.value ? this.value.length : 0
+    }
+  },
+  methods: {
+    new_item () {
+      return new Array(this.props_headers.items.length).fill(0)
+    },
+    order_timers () {
+      let timers_order = []
+        if (this.value) {
+          timers_order = [...this.value].sort((a, b) => {
+            if (a[0] < b[0]){
+              return -1
+            }
+            if (a[0] > b[0]){
+              return 1
+            }
+            if (a[1] < b[1]){
+              return -1
+            }
+            if (a[1] > b[1]){
+              return 1
+            }
+            return 0
+        }).map(item => this.value.indexOf(item))
       }
-      return r
+      return timers_order
     }
   },
   watch: {
+    timers_count () {
+      this.timers_order = this.order_timers()
+    },
     value: {
       deep: true,
       handler () {
