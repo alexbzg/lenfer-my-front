@@ -1,30 +1,33 @@
 <template>
     <div id="feeder_timers">
         <span class="title">Расписание работы</span><br/>
-
         <table id="timers_setup">
             <tr>
                 <th>Начало</th>
                 <th>Длительность, сек</th>
                 <th></th>
             </tr>
-            <tr v-for="(item, item_idx) in value" class="timer" :key="item_idx">
-                <td :class="{error: item_idx in validation_errors && 0 in validation_errors[item_idx]}">
-                    <seconds-edit v-model="item[0]">
+            <tr>
+                <td colspan="3" style="text-align: center">
+                    <button class="add_timer" @click="value.push(new_item())">
+                        Добавить период
+                    </button>
+                </td>
+            </tr>
+            <tr v-for="(item, item_idx) in timers_order" class="timer" :key="item_idx">
+                <td :class="{error: item in validation_errors && 0 in validation_errors[item]}">
+                    <seconds-edit v-model="value[item][0]">
                     </seconds-edit>
                 </td>
-                <td :class="{error: item_idx in validation_errors && 1 in validation_errors[item_idx]}">
-                    <input type="number" v-model="item[1]" 
+                <td :class="{error: item in validation_errors && 1 in validation_errors[item]}">
+                    <input type="number" v-model="value[item][1]" 
                         @input="$emit('input', Number($event.target.value))"/>
                 </td>
-                <td @click="delete_item(props_headers, value, item_idx)">
+                <td @click="delete_item(props_headers, value, item)">
                     <img src="/images/icon_close.png" title="Удалить период"/>
                 </td>
             </tr>
         </table>
-        <button class="add_timer" @click="value.push(new_item())">
-            Добавить период
-        </button>
         <br/>
     </div>
 </template>
@@ -45,6 +48,29 @@ export default {
   data () {
     return {
       validation_errors: {}
+    }
+  },
+  computed: {
+    timers_order () {
+      let r = []
+      if (this.value) {
+        r = [...this.value].sort((a, b) => {
+          if (a[0] < b[0]){
+            return -1
+          }
+          if (a[0] > b[0]){
+            return 1
+          }
+          if (a[1] < b[1]){
+            return -1
+          }
+          if (a[1] > b[1]){
+            return 1
+          }
+          return 0
+        }).map(item => this.value.indexOf(item))        
+      }
+      return r
     }
   },
   watch: {
