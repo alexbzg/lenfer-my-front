@@ -67,7 +67,14 @@ input.btn[type="button"][disabled]{
 	color: #83befe;
 }
 
-
+.border{
+	border: 1px solid #eee;
+	padding: 10px;
+	border-radius: 10px;
+	display: inline-block;
+	margin: 30px;
+	vertical-align: text-top;
+}
 
 
 
@@ -179,6 +186,7 @@ input#login_btn{
     background-color: #fff;
 	border-radius: 10px;
 	border: 1px solid #ddd;
+	text-align: center;
 }
 .device_index h3{
     margin-bottom: 20px;
@@ -235,7 +243,6 @@ table.controller_table td.schedule_day, table.controller_table td span.current_d
 table.controller_table td span.current_time{
 	font-size: 10px;
 	font-weight: normal;
-	display: none;
 }
 
 table.controller_table td span.current_time.timeout{
@@ -298,12 +305,10 @@ table.controller_table td#schedule_start{
 
 
 
-a{
-	text-decoration: none;
-}
+
 
 table#timers{
-	margin: 20px auto;
+	margin: 0px auto;
 	border-collapse: collapse;
 }
 table#timers th{
@@ -342,6 +347,58 @@ table#log td.server_tstamp, table#log td.device_tstamp {
 
 
 
+table#timers_log{
+	border-collapse: collapse;
+}
+table#timers_log th{
+	padding: 0px 10px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 1em;
+	vertical-align: top;
+}
+table#timers_log td{
+	border-top: 1px solid #ddd;
+	padding: 5px 10px;
+	text-align: left;
+	vertical-align: middle;
+}
+table#timers_log th span, table#timers_log td span, table#timers_log td.comment, table#timers_log td.date{
+	font-size: 12px;
+	font-weight: normal;
+	color: #999;
+}
+
+
+table#timers_log td.status span.on{
+	font-size: 16px;
+	font-weight: bold;
+	color: #070;
+	margin-right: 7px;
+}
+table#timers_log td.status span.off{
+	font-size: 16px;
+	font-weight: bold;
+	color: #900;
+	margin-right: 7px;
+}
+table#timers_log td.status span.reverse{
+	font-size: 16px;
+	font-weight: bold;
+	color: #555;
+	margin-right: 7px;
+}
+table#timers_log td.status span.connection{
+	font-size: 14px;
+	color: #009;
+	margin-left: 20px;
+}
+table#timers_log td.status span.disconnection{
+	font-size: 14px;
+	color: #e3ff00;
+	margin-left: 20px;
+	background: #a00;
+}
 
 
 

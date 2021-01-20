@@ -46,16 +46,66 @@
             </sensor-chart>
         </div>
 
-        <router-link :to="'/settings/devices/' + device_id" v-if="device_props && device_props.length">
-            <template v-for="(prop, idx) in device_props">
-                <component v-if="prop.title.id in custom_props" :is="custom_props[prop.title.id]"
-                    :prop="prop" :key="idx"></component>
-                <div v-else :key="idx">
-                    <span class="prop_title">{{prop.title.title}}</span>
-                    <span class="prop_value">{{prop.value}}</span>
-                </div>
-            </template>
+        <router-link :to="'/settings/devices/' + device_id" 
+            v-if="device_props.custom.length || device_props.standart.length"
+            tag="div" class="border">
+            <component v-for="(prop, idx) in device_props.custom" :is="prop.component"
+                :prop="prop" :key="idx"></component>
+            <table id="props" v-if="device_props.standart.length">
+                <tr v-for="(prop, idx) in device_props.standart" :key="idx">
+                    <td class="prop_title">{{prop.title.title}}</td>
+                    <td class="prop_value">{{prop.value}}</td>
+                </tr>
+            </table>
         </router-link>
+
+        <div class="border" v-if="log && log.length">
+            <log-summary :log="log"></log-summary>
+        </div>
+
+        <!--!v class="border">
+        <table id="timers_log">
+            <tr>
+                <th class="date" rowspan="2">Дата</th>
+                <th class="ts_device" colspan="2">Время</th>
+                <th class="status" rowspan="2">Статус</th>
+            </tr>
+            <tr>
+                <th class="ts_device"><span>на устройcтве</span></th>
+                <th class="ts_server"><span>на сервере</span></th>
+            </tr>
+            <tr>
+                <td class="date">25 декабря 2020</td>
+                <td class="ts_device">17:30<span>:05</span></td>
+                <td class="ts_server">17:31<span>:17</span></td>
+                <td class="status">Нет связи с сервером</td>
+            </tr>
+            <tr>
+                <td class="date">25 декабря 2020</td>
+                <td class="ts_device">17:30<span>:05</span></td>
+                <td class="ts_server">17:31<span>:17</span></td>
+                <td class="status"><span class="reverse">Включен реверс</span> <span>(~750мА)</span></td>
+            </tr>
+            <tr>
+                <td class="date">25 декабря 2020</td>
+                <td class="ts_device">17:30<span>:05</span></td>
+                <td class="ts_server">17:31<span>:17</span></td>
+                <td class="status"><span class="off">Выключено</span> <span>по таймеру (~200мА, макс.287мА)</span></td>
+            </tr>
+            <tr>
+                <td class="date">25 декабря 2020</td>
+                <td class="ts_device">17:30<span>:05</span></td>
+                <td class="ts_server">17:31<span>:17</span></td>
+                <td class="status"><span class="on">Включено</span> <span>по таймеру</span></td>
+            </tr>
+            <tr>
+                <td class="date">25 декабря 2020</td>
+                <td class="ts_device">17:30<span>:05</span></td>
+                <td class="ts_server">17:31<span>:17</span></td>
+                <td class="status">Подключено к серверу</td>
+            </tr>
+        </table>
+        </div-->
 
         <table id="log" v-if="log && log.length">
             <tr class="head">
@@ -69,7 +119,7 @@
                 <td class="txt">{{entry.txt}}</td>
             </tr>
         </table>
-           
+
 
     </div>
 </template>
@@ -83,6 +133,7 @@ import {DEVICE_PARAMS} from '../../definitions'
 import {display_datetime} from '../../utils'
 
 import SensorChart from './SensorChart'
+import LogSummary from './LogSummary'
 
 const SHOW_LOG_DEVICE_TYPES = ["Feeder"]
 
@@ -90,7 +141,7 @@ const CUSTOM_PROPS = {timers: () => import('./Timers')}
 
 export default {
   name: 'DeviceIndex',
-  components: {SensorChart},
+  components: {SensorChart, LogSummary},
   props: ['device_id'],
   data () {
     return {
@@ -129,7 +180,7 @@ export default {
               }
             }
           }
-          
+
           if (SHOW_LOG_DEVICE_TYPES.includes(this.device.type)) {
             const end = new Date()
             const begin = new Date()
@@ -163,23 +214,25 @@ export default {
     },
 
     device_props () {
-      let r = []
+      let r = {'custom': [], 'standart': []}
       if (this.device_type) {
         const props_length = this.device.props_titles.length
         for (let co = 0; co < props_length; co++) {
           if (this.device.props_titles[co].display) {
-            r.push({
+            const prop = {
               'title': this.device.props_titles[co],
               'value': this.device.props_values[co]
-            })
+            }
+            if (prop.title.id in CUSTOM_PROPS) {
+              prop.component = CUSTOM_PROPS[prop.title.id]
+              r.custom.push(prop)
+            } else {
+              r.default.push(prop)
+            }
           }
         }
       }
       return r
-    },
-
-    custom_props () {
-      return CUSTOM_PROPS
     },
 
     schedule () {
