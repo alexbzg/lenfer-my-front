@@ -81,6 +81,13 @@ export default {
             if (line == 'device start' || line == 'disconnected') {
               entry.class = 'connection'
               entry.status = line == 'disconnected' ? 'Нет связи с сервером' : 'Подключено к серверу'
+            } else if (line.includes('reverse')) {
+              entry.class = 'reverse'
+              const reverse_on = line.includes(' on')
+              entry.status = `${reverse_on ? 'Включен' : 'Выключен'} реверс`
+              if (reverse_on && aggregates.current.last) {
+                entry.comments = `(~${aggregates.current.last}мА)`
+              }
             } else if (line.includes('Feeder start')) {
               entry.class = 'on'
               entry.status = 'Включено'
@@ -97,8 +104,8 @@ export default {
               if (current_avg || aggregates.current.max) {
                 entry.comments += ' ('
                 if (current_avg) {
-                  entry.comments += `~${current_avg}мА`
-                  if (aggregates.current.max || aggregate.current.min) {
+                  entry.comments += `~${aggregates.current.last}мА`
+                  if (aggregates.current.max || aggregates.current.min) {
                     entry.comments += `, `
                   }
                 } 

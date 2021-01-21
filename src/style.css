@@ -393,12 +393,7 @@ table#timers_log td.status span.connection{
 	color: #009;
 	margin-left: 20px;
 }
-table#timers_log td.status span.disconnection{
-	font-size: 14px;
-	color: #e3ff00;
-	margin-left: 20px;
-	background: #a00;
-}
+
 
 
 
