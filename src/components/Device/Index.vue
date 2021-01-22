@@ -5,7 +5,7 @@
             <span class="info_title">{{device.title ? device.title : device.type}}</span>
         </div>
 
-
+        <div class="border">
         <table class="controller_table" v-if="device_type && device_type.schedule_params">
             <tr id="header">
                 <th v-for="param in sensors_charts" :key="param.id" class="parameter">
@@ -27,7 +27,7 @@
                       </template>
                       <template v-if="!schedule || !schedule.today.params"></template>
                     </span>
-                    <br/><span class="current_time" :class="{timeout: param.timeout}">{{param.tstamp}}</span>
+                    <!-- <br/><span class="current_time" :class="{timeout: param.timeout}">{{param.tstamp}}</span> -->
                 </td>
                 <td class="schedule_day">
                     <template v-if="schedule">{{schedule.today.day_no}}</template>
@@ -38,15 +38,29 @@
                     </router-link>
                 </td>
             </tr>
+            <tr>
+                <td colspan="4">
+                    <span class="current_time">
+                        {{sensors_charts[0].tstamp}}
+                    </span>
+                </td>
+            </tr>
         </table>
+        </div>
+
+        <div class="right" v-if="sensors_charts.length">
+          <div id="charts_button" class="btn" @click="toggle_chart_interval">
+              {{$options.CHART_INTERVALS_SETTINGS[chart_interval_idx].title}}
+          </div>
+        </div>
 
         <div v-for="sensors_param in sensors_charts" :key="sensors_param.id" class="sensor_data_chart">
             <h4>{{sensors_param.title}}</h4>
-            <sensor-chart :sensors="sensors_param.sensors">
+            <sensor-chart :sensors="sensors_param.sensors" :interval="chart_interval">
             </sensor-chart>
         </div>
 
-        <router-link :to="'/settings/devices/' + device_id" 
+        <router-link :to="'/settings/devices/' + device_id"
             v-if="device_props.custom.length || device_props.standart.length"
             tag="div" class="border">
             <component v-for="(prop, idx) in device_props.custom" :is="prop.component"
@@ -62,50 +76,6 @@
         <div class="border" v-if="log && log.length">
             <log-summary :log="log"></log-summary>
         </div>
-
-        <!--!v class="border">
-        <table id="timers_log">
-            <tr>
-                <th class="date" rowspan="2">Дата</th>
-                <th class="ts_device" colspan="2">Время</th>
-                <th class="status" rowspan="2">Статус</th>
-            </tr>
-            <tr>
-                <th class="ts_device"><span>на устройcтве</span></th>
-                <th class="ts_server"><span>на сервере</span></th>
-            </tr>
-            <tr>
-                <td class="date">25 декабря 2020</td>
-                <td class="ts_device">17:30<span>:05</span></td>
-                <td class="ts_server">17:31<span>:17</span></td>
-                <td class="status">Нет связи с сервером</td>
-            </tr>
-            <tr>
-                <td class="date">25 декабря 2020</td>
-                <td class="ts_device">17:30<span>:05</span></td>
-                <td class="ts_server">17:31<span>:17</span></td>
-                <td class="status"><span class="reverse">Включен реверс</span> <span>(~750мА)</span></td>
-            </tr>
-            <tr>
-                <td class="date">25 декабря 2020</td>
-                <td class="ts_device">17:30<span>:05</span></td>
-                <td class="ts_server">17:31<span>:17</span></td>
-                <td class="status"><span class="off">Выключено</span> <span>по таймеру (~200мА, макс.287мА)</span></td>
-            </tr>
-            <tr>
-                <td class="date">25 декабря 2020</td>
-                <td class="ts_device">17:30<span>:05</span></td>
-                <td class="ts_server">17:31<span>:17</span></td>
-                <td class="status"><span class="on">Включено</span> <span>по таймеру</span></td>
-            </tr>
-            <tr>
-                <td class="date">25 декабря 2020</td>
-                <td class="ts_device">17:30<span>:05</span></td>
-                <td class="ts_server">17:31<span>:17</span></td>
-                <td class="status">Подключено к серверу</td>
-            </tr>
-        </table>
-        </div-->
 
         <table id="log" v-if="log && log.length">
             <tr class="head">
@@ -138,15 +108,21 @@ import LogSummary from './LogSummary'
 const SHOW_LOG_DEVICE_TYPES = ["Feeder"]
 
 const CUSTOM_PROPS = {timers: () => import('./Timers')}
+const CHART_INTERVALS_SETTINGS = [
+  {title: '4 часа', hours: 4},
+  {title: '24 часа', hours: 24}
+]
 
 export default {
   name: 'DeviceIndex',
   components: {SensorChart, LogSummary},
+  CHART_INTERVALS_SETTINGS: CHART_INTERVALS_SETTINGS,
   props: ['device_id'],
   data () {
     return {
       device: {},
       log: null,
+      chart_interval_idx: 0,
       sensors_charts: []
     }
   },
@@ -154,6 +130,13 @@ export default {
     this.load_device()
   },
   methods: {
+    async toggle_chart_interval () {
+      if (this.chart_interval_idx === CHART_INTERVALS_SETTINGS.length - 1) {
+        this.chart_interval_idx = 0
+      } else {
+        this.chart_interval_idx++
+      }
+    },
     async load_device () {
       this.device = {}
       this.log = null
@@ -200,6 +183,13 @@ export default {
     display_datetime: display_datetime
   },
   computed: {
+
+    chart_interval () {
+      const end = new Date()
+      const begin = new Date()
+      begin.setHours(begin.getHours() - CHART_INTERVALS_SETTINGS[this.chart_interval_idx].hours)
+      return [begin, end]
+    },
 
     device_type () {
       let r = null

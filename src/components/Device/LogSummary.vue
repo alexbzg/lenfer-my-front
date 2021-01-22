@@ -2,25 +2,19 @@
     <table id="timers_log">
         <tr>
             <th class="date" rowspan="2">Дата</th>
-            <th class="ts_device" colspan="2">Время</th>
+            <th class="ts_device">Время</th>
             <th class="status" rowspan="2">Статус</th>
         </tr>
         <tr>
             <th class="ts_device"><span>на устройcтве</span></th>
-            <th class="ts_server"><span>на сервере</span></th>
         </tr>
         <tr v-for="(entry, idx) in entries" :key="idx">
             <td class="date">{{entry.date}}</td>
             <td class="ts_device">
-                {{entry.device_time.h}}:{{entry.device_time.m}}
-                <span>{{entry.device_time.s}}</span>
-            </td>
-            <td class="ts_server">
-                {{entry.server_time.h}}:{{entry.server_time.m}}
-                <span>{{entry.server_time.s}}</span>
+                {{entry.device_time.h}}:{{entry.device_time.m}}<span>:{{entry.device_time.s}}</span>
             </td>
             <td class="status">
-                <span :class="entry.class">{{entry.status}}</span> 
+                <span :class="entry.class">{{entry.status}}</span>
                 <span v-if="entry.comments">{{entry.comments}}</span>
             </td>
         </tr>
@@ -39,7 +33,7 @@ function split_time (val) {
 
 function create_entry (log_entry) {
   const date_str = log_entry.rcvd_tstamp.split(' ')[0]
-  const date_array = date_str.split('-')  
+  const date_array = date_str.split('-')
   return {
     date: `${date_array[2]} ${RU_MONTH[parseInt(date_array[1]) - 1]} ${date_array[0]}`,
     device_time: split_time(log_entry.log_tstamp.split(' ')[1]),
@@ -81,7 +75,7 @@ export default {
             if (line == 'device start' || line == 'disconnected') {
               entry.class = 'connection'
               entry.status = line == 'disconnected' ? 'Нет связи с сервером' : 'Подключено к серверу'
-            } else if (line.includes('reverse')) {
+            } else if (line.includes(' reverse ')) {
               entry.class = 'reverse'
               const reverse_on = line.includes(' on')
               entry.status = `${reverse_on ? 'Включен' : 'Выключен'} реверс`
@@ -91,12 +85,14 @@ export default {
             } else if (line.includes('Feeder start')) {
               entry.class = 'on'
               entry.status = 'Включено'
-              entry.comments = line.includes('timer') ? 'по таймеру' : 'вручную'
+              entry.status += line.includes('timer') ? ' по таймеру' : ' вручную'
+              entry.comments = ''
               aggregates = init_aggregates()
             } else if (line.includes('Feeder stop')) {
               entry.class = 'off'
               entry.status = 'Выключено'
-              entry.comments = line.includes('timer') ? 'по таймеру' : 'вручную'
+              entry.status += line.includes('timer') ? ' по таймеру' : ' вручную'
+              entry.comments = ''
               let current_avg = 0
               if (aggregates.current.count) {
                 current_avg = Math.round(aggregates.current.sum/aggregates.current.count)
@@ -104,11 +100,11 @@ export default {
               if (current_avg || aggregates.current.max) {
                 entry.comments += ' ('
                 if (current_avg) {
-                  entry.comments += `~${aggregates.current.last}мА`
+                  entry.comments += `~${aggregates.current.last} мА`
                   if (aggregates.current.max || aggregates.current.min) {
                     entry.comments += `, `
                   }
-                } 
+                }
                 if (aggregates.current.min)
                 {
                   entry.comments += `мин.${Math.round(aggregates.current.min)}, `
@@ -120,7 +116,7 @@ export default {
                 entry.comments += ')'
               }
               aggregates = init_aggregates()
-            } 
+            }
             r.push(entry)
           }
         }
