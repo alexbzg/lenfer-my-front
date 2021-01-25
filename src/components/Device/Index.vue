@@ -50,7 +50,7 @@
 
         <div class="right" v-if="sensors_charts.length">
           <div id="charts_button" class="btn" @click="toggle_chart_interval">
-              {{$options.CHART_INTERVALS_SETTINGS[chart_interval_idx].title}}
+              {{$options.CHART_INTERVALS_SETTINGS[chart_interval_idx_next].title}}
           </div>
         </div>
 
@@ -131,11 +131,7 @@ export default {
   },
   methods: {
     async toggle_chart_interval () {
-      if (this.chart_interval_idx === CHART_INTERVALS_SETTINGS.length - 1) {
-        this.chart_interval_idx = 0
-      } else {
-        this.chart_interval_idx++
-      }
+      this.chart_interval_idx = this.chart_interval_idx_next
     },
     async load_device () {
       this.device = {}
@@ -191,6 +187,14 @@ export default {
       return [begin, end]
     },
 
+    chart_interval_idx_next () {
+      if (this.chart_interval_idx === CHART_INTERVALS_SETTINGS.length - 1) {
+        return 0
+      } else {
+        return this.chart_interval_idx + 1
+      } 
+    },
+
     device_type () {
       let r = null
       if (this.device) {
@@ -238,7 +242,11 @@ export default {
             const day = Math.floor((now - start) / (1000 * 60 * 60 * 24))
             if (day < schedule.days) {
               r.today = schedule.items[day]
+            } else {
+              r.today = schedule.items[schedule.days - 1]
             }
+          } else if  (schedule.days > 0) {
+            r.today = schedule.items[0]
           }
           if (!r.today) {
            r.today = {day_no: '-'}
