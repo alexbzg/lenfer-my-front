@@ -3,6 +3,7 @@
         <tr>
             <th>Начало</th>
             <th>Длительность</th>
+            <th class="report"></th>
         </tr>
         <tr v-for="(item, idx) in timers" class="timer" :key="idx">
             <td class="start">
@@ -11,6 +12,9 @@
             <td class="duration">
                 {{item[1]}} сек
             </td>
+            <!--td class="report">
+                <img src="/images/icon_done.png" />
+            </td-->
         </tr>
     </table>
 </template>

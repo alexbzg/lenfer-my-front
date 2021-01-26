@@ -5,16 +5,25 @@
             <span class="info_title">{{device.title ? device.title : device.type}}</span>
         </div>
 
-        <div class="border">
-        <table class="controller_table" v-if="device_type && device_type.schedule_params">
-            <tr id="header">
+        <div class="border" v-if="(device_type && device_type.schedule_params) 
+            || sensors_charts.length">
+        <table class="controller_table">
+            <tr id="header" v-if="device_type && device_type.schedule_params">
                 <th v-for="param in sensors_charts" :key="param.id" class="parameter">
                     {{param.title}}
                 </th>
                 <th class="schedule_day">День</th>
                 <th id="schedule">Таблица работы</th>
             </tr>
-            <tr>
+            <tr v-else>
+                <template v-for="param in sensors_charts">
+                    <th v-for="sensor in param.sensors" class="parameter" 
+                        :key="sensor.id">
+                        {{sensor.title ? sensor.title : sensor.default_title}}
+                    </th>
+                </template>
+            </tr>
+            <tr v-if="device_type && device_type.schedule_params">
                 <td v-for="param in sensors_charts" :key="param.id" class="parameter">
                     <span class="current_data" >
                         {{param.value}}<template v-if="param.unit">{{param.unit}}</template>
@@ -27,7 +36,6 @@
                       </template>
                       <template v-if="!schedule || !schedule.today.params"></template>
                     </span>
-                    <!-- <br/><span class="current_time" :class="{timeout: param.timeout}">{{param.tstamp}}</span> -->
                 </td>
                 <td class="schedule_day">
                     <template v-if="schedule">{{schedule.today.day_no}}</template>
@@ -38,9 +46,19 @@
                     </router-link>
                 </td>
             </tr>
+            <tr v-else>
+                <template v-for="param in sensors_charts">
+                    <td v-for="sensor in param.sensors" class="parameter" 
+                        :key="sensor.id">
+                        <span class="current_data" v-if="sensor.value">
+                            {{sensor.value}}{{param.unit}}
+                        </span>
+                    </td>
+                </template>
+            </tr>
             <tr>
                 <td colspan="4">
-                    <span class="current_time">
+                    <span class="current_time" :class="{timeout: sensors_charts[0].timeout}">
                         {{sensors_charts[0].tstamp}}
                     </span>
                 </td>
@@ -192,7 +210,7 @@ export default {
         return 0
       } else {
         return this.chart_interval_idx + 1
-      } 
+      }
     },
 
     device_type () {

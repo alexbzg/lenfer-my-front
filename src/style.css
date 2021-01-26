@@ -330,6 +330,9 @@ table#timers td{
 	border-top: 1px solid #ddd;
 	padding: 0 50px;
 }
+table#timers th.report, table#timers td.report{
+	padding: 0 10px;
+}
 
 
 
@@ -400,6 +403,47 @@ table#timers_log td.status span.connection{
 	font-size: 14px;
 	color: #009;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+table#climat_informer{
+	margin: 0px auto;
+	border-collapse: collapse;
+}
+table#climat_informer th{
+	border-bottom: 1px solid #ddd;
+	font-weight: bold;
+	padding: 0px 50px;
+}
+table#climat_informer td{
+	padding: 0px 50px;
+}
+table#climat_informer td.current_time{
+	padding: 5px 50px;
+	font-size: 10px;
+	font-weight: normal;
+	line-height: 10px;
+	color: #777;
+}
+
+table#climat_informer td.current_time span.timeout{
+	display: inline-block;
+	background: url(/images/flashing.gif);
+	color: #faffb2;
+	padding: 3px 10px;
+	line-height: 10px;
+}
+
+
 
 
 
