@@ -119,6 +119,7 @@ export default {
           }
         }
       }
+      this.$emit('summary', r)
       return r
     }
   }

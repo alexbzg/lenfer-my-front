@@ -329,9 +329,11 @@ table#timers th{
 table#timers td{
 	border-top: 1px solid #ddd;
 	padding: 0 50px;
+	vertical-align: middle;
 }
 table#timers th.report, table#timers td.report{
-	padding: 0 10px;
+	padding: 5px 10px ;
+	line-height: 10px;
 }
 
 

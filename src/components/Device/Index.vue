@@ -82,7 +82,7 @@
             v-if="device_props.custom.length || device_props.standart.length"
             tag="div" class="border">
             <component v-for="(prop, idx) in device_props.custom" :is="prop.component"
-                :prop="prop" :key="idx"></component>
+                :prop="prop" :key="idx" :log="log"></component>
             <table id="props" v-if="device_props.standart.length">
                 <tr v-for="(prop, idx) in device_props.standart" :key="idx">
                     <td class="prop_title">{{prop.title.title}}</td>
@@ -172,7 +172,7 @@ export default {
                   sensors: sensors,
                   value: this.device.sensors_params[DEVICE_PARAMS[co].id].master.value,
                   tstamp: display_datetime(tstamp),
-                  timeout: now - tstamp > 1800000
+                  timeout: now - tstamp > 600000
                 })
               }
             }
