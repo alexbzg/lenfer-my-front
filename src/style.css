@@ -99,9 +99,6 @@ table#top_menu{
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	background-color:#fff;
-	border-bottom: 1px solid #ddd;
-	box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
 }
 table#top_menu td{
 	padding: 0;
@@ -109,28 +106,30 @@ table#top_menu td{
 }
 table#top_menu td#logo{
 	width:250px;
-	padding-left: 50px;
+	padding: 0 10px 0 50px;
 	text-align: left;
 }
 table#top_menu td#device_list{
 	text-align: center;
-	padding-top: 15px;
-	font-size: 18px;
+	padding: 10px 10px 0px 10px;
+	font-size: 16px;
 }
 table#top_menu td#device_list a{
-	margin-right: 30px;
+	display: inline-block;
+	margin: 0 30px 7px 0;
 	font-weight: bold;
-	background-color: #eee;
+	background-color: #fff;
 	border-radius: 5px;
-	border: 1px solid #ddd;
+	border: 1px solid #ccc;
 	padding: 5px 20px;
 	text-decoration: none;
 	cursor: pointer;
+	line-height: 14px;
 }
 
 table#top_menu td#menu_links{
 	width:250px;
-	padding: 15px 20px 0 0;
+	padding: 10px 20px 0 0;
 	text-align: right;
 }
 table#top_menu td#menu_links a{
@@ -184,7 +183,7 @@ input#login_btn{
 	position: relative;
     width: 90%;
     max-width: 1600px;
-    margin: 20px auto 50px auto;
+    margin: 0px auto 50px auto;
     background-color: #fff;
 	border-radius: 10px;
 	border: 1px solid #ddd;

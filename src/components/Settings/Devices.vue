@@ -60,6 +60,10 @@
                     <input class="btn" type="submit" value="Сохранить"
                         :disabled="pending" @click="post_device"/>
                     <input class="btn cancel" type="submit" value="Отмена" @click="open_device(null)"/>
+                    <br/>
+                    <input class="btn delete" type="submit" value="Удалить устройство"
+                        :disabled="pending" @click="delete_device"/>
+
                 </div>
               </td>
             </tr>
@@ -145,6 +149,18 @@ export default {
             this.pending = false
           })
       }
+    },
+    async delete_device () {
+      messageBox('Удаление устройства',
+        'Вы действительно хотите удалить это устройство?',
+        true)
+        .then(() => {
+          userDataPost('device/' + this.edit_device.id, {delete: true})
+            .then(() => {
+              this.open_device(null)
+              this.$store.dispatch(LOAD_DEVICES_ACTION)
+            })
+        })
     },
     async post_device () {
       for (const field in this.edit_device.props_validation) {
