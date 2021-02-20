@@ -184,7 +184,7 @@
             "minLength": 1
         },
         "title": {
-            "type": "string"
+            "type": ["string", "null"]
         },
         "enabled": {
             "type": "boolean"

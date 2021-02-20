@@ -18,6 +18,7 @@ const SET_DEVICES_TYPES_MUTATION = 'setDevicesTypesMttn'
 const SET_SCHEDULES_MUTATION = 'setSchedulessMttn'
 
 export const LOGIN_ACTION = 'loginActn'
+export const REGISTER_ACTION = 'regActn'
 export const LOAD_DEVICES_ACTION = 'loadDeviceActn'
 export const LOAD_SCHEDULES_ACTION = 'loadSchedulesActn'
 const LOAD_DEVICES_TYPES_ACTION = 'loadDevicesTypesActn'
@@ -75,6 +76,12 @@ const store = new Vuex.Store({
         .then(data => { 
           commit(SET_USER_MUTATION, {user: data, remember: true}) 
           dispatch(LOAD_DEVICES_ACTION)
+        })
+    },
+    [REGISTER_ACTION] ({commit}, payload) {
+      return dataPost('register_user', payload)
+        .then(data => { 
+          commit(SET_USER_MUTATION, {user: data, remember: true}) 
         })
     },
     [LOAD_DEVICES_ACTION] ({commit}) {

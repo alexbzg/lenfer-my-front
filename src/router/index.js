@@ -16,7 +16,8 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      props: route => ({ token: route.query.token })
     },
     {
       path: '/device/:device_id',
