@@ -1,4 +1,32 @@
 <template>
+  <div id="app">
+    <div id="logo">
+      <router-link id="home_link" to="/">
+        <img src="/images/logo_lk.png" title="Личный кабинет" />
+      </router-link>
+      <template v-if="userLogin">
+        <div id="menu_links">
+          <router-link id="lk_setup_link" to="/settings">Настройки</router-link>
+          <a id="lk_logout_link" href="#" @click="logout()">Выход</a>
+        </div>
+      </template>
+    </div>
+
+    <template v-if="userLogin">
+      <div id="device_list">
+        <router-link class="device_btn" v-for="(device, idx) in devices" :key="idx"
+                :class="{timeout: device.timeout}" :to="'/device/' + device.id">
+                {{device.title ? device.title : device.type_title}}
+        </router-link>
+      </div>
+    </template>
+
+    <router-view></router-view>
+  </div>
+</template>
+
+
+<!--
     <div id="app">
 
         <table id="top_menu">
@@ -25,7 +53,11 @@
 
         <router-view></router-view>
     </div>
-</template>
+-->
+
+
+
+
 
 <script>
 
