@@ -1,11 +1,20 @@
 <template>
+    <div>
+    <div id="device_list" v-if="userLogin">
+        <router-link class="device_btn" v-for="(device, idx) in devices" :key="idx"
+                :class="{timeout: device.timeout}" :to="'/device/' + device.id">
+                {{device.title ? device.title : device.type_title}}
+        </router-link>
+    </div>
+
+
   <div class="device_index" v-if="device">
 
-        <div class="controller_info">
+<!--        <div class="controller_info">
             <span class="info_title">{{device.title ? device.title : device.type}}</span>
-        </div>
+        </div> -->
 
-        <div class="border" v-if="(device_type && device_type.schedule_params) 
+        <div class="border" v-if="(device_type && device_type.schedule_params)
             || sensors_charts.length">
         <table class="controller_table">
             <tr id="header" v-if="device_type && device_type.schedule_params">
@@ -17,7 +26,7 @@
             </tr>
             <tr v-else>
                 <template v-for="param in sensors_charts">
-                    <th v-for="sensor in param.sensors" class="parameter" 
+                    <th v-for="sensor in param.sensors" class="parameter"
                         :key="sensor.id">
                         {{sensor.title ? sensor.title : sensor.default_title}}
                     </th>
@@ -48,7 +57,7 @@
             </tr>
             <tr v-else>
                 <template v-for="param in sensors_charts">
-                    <td v-for="sensor in param.sensors" class="parameter" 
+                    <td v-for="sensor in param.sensors" class="parameter"
                         :key="sensor.id">
                         <span class="current_data" v-if="sensor.value">
                             {{sensor.value}}{{param.unit}}
@@ -110,9 +119,12 @@
 
 
     </div>
+    </div>
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 import strftime from 'strftime'
 
 import load_device from '../../device'
@@ -197,6 +209,10 @@ export default {
     display_datetime: display_datetime
   },
   computed: {
+    ...mapState(['devices']),
+    userLogin () {
+      return this.$store.getters.userLogin
+    },
 
     chart_interval () {
       const end = new Date()

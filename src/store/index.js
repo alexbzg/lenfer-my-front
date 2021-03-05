@@ -7,7 +7,6 @@ import storage from '../storage'
 import {get, dataPost} from '../api'
 import router from '../router'
 import {Schedule} from '../schedule'
-import {debugLog} from '../utils'
 
 const STORAGE_KEY_USER = 'user'
 
@@ -89,7 +88,6 @@ const store = new Vuex.Store({
         if (device) {
           Vue.set(device, 'last_tstamp', tstamp)
           Vue.set(device, 'timeout', now - tstamp > 60000)
-          debugLog(device)
         }
       }
     }

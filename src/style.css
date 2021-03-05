@@ -73,7 +73,7 @@ input.btn[type="button"][disabled]{
 	padding: 10px 10px 0px 10px;
 	border-radius: 10px;
 	display: inline-block;
-	margin: 30px;
+	margin: 0px 30px 30px 30px;
 	vertical-align: text-top;
 }
 .right{
@@ -139,9 +139,13 @@ input.btn[type="button"][disabled]{
 	line-height: 14px;
 }
 #device_list a.timeout{
-	border-color: #f99;
 	background-color: #fffeee;
 }
+#device_list a.router-link-active{
+	border-color: #000;
+}
+
+
 
 
 
@@ -205,7 +209,7 @@ input#login_btn{
 
 
 .controller_info{
-	padding: 30px 30px 10px 30px;
+	padding: 0px 30px 10px 30px;
 	color: #333;
 	text-align: left;
 	line-height: 24px;
@@ -229,7 +233,7 @@ input#login_btn{
 
 table.controller_table{
 	border-collapse: collapse;
-	margin: 10px auto 0 auto;
+	margin: 0 auto;
 	font-size: 20px;
 	line-height: 18px;
 	color: #777;
@@ -472,26 +476,44 @@ table#climat_informer td.current_time span.timeout{
 
 
 .settings_index {
-    width: 900px;
-    max-width: 1600px;
-    margin: 20px auto 50px auto;
+    margin: 0px auto 50px auto;
 	min-height: 300px;
-	padding: 0 20px 20px 20px;
+	padding: 0;
 }
 
 
 
-
-
-
+.settings_menu{
+	width: 100%;
+	padding: 15px 0px 5px 0;
+	margin-bottom: 20px;
+	background-color: #eee;
+	text-align: center;
+	font-size: 16px;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+}
 .settings_menu a{
-	margin: 0 20px;
-	color: #333;
+	display: inline-block;
+	margin: 0 30px 7px 0;
+	padding: 5px 20px ;
+	font-weight: bold;
+	background-color: #fff;
+	border-radius: 5px;
+	border: 1px solid #ddd;
+	text-decoration: none;
+	cursor: pointer;
+	line-height: 14px;
 }
+.settings_menu a.router-link-exact-active{
+	border-color: #000;
+}
+
+
 
 .settings_devices{
-	margin: 30px auto;
-
+	margin: 20px auto;
+	width: 1000px;
 }
 
 
@@ -522,7 +544,7 @@ table#settings_devices_table td{
 }
 
 table#settings_devices_table td.title{
-	width: 150px;
+	width: 250px;
 	font-weight: bold;
 	cursor: pointer;
 }
@@ -693,7 +715,8 @@ table#timers_setup td.error input{
 
 
 #settings_schedules{
-	margin-top: 30px;
+	margin: 30px auto;
+	width: 1000px;
 }
 
 #new_schedule_button{

@@ -12,15 +12,6 @@
       </template>
     </div>
 
-    <template v-if="userLogin">
-      <div id="device_list">
-        <router-link class="device_btn" v-for="(device, idx) in devices" :key="idx"
-                :class="{timeout: device.timeout}" :to="'/device/' + device.id">
-                {{device.title ? device.title : device.type_title}}
-        </router-link>
-      </div>
-    </template>
-
     <router-view></router-view>
   </div>
 </template>
