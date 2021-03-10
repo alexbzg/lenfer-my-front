@@ -211,7 +211,6 @@ export default {
             }
         }
         p.then(() => {
-          this.open_device(null)
           this.$store.dispatch(LOAD_DEVICES_ACTION)
         })
       } else {
