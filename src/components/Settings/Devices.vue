@@ -2,29 +2,11 @@
     <div class="settings_devices">
           <table id="settings_devices_table">
             <tr>
-              <td class="title">
-                <div v-for="device in devices" :key="device.id"
-                    @click="open_device(device)">
-                    <div class="device_title">{{device.title}}</div>
-                    <div class="device_type">{{device.type_title}} / {{device.hash}}</div>
-                </div>
-                <input type="submit" value="Добавить устройство"
-                    @click="register_device = !register_device; edit_device = false"
-                    id="new_schedule_button" />
-              </td>
               <td class="settings_window">
-                <div class="add_device" v-if="register_device">
-                    Введите код устройства<br/>
-                    <input type="text" :class="{error: register_device_hash.length < 6}"
-                        v-model="register_device_hash"/><br/>
-                    <input class="btn" type="submit" @click="register_device_post"
-                        :disabled="register_device_hash.length < 6 || pending"
-                        value="Отправить"/>
-                </div>
                 <div class="settings" v-if="edit_device">
                     <div class="title">
-                        <span class="title">Название устройства на сайте</span><br/>
-                        <input type="text" v-model="edit_device.title"/>
+                        <input type="text" v-model="edit_device.title"/><br/>
+                        <span class="title">название устройства на сайте</span>
                     </div>
                     <device-props :props_headers="edit_device.props_titles"
                         :device_type_id="edit_device.type_id"
@@ -32,11 +14,11 @@
                         v-model="edit_device.props_values">
                     </device-props>
                     <template v-if="edit_device.enable_schedule">
-                        <span class="title">Таблица работы</span><br/>
                         <select v-model="edit_device.schedule_id">
                             <option v-for="schedule in schedules" :key="schedule.id"
                                 :value="schedule.id">{{schedule.title}}</option>
-                        </select>
+                        </select><br/>
+                        <span class="title">таблица работы</span>
                     </template>
 
                     <table id="device_sensor_setup" class="sensors_param" v-if="edit_device.sensors">
@@ -68,6 +50,7 @@
               </td>
             </tr>
           </table>
+
     </div>
 </template>
 
@@ -211,7 +194,7 @@ export default {
         }
       }
       if (queries.length) {
-        this.pending = false
+        this.pending = true
         let p = null
 
         for (const query of queries) {
@@ -234,19 +217,6 @@ export default {
       } else {
         this.open_device(null)
       }
-    },
-    async register_device_post () {
-      userDataPost('device/register', {device_hash: this.register_device_hash})
-        .then(() => {
-          this.register_device_hash = ''
-          this.$store.dispatch(LOAD_DEVICES_ACTION)
-        })
-        .catch(error => {
-          messageBox('Регистрация устройства', error.message)
-        })
-        .finally(() => {
-          this.pending = false
-        })
     }
 
   }

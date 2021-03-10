@@ -5,7 +5,6 @@
                 :props_headers="prop" :value="value[idx]" @validated="on_validated">
             </component>
             <div class="prop" v-else :key="idx">
-                <span class="title">{{prop.title}}</span><br/>
                 <template v-if="prop.type === 'date'">
                     <date-picker v-model="value[idx]" locale="ru"
                         :masks="{input: 'DD MMMM'}"></date-picker>
@@ -16,6 +15,7 @@
                 <template v-if="prop.type === 'integer'">
                     <input type="number" v-model="value[idx]"/>
                 </template>
+                <br/><span class="title">{{prop.title}}</span>
                 <template v-if="'items' in prop">
                     <div v-for="(item, item_idx) in value[idx]" class="prop_item" :key="item_idx">
                         <device-props :props_headers="prop.items" :value="item">

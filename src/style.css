@@ -11,7 +11,7 @@ html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p, a, img, ol, ul, li, fi
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 html, body{
 	width: 100%;
@@ -56,12 +56,12 @@ option{
 	display: inline-block;
 }
 input, select, option{
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	padding: 5px 20px;
-	margin-bottom: 10px;
+	border: none;
+	border-bottom: 1px solid #ccc;
+	padding: 5px 20px 0px 20px;
+	margin: 10px 0 0 0;
 	font-weight: bold;
-	font-size: 16px;
+	font-size: 18px;
 	text-align: center;
 }
 input.btn[type="button"][disabled]{
@@ -73,7 +73,7 @@ input.btn[type="button"][disabled]{
 	padding: 10px 10px 0px 10px;
 	border-radius: 10px;
 	display: inline-block;
-	margin: 0px 30px 30px 30px;
+	margin: 0px 30px 0px 30px;
 	vertical-align: text-top;
 }
 .right{
@@ -98,7 +98,7 @@ input.btn[type="button"][disabled]{
 
 #logo{
 	width: 100%;
-	height: 55px;
+	height: 60px;
 	padding: 0 50px;
 	text-align: left;
 }
@@ -111,14 +111,15 @@ input.btn[type="button"][disabled]{
 	right: 50px;
 }
 #menu_links a{
-	color: #333;
+	color: #777;
 	margin-left: 30px;
+	font-size: 14px;
 }
 
 
 #device_list{
 	width: 100%;
-	padding: 15px 0px 5px 0;
+	padding: 15px 15px 5px 15px;
 	margin-bottom: 20px;
 	background-color: #eee;
 	text-align: center;
@@ -127,23 +128,38 @@ input.btn[type="button"][disabled]{
 	border-bottom: 1px solid #ddd;
 }
 #device_list a{
+	font-size: 18px;
 	display: inline-block;
-	margin: 0 30px 7px 0;
-	padding: 5px 20px ;
-	font-weight: bold;
+	margin: 0 20px 7px 0;
+	padding: 5px 15px ;
 	background-color: #fff;
 	border-radius: 5px;
-	border: 1px solid #ddd;
+	border: 1px solid #ccc;
 	text-decoration: none;
 	cursor: pointer;
-	line-height: 14px;
+	line-height: 16px;
+	color:#000;
 }
 #device_list a.timeout{
-	background-color: #fffeee;
+	background-color: #eee;
+	color: #955;
 }
 #device_list a.router-link-active{
 	border-color: #000;
+	font-weight: bold;
 }
+#device_list a#add_device{
+	float: right;
+	margin: 7px 10px 0 10px;
+	font-size: 36px;
+	padding: 0px 0px;
+	background-color: #eee;
+	border: none;
+	color: #777;
+}
+
+
+
 
 
 
@@ -191,13 +207,11 @@ input#login_btn{
 
 
 .device_index {
-	position: relative;
     width: 90%;
     max-width: 1600px;
     margin: 0px auto 50px auto;
     background-color: #fff;
 	border-radius: 10px;
-
 	text-align: center;
 }
 .device_index h3{
@@ -205,6 +219,22 @@ input#login_btn{
     font-weight: bold;
     font-size: 24px;
 }
+
+
+
+
+#right_menu{
+	width: 50px;
+	position: absolute;
+	right: 10px;
+}
+#right_menu img{
+	cursor: pointer;
+}
+
+
+
+
 
 
 
@@ -268,9 +298,9 @@ table.controller_table td span.current_time.timeout{
 
 
 table.controller_table td span.schedule_data{
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: normal;
-	margin-left: 10px;
+	margin-left: 5px;
 }
 table.controller_table td#schedule a{
 	color: #777;
@@ -483,34 +513,6 @@ table#climat_informer td.current_time span.timeout{
 
 
 
-.settings_menu{
-	width: 100%;
-	padding: 15px 0px 5px 0;
-	margin-bottom: 20px;
-	background-color: #eee;
-	text-align: center;
-	font-size: 16px;
-	border-top: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
-}
-.settings_menu a{
-	display: inline-block;
-	margin: 0 30px 7px 0;
-	padding: 5px 20px ;
-	font-weight: bold;
-	background-color: #fff;
-	border-radius: 5px;
-	border: 1px solid #ddd;
-	text-decoration: none;
-	cursor: pointer;
-	line-height: 14px;
-}
-.settings_menu a.router-link-exact-active{
-	border-color: #000;
-}
-
-
-
 .settings_devices{
 	margin: 20px auto;
 	width: 1000px;
@@ -535,9 +537,6 @@ table#settings_devices_table{
 	margin: 0 auto;
 }
 table#settings_devices_table td{
-	padding: 20px;
-	border: 1px solid #ddd;
-	border-radius: 10px;
 	text-align: left;
 	vertical-align: top;
 	line-height: 1em;
@@ -590,20 +589,21 @@ table#settings_devices_table table.seconds_picker select{
 
 .settings .title input{
 	width: 300px;
-	margin-bottom: 20px;
 }
 .settings .prop input{
 	width: 200px;
-	padding: 5px;
-	margin-bottom: 20px;
+	padding: 5px 5px 0px 5px;
 }
-
+.settings .prop input.vc-appearance-none{
+	border: none;
+	border-bottom: 1px solid #ccc;
+	border-radius: 0px;
+}
 
 
 table#device_sensor_setup{
 	border-collapse: collapse;
 	margin: 50px auto;
-	border-bottom: 1px solid #eee;
 }
 table#device_sensor_setup th{
 	border: none;
@@ -627,24 +627,14 @@ table#device_sensor_setup input{
 
 
 
-.add_device{
-	text-align: center;
-	font-size: 12px;
-	color: #777;
-}
-.add_device input{
-	margin-right: 0;
-}
-
-
 
 
 #feeder_timers{
-	margin: 30px auto;
+	margin: 50px auto;
 }
 #feeder_timers .title{
 	font-weight: bold;
-	font-size: 16px;
+	font-size: 18px;
 	color: #333;
 }
 table#timers_setup{

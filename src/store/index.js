@@ -87,7 +87,7 @@ const store = new Vuex.Store({
         const device = state.devices.find(item => item.id == payload[device_id].id)
         if (device) {
           Vue.set(device, 'last_tstamp', tstamp)
-          Vue.set(device, 'timeout', now - tstamp > 60000)
+          Vue.set(device, 'timeout', now - tstamp > 600000)
         }
       }
     }

@@ -7,7 +7,10 @@
                     <div class="modal-header" v-html="title">
                     </div>
 
-                    <div class="modal-body" v-html="message">
+                    <div class="modal-body" v-html="message" v-if="message">
+                    </div>
+                    <div class="modal-body" v-else>
+                        <slot></slot>
                     </div>
 
                     <div class="modal-footer">
@@ -53,7 +56,7 @@ export default {
 }
 
 .modal-container {
-  width: 300px;
+  width: 350px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -63,17 +66,21 @@ export default {
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
+.modal-header{
+  font-weight: bold;
 }
 
 .modal-body {
   margin: 20px 0;
 }
 
-.modal-default-button .modal-cancel-button {
-  float: right;
+.modal-default-button, .modal-cancel-button {
+  padding: 5px 15px ;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  line-height: 16px;
+  margin: 0 5px;
 }
 
 /*

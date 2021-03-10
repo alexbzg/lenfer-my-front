@@ -1,14 +1,18 @@
 <template>
     <div>
-    <div id="device_list" v-if="userLogin">
-        <router-link class="device_btn" v-for="(device, idx) in devices" :key="idx"
-                :class="{timeout: device.timeout}" :to="'/device/' + device.id">
-                {{device.title ? device.title : device.type_title}}
-        </router-link>
-    </div>
 
-
+  <div id="right_menu">
+    <router-link :to="'/settings/devices/' + device_id"
+       v-if="device_id" tag="img" id="icon_settings" 
+       src="/images/icon_settings.png" title="Настройки" />
+    <router-link 
+        :to="'/settings/schedules' + (device.schedule_id ? '/' + device.schedule_id : '')"
+        v-if="device_type && device_type.schedule_params"
+        tag="img" id="icon_tables" src="/images/icon_tables.png" 
+        title="Редактирование таблиц" />
+  </div>
   <div class="device_index" v-if="device">
+
 
 <!--        <div class="controller_info">
             <span class="info_title">{{device.title ? device.title : device.type}}</span>
@@ -206,7 +210,7 @@ export default {
 
         })
     },
-    display_datetime: display_datetime
+    display_datetime: display_datetime,
   },
   computed: {
     ...mapState(['devices']),
