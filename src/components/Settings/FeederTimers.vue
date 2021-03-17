@@ -5,14 +5,9 @@
             <tr>
                 <th>Начало</th>
                 <th>Длительность, сек</th>
-                <th></th>
-            </tr>
-            <tr>
-                <td colspan="3" style="text-align: center">
-                    <button class="add_timer" @click="value.push(new_item())">
-                        Добавить период
-                    </button>
-                </td>
+                <th class="add_timer" @click="value.push(new_item())">
+                  <img src="/images/icon_add.jpg" title="Добавить период"/>
+                </th>
             </tr>
             <tr v-for="(item, item_idx) in timers_order" class="timer" :key="item_idx">
                 <td :class="{error: item in validation_errors && 0 in validation_errors[item]}">
@@ -20,7 +15,7 @@
                     </seconds-edit>
                 </td>
                 <td :class="{error: item in validation_errors && 1 in validation_errors[item]}">
-                    <input type="number" v-model="value[item][1]" 
+                    <input type="number" v-model="value[item][1]"
                         @input="$emit('input', Number($event.target.value))"/>
                 </td>
                 <td @click="delete_item(props_headers, value, item)">
@@ -102,7 +97,7 @@ export default {
             if ((limits[0] >= check[0] && limits[0] <= check[1]) ||
                 (limits[1] >= check[0] && limits[1] <= check[1])) {
                 r = 'Конфликт периодов.'
-                this.validation_errors[co] = {0: 1, 1: 1}  
+                this.validation_errors[co] = {0: 1, 1: 1}
                 this.validation_errors[check_co] = {0: 1, 1: 1}
                 break
             }

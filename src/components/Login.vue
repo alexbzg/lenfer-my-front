@@ -2,16 +2,10 @@
     <div id="login_form">
 
         <template v-if="mode !== 'password_change'">
-            <b>Логин</b><br/>
+            <b>Email</b><br/>
             <input type="text" name="login_input" id="login_input" v-model.trim="post_data.login"
-                v-capitalize/>
+                v-capitalize:lower/>
             <br/>
-        </template>
-
-        <template v-if="mode === 'register'">
-            <b>Email</b> <span class="note">(минимум 8 символов)</span><br/>
-            <input type="text" name="email_input" id="email_input"
-                v-model.trim="post_data.email"><br/>
         </template>
 
         <template v-if="mode !== 'password_request'">
@@ -72,7 +66,6 @@ export default {
     const post_data = {
       login: null,
       password: null,
-      email: null,
       recaptcha: null,
       token: null
     }

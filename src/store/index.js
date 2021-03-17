@@ -98,6 +98,7 @@ const store = new Vuex.Store({
         .then(data => { 
           commit(SET_USER_MUTATION, {user: data, remember: true}) 
           dispatch(LOAD_DEVICES_ACTION)
+          dispatch(LOAD_SCHEDULES_ACTION)
         })
     },
     [REGISTER_ACTION] ({commit}, payload) {

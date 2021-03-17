@@ -1,5 +1,5 @@
 import {get} from '../api'
-import {DEVICE_PARAMS} from '../definitions'
+import {DEVICE_SENSORS_PARAMS} from '../definitions'
 
 export class Schedule {
   constructor (params, devices_types) {
@@ -47,7 +47,7 @@ export class Schedule {
       this.params = []
       const device_type = this.devices_types.find(item => item.id === val)
       if (device_type) {
-        for (const param of DEVICE_PARAMS) {
+        for (const param of DEVICE_SENSORS_PARAMS) {
           if (param.id in device_type.schedule_params) {
             this.params.push({...param, ...device_type.schedule_params[param.id]})
           }

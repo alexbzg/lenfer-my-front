@@ -96,36 +96,22 @@ input.btn[type="button"][disabled]{
 
 
 
-#logo{
-	width: 100%;
-	height: 60px;
-	padding: 0 50px;
-	text-align: left;
-}
-#menu_links{
-	float: right;
-	text-align: right;
-	width:250px;
-	padding-top: 15px;
-	top: 0;
-	right: 50px;
-}
-#menu_links a{
-	color: #777;
-	margin-left: 30px;
-	font-size: 14px;
-}
-
 
 #device_list{
 	width: 100%;
-	padding: 15px 15px 5px 15px;
+	padding: 15px 15px 5px 70px;
 	margin-bottom: 20px;
 	background-color: #eee;
 	text-align: center;
 	font-size: 16px;
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
+}
+#logo{
+	position: fixed;
+	top:5px;
+	left: 20px;
+	margin-right: 15px;
 }
 #device_list a{
 	font-size: 18px;
@@ -221,7 +207,10 @@ input#login_btn{
 }
 
 
-
+#loader{
+	width: 300px;
+	margin: 100px auto;
+}
 
 #right_menu{
 	width: 50px;
@@ -230,6 +219,7 @@ input#login_btn{
 }
 #right_menu img{
 	cursor: pointer;
+	margin-bottom: 10px;
 }
 
 
@@ -505,132 +495,128 @@ table#climat_informer td.current_time span.timeout{
 
 
 
-.settings_index {
-    margin: 0px auto 50px auto;
-	min-height: 300px;
+#device_settings {
+	text-align: center;
+	display: flex;
+}
+
+
+#device_setup{
+	width: 300px;
+	margin: 0 50px 0 auto;
 	padding: 0;
+	text-align: center;
+	line-height: 12px;
+}
+#function_setup{
+	width: 500px;
+	margin: 10px auto 0 0;
 }
 
 
 
-.settings_devices{
-	margin: 20px auto;
-	width: 1000px;
-}
-
-
-#new_schedule_button{
-	cursor: pointer;
-	margin-top: 30px;
-	padding: 3px 10px;
-	font-weight: normal;
-}
-
-
-
-
-
-
-
-table#settings_devices_table{
-	width: 90%;
-	margin: 0 auto;
-}
-table#settings_devices_table td{
-	text-align: left;
-	vertical-align: top;
-	line-height: 1em;
-}
-
-table#settings_devices_table td.title{
-	width: 250px;
-	font-weight: bold;
-	cursor: pointer;
-}
-table#settings_devices_table td.title .device_title{
-	margin-top: 10px;
-	color: #009;
-	text-decoration: underline;
-}
-table#settings_devices_table td.title .device_type{
-	color: #999;
-	text-decoration: none;
-	margin-bottom: 20px;
+#device_setup .title{
+	text-align: center;
+	line-height: 12px;
 	font-size: 12px;
-	font-weight: normal;
 }
-
-
-
-table#settings_devices_table table.seconds_picker{
-	border-collapse: collapse;
-	margin: 0px auto;
-}
-table#settings_devices_table table.seconds_picker td{
-	padding: 0;
-	border: none;
-	text-align: center;
-}
-table#settings_devices_table table.seconds_picker select{
-	margin: 0;
-}
-
-
-
-
-
-
-
-.settings{
-	text-align: center;
+#device_setup .title span, #device_setup .prop span.title{
 	font-size: 12px;
 	color: #777;
 }
 
-.settings .title input{
-	width: 300px;
+#device_code{
+	margin-top: 20px;
+	font-weight: bold;
+	color: #333;
+	line-height: 12px;
+	font-size: 18px;
 }
-.settings .prop input{
-	width: 200px;
-	padding: 5px 5px 0px 5px;
+#device_code span{
+	font-weight: normal;
+	color: #777;
+	font-size: 12px;
 }
-.settings .prop input.vc-appearance-none{
+
+
+
+
+#device_setup .prop{
+	line-height: 12px;
+}
+#device_setup .prop input{
+	width: 250px;
+	margin: 30px 0 0 0;
+	padding: 0;
 	border: none;
+	border-radius: 0;
 	border-bottom: 1px solid #ccc;
-	border-radius: 0px;
+	color: #000;
+	text-align: center;
 }
+#device_setup select{
+	margin: 30px 0 0 0;
+	padding: 0 5px;
+}
+#device_setup option{
+	text-align: center;
+}
+#device_setup input.btn{
+	margin: 50px 0 0 0;
+}
+#device_setup input.btn.cancel{
+	margin-right: 50px;
+}
+
+
 
 
 table#device_sensor_setup{
-	border-collapse: collapse;
-	margin: 50px auto;
+    border-collapse: collapse;
+    margin: 0px auto 50px auto;
 }
 table#device_sensor_setup th{
-	border: none;
-	line-height: 14px;
-	padding: 5px 0;
-	text-align: center;
-	border-bottom: 1px solid #eee;
+    border: none;
+    line-height: 14px;
+    color: #777;
+    font-size: 14px;
+    padding: 5px 0;
+    text-align: center;
+    border-bottom: 1px solid #eee;
 }
 table#device_sensor_setup td{
-	border: none;
-	line-height: 14px;
-	padding: 10px 5px;
-	text-align: center;
-	font-size: 16px;
-	vertical-align: middle;
+    border: none;
+    line-height: 14px;
+    padding: 10px 5px;
+    text-align: center;
+    font-size: 16px;
+    vertical-align: middle;
 }
 
 table#device_sensor_setup input{
-	margin: 0;
+    margin: 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
 #feeder_timers{
-	margin: 50px auto;
+	margin: 0px auto 50px auto;
 }
 #feeder_timers .title{
 	font-weight: bold;
@@ -643,7 +629,16 @@ table#timers_setup{
 }
 table#timers_setup th{
 	border-bottom: 1px solid #eee;
-	padding: 5px 20px;
+	padding: 5px 20px 0 20px;
+	vertical-align: middle;
+}
+table#timers_setup th.add_timer{
+	padding-bottom: 5px;
+	line-height: 10px;
+}
+table#timers_setup th.add_timer img{
+	width: 30px;
+	cursor: pointer;
 }
 table#timers_setup td{
 	border: none;
@@ -665,14 +660,7 @@ table#timers_setup img{
 #feeder_timers button{
 	cursor: pointer;
 }
-.add_timer{
-	cursor: pointer;
-	margin: 10px 0 5px 0;
-	padding: 3px 90px;
-	font-weight: normal;
-	border: 1px solid #bbb;
-	border-radius: 5px;
-}
+
 
 table#timers_setup td.error input{
 	background-color: #fde7e8;
@@ -709,9 +697,17 @@ table#timers_setup td.error input{
 	width: 1000px;
 }
 
+
+
 #new_schedule_button{
+	cursor: pointer;
+	margin-top: 30px;
+	padding: 3px 10px;
+	font-weight: normal;
 	margin-bottom: 20px;
 }
+
+
 #settings_schedules .schedule{
 	text-align: left;
 	cursor: pointer;
@@ -829,7 +825,10 @@ table#setting_login th{
 	padding: 0px 20px;
 }
 table#setting_login td{
-	padding: 5px 5px;
+	padding: 5px  15px  0px 15px;
+}
+table#setting_login td.email{
+	font-weight: bold;
 }
 
 
@@ -839,6 +838,7 @@ table#setting_login td{
 	padding: 10px;
 	margin-bottom: 50px;
 	line-height: 14px;
+	font-size: 18px;
 }
 #settings_link span.note{
 	color: #777;
@@ -849,8 +849,6 @@ table#setting_login td{
 	color: #aaa;
 }
 #settings_link span#link{
-	border-bottom: 1px solid #009;
-	padding-bottom: 1px;
 	color: #009;
 	font-weight: bold;
 }
@@ -861,12 +859,12 @@ table#setting_login td{
 	font-weight: bold;
 	border-radius: 0px;
 	border: none;
-	border-bottom: 1px solid #009;
 	padding: 0;
 	text-align: left;
 	font-size: 16px;
 	color: #333;
 	margin: 0 20px 10px 0;
+	padding-left: 5px;
 }
 #settings_link a{
 	color: #009;

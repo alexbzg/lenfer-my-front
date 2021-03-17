@@ -88,7 +88,8 @@ export default {
             }
           }],
           yAxes: [{
-            ticks: {}
+            ticks: {},
+            position: 'right'
           }]
         }
       }

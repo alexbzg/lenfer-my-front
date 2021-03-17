@@ -2,10 +2,11 @@ import Vue from 'vue'
 
 export default function () {
   Vue.directive('capitalize', {
-    bind (el) {
+    bind (el, binding) {
+      const transform = (value => binding.arg === 'lower' ? value.toLowerCase() : value.toUpperCase())
       const handler = function (e) {
-        if (e.target.value && e.target.value !== e.target.value.toUpperCase()) {
-          e.target.value = e.target.value.toUpperCase()
+        if (e.target.value && e.target.value !== transform(e.target.value)) {
+          e.target.value = transform(e.target.value)
           e.target.dispatchEvent(new CustomEvent('input'))
         }
       }

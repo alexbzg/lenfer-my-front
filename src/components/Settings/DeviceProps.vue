@@ -1,10 +1,9 @@
 <template>
     <div class="device_props">
+        <slot name="device_title"></slot>
+
         <template v-for="(prop, idx) in props_headers">
-            <component v-if="prop.id in custom_props" :is="custom_props[prop.id]" :key="idx"
-                :props_headers="prop" :value="value[idx]" @validated="on_validated">
-            </component>
-            <div class="prop" v-else :key="idx">
+            <div class="prop" v-if="!custom_props[prop.id]" :key="idx">
                 <template v-if="prop.type === 'date'">
                     <date-picker v-model="value[idx]" locale="ru"
                         :masks="{input: 'DD MMMM'}"></date-picker>
@@ -43,23 +42,16 @@ import SecondsEdit from '../SecondsEdit'
 
 import messageBox from '../../message-box'
 
-import {DEVICE_TYPE_FEEDER_ID} from '../../definitions'
-
-const CUSTOM_PROPS = [
-  {
-    device_type_id: DEVICE_TYPE_FEEDER_ID,
-    prop_id: 'timers',
-    component: (() => import('./FeederTimers'))
-  }
-]
+import {DEVICE_CUSTOM_PROPS} from '../../definitions'
 
 export default {
+  DEVICE_CUSTOM_PROPS: DEVICE_CUSTOM_PROPS,
   name: "DeviceProps",
   props: ["props_headers", "value", "device_type_id"],
   components: {DatePicker, SecondsEdit}, 
   data () {
     return {
-      validated: {}
+      validated: {},
     }
   },
   methods: {
@@ -82,9 +74,9 @@ export default {
   computed: {
     custom_props () {
       const r = {}
-      for (const custom_prop_def of CUSTOM_PROPS) {
+      for (const custom_prop_def of DEVICE_CUSTOM_PROPS) {
         if (custom_prop_def.device_type_id === this.device_type_id) {
-          r[custom_prop_def.prop_id] = custom_prop_def.component
+          r[custom_prop_def.prop_id] = true
         }
       }
       return r

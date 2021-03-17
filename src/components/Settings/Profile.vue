@@ -2,14 +2,14 @@
     <div class="settings_profile">
       <table id="setting_login">
         <tr>
-          <th>Email</th>
-          <th>Пароль</th>
-          <th></th>
-        </tr>
-        <tr>
-          <td><input type="text" v-model="post_data.email" :class="{error: validationErrors.email}" /></td>
+          <td class="email">{{$store.state.user.login}}</td>
           <td><input type="password" v-model="post_data.password" :class="{error: validationErrors.password}"/></td>
           <td><input type="button" :disabled="pending || !validated" value="Сохранить" @click="post" class="btn" /></td>
+        </tr>
+        <tr>
+          <th>email</th>
+          <th>пароль</th>
+          <th></th>
         </tr>
       </table>
       <modal v-if="post_error" @close="post_error = null">
@@ -21,8 +21,8 @@
 
       <div id="settings_link">
         <span class="note">Ссылка для просмотра статистики ваших устройств<br/><span>(можно изменить, от 6 до 20 английских букв и/или цифр)</span><br/><br/></span>
-        <span id="link">http://my.lenfer.ru/</span><input type="text" value="alexbzg" id="input_link_nickname">
-        <a href="http://my.lenfer.ru/alexbzg" target="_blank">
+        <span id="link">http://my.lenfer.ru/</span><input type="text" :value="post_data.public_id" id="input_link_nickname">
+        <a :href="'http://my.lenfer.ru/' + post_data.public_id" target="_blank">
           <img src="images/icon_weblink.png" width="15" title="Ссылка откроется в новом окне" />
         </a><br/>
 
@@ -59,8 +59,8 @@ export default {
   components: {Modal},
   data () {
     const post_data = {
-      email: this.$store.state.user.email,
-      password: ''
+      password: '',
+      public_id: this.$store.state.user.public_id
     }
     return {
       post_data: post_data,
@@ -83,6 +83,11 @@ export default {
         .finally(() => {
           this.pending = false
         })
+    }
+  },
+  computed: {
+    userLogin () {
+      return this.$store.getters.userLogin ? this.$store.getters.userLogin.toLowerCase() : null
     }
   }
 }

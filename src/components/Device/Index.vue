@@ -1,22 +1,10 @@
 <template>
-    <div>
+  <div>
 
-  <div id="right_menu">
-    <router-link :to="'/settings/devices/' + device_id"
-       v-if="device_id" tag="img" id="icon_settings" 
-       src="/images/icon_settings.png" title="Настройки" />
-    <router-link 
-        :to="'/settings/schedules' + (device.schedule_id ? '/' + device.schedule_id : '')"
-        v-if="device_type && device_type.schedule_params"
-        tag="img" id="icon_tables" src="/images/icon_tables.png" 
-        title="Редактирование таблиц" />
-  </div>
+
+      <loading v-if="load_in_progress"></loading>
+
   <div class="device_index" v-if="device">
-
-
-<!--        <div class="controller_info">
-            <span class="info_title">{{device.title ? device.title : device.type}}</span>
-        </div> -->
 
         <div class="border" v-if="(device_type && device_type.schedule_params)
             || sensors_charts.length">
@@ -107,7 +95,7 @@
         <div class="border" v-if="log && log.length">
             <log-summary :log="log"></log-summary>
         </div>
-
+<!--
         <table id="log" v-if="log && log.length">
             <tr class="head">
                 <th class="server_tstamp">Время (сервер)</th>
@@ -120,7 +108,7 @@
                 <td class="txt">{{entry.txt}}</td>
             </tr>
         </table>
-
+-->
 
     </div>
     </div>
@@ -133,11 +121,12 @@ import strftime from 'strftime'
 
 import load_device from '../../device'
 import {dataPost} from '../../api'
-import {DEVICE_PARAMS} from '../../definitions'
+import {DEVICE_SENSORS_PARAMS} from '../../definitions'
 import {display_datetime} from '../../utils'
 
 import SensorChart from './SensorChart'
 import LogSummary from './LogSummary'
+import Loading from '../Loading'
 
 const SHOW_LOG_DEVICE_TYPES = ["Feeder"]
 
@@ -149,7 +138,7 @@ const CHART_INTERVALS_SETTINGS = [
 
 export default {
   name: 'DeviceIndex',
-  components: {SensorChart, LogSummary},
+  components: {SensorChart, LogSummary, Loading},
   CHART_INTERVALS_SETTINGS: CHART_INTERVALS_SETTINGS,
   props: ['device_id'],
   data () {
@@ -157,7 +146,8 @@ export default {
       device: {},
       log: null,
       chart_interval_idx: 0,
-      sensors_charts: []
+      sensors_charts: [],
+      load_in_progress: false
     }
   },
   async mounted () {
@@ -171,22 +161,23 @@ export default {
       this.device = {}
       this.log = null
       this.sensors_charts = []
+      this.load_in_progress = true
       load_device(this.device_id)
         .then(device => {
           this.device = device
           this.sensors_charts = []
-          const sp_length = DEVICE_PARAMS.length
+          const sp_length = DEVICE_SENSORS_PARAMS.length
           for (let co = 0; co < sp_length; co++) {
             const now = new Date()
-            if (DEVICE_PARAMS[co].id in this.device.sensors_params) {
+            if (DEVICE_SENSORS_PARAMS[co].id in this.device.sensors_params) {
               const sensors = this.device.sensors_params[
-                  DEVICE_PARAMS[co].id].sensors.filter(item => item.enabled)
+                  DEVICE_SENSORS_PARAMS[co].id].sensors.filter(item => item.enabled)
               if (sensors.length) {
-                const tstamp = new Date(this.device.sensors_params[DEVICE_PARAMS[co].id].master.tstamp)
+                const tstamp = new Date(this.device.sensors_params[DEVICE_SENSORS_PARAMS[co].id].master.tstamp)
                 this.sensors_charts.push({
-                  ...DEVICE_PARAMS[co],
+                  ...DEVICE_SENSORS_PARAMS[co],
                   sensors: sensors,
-                  value: this.device.sensors_params[DEVICE_PARAMS[co].id].master.value,
+                  value: this.device.sensors_params[DEVICE_SENSORS_PARAMS[co].id].master.value,
                   tstamp: display_datetime(tstamp),
                   timeout: now - tstamp > 600000
                 })
@@ -209,6 +200,9 @@ export default {
           }
 
         })
+      .finally(() => {
+        this.load_in_progress = false
+      })
     },
     display_datetime: display_datetime,
   },

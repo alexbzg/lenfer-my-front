@@ -1,56 +1,74 @@
 <template>
-    <div class="settings_devices">
-          <table id="settings_devices_table">
-            <tr>
-              <td class="settings_window">
-                <div class="settings" v-if="edit_device">
-                    <div class="title">
-                        <input type="text" v-model="edit_device.title"/><br/>
-                        <span class="title">название устройства на сайте</span>
-                    </div>
-                    <device-props :props_headers="edit_device.props_titles"
-                        :device_type_id="edit_device.type_id"
-                        @validated="edit_device_props_validated"
-                        v-model="edit_device.props_values">
-                    </device-props>
-                    <template v-if="edit_device.enable_schedule">
-                        <select v-model="edit_device.schedule_id">
-                            <option v-for="schedule in schedules" :key="schedule.id"
-                                :value="schedule.id">{{schedule.title}}</option>
-                        </select><br/>
-                        <span class="title">таблица работы</span>
-                    </template>
+    <div id="device_settings">
 
-                    <table id="device_sensor_setup" class="sensors_param" v-if="edit_device.sensors">
-                        <tr>
-                            <th>Подключен</th>
-                            <th>Датчик</th>
-                            <th>Название датчика на графике</th>
-                        </tr>
-                        <tr class="sensor" v-for="(entry, title) in edit_device.sensors_titles"
-                            :key="title">
-                            <td class="sensor_checkbox">
-                                <input type="checkbox" v-model="entry.enabled"/>
-                            </td>
-                            <td class="sensor">{{title}}</td>
-                            <td class="sensor_graf_title">
-                                <input type="text" v-model="entry.title"/>
-                            </td>
-                         </tr>
-                    </table>
+      <loading v-if="pending && !edit_device"></loading>
 
-                    <input class="btn" type="submit" value="Сохранить"
-                        :disabled="pending" @click="post_device"/>
-                    <input class="btn cancel" type="submit" value="Отмена" @click="open_device(null)"/>
-                    <br/>
-                    <input class="btn delete" type="submit" value="Удалить устройство"
-                        :disabled="pending" @click="delete_device"/>
+      <div id="device_setup" v-if="edit_device">
 
+
+        <device-props :props_headers="edit_device.props_titles"
+          :device_type_id="edit_device.type_id"
+          @validated="edit_device_props_validated"
+          v-model="edit_device.props_values">
+
+            <template v-slot:device_title>
+
+                <div class="title">
+                    <input type="text" v-model="edit_device.title"/><br/>
+                    <span class="title">название устройства на сайте</span>
                 </div>
-              </td>
-            </tr>
-          </table>
 
+                <div id="device_code">
+                    {{edit_device.hash}}<br/>
+                    <span>код устройства</span>
+                </div>
+
+                <template v-if="edit_device.enable_schedule">
+                    <select v-model="edit_device.schedule_id">
+                        <option v-for="schedule in schedules" :key="schedule.id"
+                            :value="schedule.id">{{schedule.title}}</option>
+                        </select><br/>
+                    <span class="title">таблица работы</span>
+                </template>
+
+            </template>
+        </device-props>
+
+        <br/>
+        <input class="btn cancel" type="submit" value="Отмена" @click="open_device_index"/>
+        <input class="btn" type="submit" value="Сохранить"
+          :disabled="pending" @click="post_device"/>
+        <br/>
+        <input class="btn delete" type="submit" value="Удалить устройство"
+          :disabled="pending" @click="delete_device"/>
+      </div>
+
+      <div id="function_setup" v-if="edit_device">
+        <table id="device_sensor_setup" class="sensors_param" v-if="edit_device.sensors">
+          <tr>
+            <th>Подключен</th>
+            <th>Датчик</th>
+            <th>Название датчика на графике</th>
+          </tr>
+          <tr class="sensor" v-for="(entry, title) in edit_device.sensors_titles"
+            :key="title">
+            <td class="sensor_checkbox">
+              <input type="checkbox" v-model="entry.enabled"/>
+            </td>
+            <td class="sensor">{{title}}</td>
+            <td class="sensor_graf_title">
+              <input type="text" v-model="entry.title"/>
+            </td>
+          </tr>
+        </table>
+        <component v-for="(prop, prop_id) in edit_device.custom_props"
+            :is="prop.component"
+            :key="prop_id"
+            :props_headers="prop.title"
+            :value="prop.value"
+            @validated="edit_device_custom_prop_validated">
+        </component>
+      </div>
     </div>
 </template>
 
@@ -59,15 +77,16 @@
 import {mapState} from 'vuex'
 
 import DeviceProps from './DeviceProps'
+import Loading from '../Loading'
 
 import messageBox from '../../message-box'
 import {userDataPost, LOAD_DEVICES_ACTION} from '../../store'
 import load_device from '../../device'
-import {DEVICE_PARAMS} from '../../definitions'
+import {DEVICE_SENSORS_PARAMS, DEVICE_CUSTOM_PROPS} from '../../definitions'
 
 export default {
   name: 'SettingsDevicesIndex',
-  components: {DeviceProps},
+  components: {DeviceProps, Loading},
   props: ['device_id'],
   data () {
     return {
@@ -98,7 +117,12 @@ export default {
   },
   methods: {
     edit_device_props_validated (validation_data) {
-      this.edit_device.props_validation = validation_data
+      for (const field in validation_data) {
+        this.edit_device.props_validation[field] = validation_data[field]
+      }
+    },
+    edit_device_custom_prop_validated (prop_id, msg) {
+      this.edit_device.props_validation[prop_id] = msg
     },
     async open_device (device) {
       if (this.pending) {
@@ -118,15 +142,29 @@ export default {
             this.edit_device.enable_schedule = Boolean(device_type.schedule_params)
             this.device_cache = JSON.parse(JSON.stringify(device))
             this.edit_device.sensors_settings = []
-            const sp_length = DEVICE_PARAMS.length
+            const sp_length = DEVICE_SENSORS_PARAMS.length
             for (let co = 0; co < sp_length; co++) {
-              if (DEVICE_PARAMS[co].id in device.sensors_params) {
+              if (DEVICE_SENSORS_PARAMS[co].id in device.sensors_params) {
                 device.sensors_settings.push({
-                  ...DEVICE_PARAMS[co],
-                  sensors: device.sensors_params[DEVICE_PARAMS[co].id].sensors
+                  ...DEVICE_SENSORS_PARAMS[co],
+                  sensors: device.sensors_params[DEVICE_SENSORS_PARAMS[co].id].sensors
                 })
               }
             }
+            this.edit_device.custom_props = {}
+            for (const custom_prop_def of DEVICE_CUSTOM_PROPS) {
+              if (custom_prop_def.device_type_id === this.edit_device.type_id) {
+                const prop_idx = this.edit_device.props_titles.findIndex(
+                  item => item.id === custom_prop_def.prop_id)
+                this.edit_device.custom_props[custom_prop_def.prop_id] = {
+                  component: custom_prop_def.component,
+                  title: this.edit_device.props_titles[prop_idx],
+                  value: this.edit_device.props_values[prop_idx]
+                }
+              }
+            }
+            this.edit_device.props_validation = {}
+
           })
           .finally(() => {
             this.pending = false
@@ -140,10 +178,13 @@ export default {
         .then(() => {
           userDataPost('device/' + this.edit_device.id, {delete: true})
             .then(() => {
-              this.open_device(null)
               this.$store.dispatch(LOAD_DEVICES_ACTION)
+              this.$router.push('/')
             })
         })
+    },
+    open_device_index () {
+      this.$router.push('/device/' + this.edit_device.id)
     },
     async post_device () {
       for (const field in this.edit_device.props_validation) {
@@ -212,9 +253,10 @@ export default {
         }
         p.then(() => {
           this.$store.dispatch(LOAD_DEVICES_ACTION)
+          this.open_device_index()
         })
       } else {
-        this.open_device(null)
+        this.open_device_index()
       }
     }
 
