@@ -73,15 +73,43 @@
     "required": ["token", "data", "device_id"]
 },
 
-"post_devices_log": {
+"post_devices_public_access": {
     "type": "object",
     "properties": {
         "token": {
             "type": "string",
             "minLength": 1
         },
-        "device_id": {
-            "type":"integer"
+        "login": {
+            "type": "string",
+            "minLength": 1
+        },
+        "values": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type":"integer"
+                    },
+                    "public_access": {
+                        "type": "boolean"
+                    }
+                },
+                "required": ["id", "public_access"]
+            },
+            "minItems": 1
+        }
+    },
+    "required": ["token", "login", "values"]
+},
+
+"post_devices_log": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 1
         },
         "entries": {
             "type": "array",
@@ -104,6 +132,7 @@
     },
     "required": ["token", "entries", "device_id"]
 },
+
 
 "register_device": {
     "type": "object",

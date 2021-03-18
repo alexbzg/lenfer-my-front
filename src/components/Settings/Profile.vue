@@ -12,16 +12,11 @@
           <th></th>
         </tr>
       </table>
-      <modal v-if="post_error" @close="post_error = null">
-        <h3 slot="header">Ошибка сохранения</h3>
-        <div slot="body">
-          {{post_error}}
-        </div>
-      </modal>
 
       <div id="settings_link">
         <span class="note">Ссылка для просмотра статистики ваших устройств<br/><span>(можно изменить, от 6 до 20 английских букв и/или цифр)</span><br/><br/></span>
-        <span id="link">http://my.lenfer.ru/</span><input type="text" :value="post_data.public_id" id="input_link_nickname">
+        <span id="link">http://my.lenfer.ru/</span>
+        <input type="text" v-capitalize:lower :value="post_data.public_id" id="input_link_nickname">
         <a :href="'http://my.lenfer.ru/' + post_data.public_id" target="_blank">
           <img src="images/icon_weblink.png" width="15" title="Ссылка откроется в новом окне" />
         </a><br/>
@@ -31,32 +26,27 @@
             <th>Устройство</th>
             <th>Показывать по ссылке</th>
           </tr>
-          <tr>
-            <td>Брудер</td>
-            <td><input type="checkbox" checked></td>
-          </tr>
-          <tr>
-            <td>Офис</td>
-            <td><input type="checkbox"></td>
+          <tr v-for="device in public_devices" :key="device.id">
+              <td>{{device.title}}</td>
+            <td><input type="checkbox" v-model="device.public_access"></td>
           </tr>
         </table>
-        <input type="button" class="btn" value="Сохранить">
+        <input type="button" class="btn" value="Сохранить" @click="post_public_devices">
       </div>
     </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 
 import ValidationMixin from '../../validation-mixin'
+import messageBox from '../../message-box'
 
-import Modal from '../Modal'
-
-import {UPDATE_USER_MUTATION, userDataPost} from '../../store'
+import {UPDATE_USER_MUTATION, LOAD_DEVICES_ACTION, userDataPost} from '../../store'
 
 export default {
   name: 'SettingsProfile',
   mixins: [ValidationMixin],
-  components: {Modal},
   data () {
     const post_data = {
       password: '',
@@ -67,18 +57,47 @@ export default {
       pending: false,
       validationData: post_data,
       validationSchema: 'post_user_settings',
-      post_error: null
+      public_devices: this.get_public_devices()
     }
   },
   methods: {
+    get_public_devices () {
+      return this.$store.state.devices.map(item => {
+        return {
+          id: item.id, 
+          public_access: item.public_access, 
+          title: item.title
+        }
+      })
+    },
     post () {
       this.pending = true
       userDataPost('user/settings', this.post_data)
         .then(() => {
-          this.$store.commit(UPDATE_USER_MUTATION, {email: this.post_data.email})
+          this.$store.dispatch(UPDATE_USER_MUTATION, {email: this.post_data.email})
         })
         .catch(err => {
-          this.post_error = err.message
+          messageBox('Ошибка сохранения', err)
+        })
+        .finally(() => {
+          this.pending = false
+        })
+    },
+    post_public_devices () {
+      this.pending = true
+        userDataPost('device/public_access', 
+          {values: this.public_devices.map(item => {
+            return {id: item.id, public_access: item.public_access}
+          })})
+        .then(() => {
+          this.$store.dispatch(LOAD_DEVICES_ACTION)
+            .then(() => {
+              this.public_devices = this.get_public_devices()
+              messageBox("Настройки просмотра", "Изменения сохранены.")
+            })
+        })
+        .catch(err => {
+          messageBox('Ошибка сохранения', err)
         })
         .finally(() => {
           this.pending = false
@@ -86,9 +105,7 @@ export default {
     }
   },
   computed: {
-    userLogin () {
-      return this.$store.getters.userLogin ? this.$store.getters.userLogin.toLowerCase() : null
-    }
+    ...mapGetters(['userLogin'])
   }
 }
 </script>

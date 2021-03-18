@@ -33,7 +33,7 @@ a{
 	background-color: #3194fe;
 	color: #fff;
 	border-radius: 5px;
-	border: 1px solid #777;
+	border: 1px solid #999;
 	padding: 5px 20px;
 	text-decoration: none;
 	margin-right: 20px;
@@ -41,10 +41,10 @@ a{
 	font-size: 16px;
 }
 .btn.cancel{
-	background-color: #999;
+	background-color: #aaa;
 }
 .btn.delete{
-	background-color: #c55;
+	background-color: #c77;
 	margin-top: 50px;
 }
 
@@ -196,6 +196,7 @@ input#login_btn{
     width: 90%;
     max-width: 1600px;
     margin: 0px auto 50px auto;
+    padding-bottom: 100px;
     background-color: #fff;
 	border-radius: 10px;
 	text-align: center;
@@ -498,18 +499,27 @@ table#climat_informer td.current_time span.timeout{
 #device_settings {
 	text-align: center;
 	display: flex;
+	padding-bottom: 100px;
 }
 
 
 #device_setup{
 	width: 300px;
-	margin: 0 50px 0 auto;
+	margin: 0 20px 0 auto;
 	padding: 0;
 	text-align: center;
 	line-height: 12px;
 }
 #function_setup{
 	width: 500px;
+	margin: 0px 20px 0 0;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	padding: 0 20px;
+
+}
+#buttons_setup{
+	width: 300px;
 	margin: 10px auto 0 0;
 }
 
@@ -561,11 +571,14 @@ table#climat_informer td.current_time span.timeout{
 #device_setup option{
 	text-align: center;
 }
-#device_setup input.btn{
-	margin: 50px 0 0 0;
+
+#buttons_setup input.btn{
+	width: 180px;
+	margin: 0 0 30px 0;
 }
-#device_setup input.btn.cancel{
-	margin-right: 50px;
+#buttons_setup input.delete{
+	margin-top: 20px;
+	font-size: 14px;
 }
 
 
@@ -573,7 +586,7 @@ table#climat_informer td.current_time span.timeout{
 
 table#device_sensor_setup{
     border-collapse: collapse;
-    margin: 0px auto 50px auto;
+    margin: 10px auto 50px auto;
 }
 table#device_sensor_setup th{
     border: none;
@@ -625,7 +638,7 @@ table#device_sensor_setup input{
 }
 table#timers_setup{
 	border-collapse: collapse;
-	margin: 10px auto;
+	margin: 0px auto;
 }
 table#timers_setup th{
 	border-bottom: 1px solid #eee;
@@ -693,7 +706,7 @@ table#timers_setup td.error input{
 
 
 #settings_schedules{
-	margin: 30px auto;
+	margin: 0px auto;
 	width: 1000px;
 }
 
@@ -701,10 +714,7 @@ table#timers_setup td.error input{
 
 #new_schedule_button{
 	cursor: pointer;
-	margin-top: 30px;
-	padding: 3px 10px;
-	font-weight: normal;
-	margin-bottom: 20px;
+	margin: 30px 0 0 0;
 }
 
 
@@ -713,8 +723,9 @@ table#timers_setup td.error input{
 	cursor: pointer;
 	font-weight: bold;
 	text-decoration: underline;
-	color: #009;
+	color: #333;
 	margin: 10px 0;
+	font-size: 18px;
 }
 #settings_schedules .schedule span{
 	color: #777;
@@ -724,16 +735,14 @@ table#timers_setup td.error input{
 }
 
 table#settings_schedules_table{
-	width: 90%;
+	width: 100%;
 	margin: 0 auto;
 }
 
 td#schedules_index{
 	width: 30%;
 	padding: 10px 20px;
-	border: 1px solid #ddd;
-	border-radius: 10px;
-
+	text-align: left;
 }
 
 td#active_schedule{

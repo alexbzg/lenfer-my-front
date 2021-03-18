@@ -1,15 +1,12 @@
 <template>
     <div id="device_settings">
 
-      <loading v-if="pending && !edit_device"></loading>
-
       <div id="device_setup" v-if="edit_device">
 
-
         <device-props :props_headers="edit_device.props_titles"
-          :device_type_id="edit_device.type_id"
-          @validated="edit_device_props_validated"
-          v-model="edit_device.props_values">
+            :device_type_id="edit_device.type_id"
+            @validated="edit_device_props_validated"
+            v-model="edit_device.props_values">
 
             <template v-slot:device_title>
 
@@ -34,13 +31,6 @@
             </template>
         </device-props>
 
-        <br/>
-        <input class="btn cancel" type="submit" value="Отмена" @click="open_device_index"/>
-        <input class="btn" type="submit" value="Сохранить"
-          :disabled="pending" @click="post_device"/>
-        <br/>
-        <input class="btn delete" type="submit" value="Удалить устройство"
-          :disabled="pending" @click="delete_device"/>
       </div>
 
       <div id="function_setup" v-if="edit_device">
@@ -69,6 +59,15 @@
             @validated="edit_device_custom_prop_validated">
         </component>
       </div>
+
+      <div id="buttons_setup" v-if="edit_device">
+        <input class="btn cancel" type="submit" value="Отмена" @click="open_device_index"/>
+        <input class="btn" type="submit" value="Сохранить"
+          :disabled="pending" @click="post_device"/>
+        <br/>
+        <input class="btn delete" type="submit" value="Удалить устройство"
+          :disabled="pending" @click="delete_device"/>
+      </div>
     </div>
 </template>
 
@@ -77,7 +76,6 @@
 import {mapState} from 'vuex'
 
 import DeviceProps from './DeviceProps'
-import Loading from '../Loading'
 
 import messageBox from '../../message-box'
 import {userDataPost, LOAD_DEVICES_ACTION} from '../../store'
@@ -86,7 +84,7 @@ import {DEVICE_SENSORS_PARAMS, DEVICE_CUSTOM_PROPS} from '../../definitions'
 
 export default {
   name: 'SettingsDevicesIndex',
-  components: {DeviceProps, Loading},
+  components: {DeviceProps},
   props: ['device_id'],
   data () {
     return {

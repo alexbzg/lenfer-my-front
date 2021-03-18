@@ -1,6 +1,5 @@
 <template>
     <div id="feeder_timers">
-        <span class="title">Расписание работы</span><br/>
         <table id="timers_setup">
             <tr>
                 <th>Начало</th>

@@ -20,18 +20,18 @@
     </div>
     <div id="right_menu">
         <router-link :to="'/settings/devices/' + current_device.id"
-        v-if="current_device" tag="img" id="icon_settings"
-        src="/images/icon_settings.png" title="Настройки устройства" />
+            v-if="current_device" tag="img" id="icon_settings"
+            src="/images/icon_settings.png" title="Настройки устройства" />
         <router-link
             :to="'/settings/schedules' + 
                 ((current_device && current_device.schedule_id) ? '/' + current_device.schedule_id : '')"
             tag="img" id="icon_tables" src="/images/icon_tables.png"
             title="Редактирование таблиц" />
         <router-link id="lk_setup_link" to="/settings/profile" v-if="userLogin">
-        <img src="/images/icon_profile.png" title="Ваш профиль" />
+            <img src="/images/icon_profile.png" title="Ваш профиль" />
         </router-link>
         <a  v-if="userLogin" id="lk_logout_link" href="#" @click="logout()">
-        <img src="/images/icon_logout.png" title="Выйти из личного кабинета" />
+            <img src="/images/icon_logout.png" title="Выйти из личного кабинета" />
         </a>
     </div>
     <router-view></router-view>
