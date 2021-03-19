@@ -16,7 +16,7 @@
       <div id="settings_link">
         <span class="note">Ссылка для просмотра статистики ваших устройств<br/><span>(можно изменить, от 6 до 20 английских букв и/или цифр)</span><br/><br/></span>
         <span id="link">http://my.lenfer.ru/</span>
-        <input type="text" v-capitalize:lower :value="post_data.public_id" id="input_link_nickname">
+        <input type="text" v-capitalize:lower v-model="post_data.public_id" id="input_link_nickname">
         <a :href="'http://my.lenfer.ru/' + post_data.public_id" target="_blank">
           <img src="images/icon_weblink.png" width="15" title="Ссылка откроется в новом окне" />
         </a><br/>
@@ -74,7 +74,8 @@ export default {
       this.pending = true
       userDataPost('user/settings', this.post_data)
         .then(() => {
-          this.$store.dispatch(UPDATE_USER_MUTATION, {email: this.post_data.email})
+          this.$store.commit(UPDATE_USER_MUTATION, {public_id: this.post_data.public_id})
+          messageBox("Настройки пользователя", "Изменения сохранены.")
         })
         .catch(err => {
           messageBox('Ошибка сохранения', err)

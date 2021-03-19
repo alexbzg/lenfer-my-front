@@ -2,13 +2,13 @@
   <div id="app">
     <div id="device_list" v-if="userLogin">
         <img id="logo" src="/images/logo_lk2.png" title="Ленивый фермер - Личный кабинет" />
-        <a id="add_device" href="#" title="Добавить устройство"
+        <a id="add_device" href="#" title="Добавить устройство" v-if="!public_id"
             @click="register_device = true">+</a>
         <router-link class="device_btn" v-for="(device, idx) in devices" :key="idx"
             :class="{timeout: device.timeout,
                 'router-link-active': $router.currentRoute.path === '/settings/devices/' + device.id ||
                 $router.currentRoute.path === '/settings/schedules/' + device.schedule_id}"
-                :to="'/device/' + device.id">
+                :to="(public_id ? '/' + public_id : '') + '/device/' + device.id">
                 {{device.title ? device.title : device.type_title}}
         </router-link>
         <modal v-if="register_device" title="Добавление устройства" :cancel_button="true"
@@ -20,9 +20,9 @@
     </div>
     <div id="right_menu">
         <router-link :to="'/settings/devices/' + current_device.id"
-            v-if="current_device" tag="img" id="icon_settings"
+            v-if="current_device && !public_id" tag="img" id="icon_settings"
             src="/images/icon_settings.png" title="Настройки устройства" />
-        <router-link
+        <router-link v-if="!public_id"
             :to="'/settings/schedules' + 
                 ((current_device && current_device.schedule_id) ? '/' + current_device.schedule_id : '')"
             tag="img" id="icon_tables" src="/images/icon_tables.png"
@@ -43,10 +43,9 @@
 
 import './style.css'
 
-import {mapState} from 'vuex'
-
 import {LOAD_DEVICES_ACTION, SET_USER_MUTATION, userDataPost} from './store'
 import messageBox from './message-box'
+import {get} from './api'
 
 import Modal from './components/Modal'
 
@@ -57,11 +56,12 @@ export default {
     return {
       register_device: false,
       register_device_hash: '',
+      public_devices: [],
       pending: false
     }
   },
   async mounted () {
-    if (!this.userLogin) {
+    if (!this.userLogin && !this.public_id) {
       this.login()
     }
   },
@@ -93,7 +93,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['devices']),
+    devices () {
+      return this.public_id ? this.public_devices : this.$store.state.devices
+    },
+    public_id () {
+      return this.$route.params.public_id
+    },
     current_device () {
       if (this.$route.name == 'Device') {
         return this.devices.find(item => item.id == parseInt(this.$route.params.device_id))
@@ -103,6 +108,24 @@ export default {
     },
     userLogin () {
       return this.$store.getters.userLogin
+    }
+  },
+  watch: {
+    public_id () {
+      if (this.public_id) {
+        get(`/api/users_device/public/${this.public_id}`)
+          .then(rsp => {
+            this.public_devices = rsp.data
+            if (this.public_devices.length > 0) {
+              const def_path = `/${this.public_id}/device/${this.public_devices[0].id}`
+              this.$router.addRoutes([{path: '/:public_id',
+                  redirect: def_path} ])
+              this.$router.push(def_path)
+            }
+          })
+      } else {
+        this.public_devices = []
+      }
     }
   }
 }

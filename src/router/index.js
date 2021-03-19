@@ -5,6 +5,7 @@ Vue.use(Router)
 
 const Login = (() => import('../components/Login'))
 const Device = (() => import('../components/Device/Index'))
+const PublicDevices = (() => import('../components/Device/PublicIndex'))
 const Settings = (() => import('../components/Settings/Index'))
 const SettingsProfile = (() => import ('../components/Settings/Profile'))
 const SettingsDevices = (() => import('../components/Settings/Devices'))
@@ -55,10 +56,22 @@ const router = new Router({
           path: 'schedules',
           name: 'SettingsSchedules',
           component: SettingsSchedules,
-        }        
+        }
+      ]
+    },
+    {
+      path: '/:public_id',
+      name: 'PublicDevicesIndex',
+      component: PublicDevices,
+      children: [
+        {
+          path: 'device/:device_id',
+          name: 'PublicDevice',
+          component: Device,
+          props: true
+        }
       ]
     }
-
   ]
 })
 

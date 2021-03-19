@@ -20,6 +20,7 @@ const SET_DEVICES_STATUS_MUTATION = 'setDevicesStatusMttn'
 
 export const LOGIN_ACTION = 'loginActn'
 export const REGISTER_ACTION = 'regActn'
+const LOAD_USER_DATA_ACTION = 'loadUserDataActn'
 export const LOAD_DEVICES_ACTION = 'loadDeviceActn'
 export const LOAD_SCHEDULES_ACTION = 'loadSchedulesActn'
 const LOAD_DEVICES_TYPES_ACTION = 'loadDevicesTypesActn'
@@ -77,8 +78,8 @@ const store = new Vuex.Store({
     },
     [UPDATE_USER_MUTATION] (state, payload) {
       Object.assign(state.user, payload)
-      storage.save(STORAGE_KEY_USER, state.user,
-        payload.remember ? 'local' : 'session')
+      const remember = 'remember' in payload ? payload.remember : state.user.remember
+      storage.save(STORAGE_KEY_USER, state.user, remember ? 'local' : 'session')
     }, 
     [SET_DEVICES_STATUS_MUTATION] (state, payload) {
       const now = new Date()
@@ -103,6 +104,12 @@ const store = new Vuex.Store({
     },
     [REGISTER_ACTION] ({commit}, payload) {
       return dataPost('register_user', payload)
+        .then(data => { 
+          commit(SET_USER_MUTATION, {user: data, remember: true}) 
+        })
+    },
+    [LOAD_USER_DATA_ACTION] ({commit}) {
+      return userDataPost('user_data')
         .then(data => { 
           commit(SET_USER_MUTATION, {user: data, remember: true}) 
         })
@@ -132,6 +139,9 @@ const store = new Vuex.Store({
 })
 
 store.commit(INIT_MUTATION)
+if (store.getters.userLogin) {
+  store.dispatch(LOAD_USER_DATA_ACTION)
+}
 store.dispatch(LOAD_DEVICES_ACTION)
 store.dispatch(LOAD_DEVICES_TYPES_ACTION)
   .then(() => { store.dispatch(LOAD_SCHEDULES_ACTION) })
