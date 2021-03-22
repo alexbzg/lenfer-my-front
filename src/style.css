@@ -821,6 +821,13 @@ table#schedule_days input.param_delta{
 
 /* =======================  S E T T I N G S   P R O F I L E  ===================================*/
 
+
+#settings_profile .error{
+	background: #faa;
+}
+
+
+
 table#setting_login{
 	margin: 50px auto;
 	border-collapse: collapse;

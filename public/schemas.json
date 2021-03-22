@@ -73,7 +73,7 @@
     "required": ["token", "data", "device_id"]
 },
 
-"post_devices_public_access": {
+"post_user_public_settings": {
     "type": "object",
     "properties": {
         "token": {
@@ -84,7 +84,11 @@
             "type": "string",
             "minLength": 1
         },
-        "values": {
+        "public_id": {
+            "type": "string",
+            "pattern": "[0-9a-z]{6,}"
+        },
+        "devices": {
             "type": "array",
             "items": {
                 "type": "object",
@@ -97,11 +101,10 @@
                     }
                 },
                 "required": ["id", "public_access"]
-            },
-            "minItems": 1
+            }
         }
     },
-    "required": ["token", "login", "values"]
+    "required": ["token", "login", "devices", "public_id"]
 },
 
 "post_devices_log": {
@@ -243,13 +246,9 @@
         "login": {
             "type": "string",
             "minLength": 1
-        },
-        "public_id": {
-            "type": "string",
-            "pattern": "[0-9a-z]{6,}"
         }
     },
-    "required": ["token", "password", "login", "public_id"]
+    "required": ["token", "password", "login"]
 }
 
 
