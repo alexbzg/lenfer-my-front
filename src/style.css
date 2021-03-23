@@ -821,18 +821,17 @@ table#schedule_days input.param_delta{
 
 /* =======================  S E T T I N G S   P R O F I L E  ===================================*/
 
-
-#settings_profile .error{
-	background: #faa;
+#settings_profile span.note{
+	color: #777;
 }
 
-
-
 table#setting_login{
-	margin: 50px auto;
-	border-collapse: collapse;
+	margin: 0px auto 50px auto;
 	text-align: center;
 	padding-bottom: 10px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	padding: 20px;
 }
 table#setting_login th{
 	font-size: 12px;
@@ -847,39 +846,38 @@ table#setting_login td.email{
 	font-weight: bold;
 }
 
-
 #settings_link{
-	width: 80%;
-	margin: 0 auto;
-	padding: 10px;
-	margin-bottom: 50px;
+	display: inline-block;
+	margin: 0 auto 50px auto;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	padding: 30px 50px 20px 50px;
 	line-height: 14px;
 	font-size: 18px;
 }
-#settings_link span.note{
-	color: #777;
-}
-#settings_link span.note span{
+
+#settings_link span.subnote{
 	font-size: 12px;
 	font-style: italic;
 	color: #aaa;
 }
 #settings_link span#link{
-	color: #009;
 	font-weight: bold;
+	font-size: 20px;
+	color: #555;text-decoration: underline;
 }
 
 
 #settings_link input#input_link_nickname{
 	width: 150px;
 	font-weight: bold;
+	font-size: 18px;
 	border-radius: 0px;
 	border: none;
 	padding: 0;
 	text-align: left;
-	font-size: 16px;
 	color: #333;
-	margin: 0 20px 10px 0;
+	margin: 0 20px 0px 0;
 	padding-left: 5px;
 }
 #settings_link a{
@@ -887,6 +885,15 @@ table#setting_login td.email{
 	font-weight: bold;
 	text-decoration: none;
 }
+
+#settings_profile input.error, #settings_link input#input_link_nickname.error{
+	border: 1px solid #f77;
+	background: #fdd;
+}
+
+
+
+
 
 table#setting_link_devices{
 	margin: 30px auto;
@@ -903,5 +910,10 @@ table#setting_link_devices th{
 }
 table#setting_link_devices td{
 	padding: 5px 0;
+	border-bottom: 1px solid #eee;
+}
+table#setting_link_devices td.device{
+	text-align: left;
+	padding-left: 10px;
 }
 

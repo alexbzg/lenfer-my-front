@@ -5,7 +5,7 @@ Vue.use(Router)
 
 const Login = (() => import('../components/Login'))
 const Device = (() => import('../components/Device/Index'))
-const PublicDevices = (() => import('../components/Device/PublicIndex'))
+const Index = (() => import('../components/Index'))
 const Settings = (() => import('../components/Settings/Index'))
 const SettingsProfile = (() => import ('../components/Settings/Profile'))
 const SettingsDevices = (() => import('../components/Settings/Devices'))
@@ -21,48 +21,56 @@ const router = new Router({
       props: route => ({ token: route.query.token })
     },
     {
-      path: '/device/:device_id',
-      name: 'Device',
-      component: Device,
-      props: true
-    },
-    {
-      path: '/settings',
-      component: Settings,
+      path: '/',
+      name: 'Index',
+      component: Index,
       children: [
         {
-          path: 'profile',
-          name: 'SettingsProfile',
-          component: SettingsProfile
-        },
-        {
-          path: 'devices/:device_id',
-          name: 'SettingsDevices',
-          component: SettingsDevices,
+          path: 'device/:device_id',
+          name: 'Device',
+          component: Device,
           props: true
         },
         {
-          path: '/',
-          name: 'SettingsDevices',
-          component: SettingsDevices
+          path: 'settings',
+          component: Settings,
+          children: [
+            {
+              path: 'profile',
+              name: 'SettingsProfile',
+              component: SettingsProfile
+            },
+            {
+              path: 'devices/:device_id',
+              name: 'SettingsDevices',
+              component: SettingsDevices,
+              props: true
+            },
+            {
+              path: '/',
+              name: 'SettingsDevices',
+              component: SettingsDevices
+            },
+            {
+              path: 'schedules/:schedule_id',
+              name: 'SettingsSchedules',
+              component: SettingsSchedules,
+              props: true
+            },
+            {
+              path: 'schedules',
+              name: 'SettingsSchedules',
+              component: SettingsSchedules,
+            }
+          ]
         },
-        {
-          path: 'schedules/:schedule_id',
-          name: 'SettingsSchedules',
-          component: SettingsSchedules,
-          props: true
-        },
-        {
-          path: 'schedules',
-          name: 'SettingsSchedules',
-          component: SettingsSchedules,
-        }
       ]
     },
     {
       path: '/:public_id',
-      name: 'PublicDevicesIndex',
-      component: PublicDevices,
+      name: 'PublicIndex',
+      component: Index,
+      props: true,
       children: [
         {
           path: 'device/:device_id',

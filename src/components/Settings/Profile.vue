@@ -1,5 +1,7 @@
 <template>
     <div id="settings_profile">
+
+      <span class="note">Смена пароля доступа</span>
       <table id="setting_login">
         <tr>
           <td class="email">{{$store.state.user.login}}</td>
@@ -13,6 +15,7 @@
         </tr>
       </table>
 
+      <span class="note">Ссылка для просмотра статистики ваших устройств</span><br/>
       <settings-public-access></settings-public-access>
 
     </div>
