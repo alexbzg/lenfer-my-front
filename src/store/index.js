@@ -16,7 +16,7 @@ export const UPDATE_USER_MUTATION = 'updUserMttn'
 const SET_DEVICES_MUTATION = 'setDevicesMttn'
 const SET_DEVICES_TYPES_MUTATION = 'setDevicesTypesMttn'
 const SET_SCHEDULES_MUTATION = 'setSchedulessMttn'
-const SET_DEVICES_STATUS_MUTATION = 'setDevicesStatusMttn'
+export const DEVICE_STATUS_MUTATION = 'deviceStatusMttn'
 
 export const LOGIN_ACTION = 'loginActn'
 export const REGISTER_ACTION = 'regActn'
@@ -24,10 +24,13 @@ const LOAD_USER_DATA_ACTION = 'loadUserDataActn'
 export const LOAD_DEVICES_ACTION = 'loadDeviceActn'
 export const LOAD_SCHEDULES_ACTION = 'loadSchedulesActn'
 const LOAD_DEVICES_TYPES_ACTION = 'loadDevicesTypesActn'
-const UPDATE_DEVICES_STATUS_ACTION = 'updateDevicesStatusActn'
 
 const INTERVAL_HANDLES = {
-  devices_status_update: null
+}
+
+export function set_device_status(device, tstamp, timeout) {
+  Vue.set(device, 'last_tstamp', tstamp)
+  Vue.set(device, 'timeout', timeout)
 }
 
 const store = new Vuex.Store({
@@ -80,17 +83,9 @@ const store = new Vuex.Store({
       Object.assign(state.user, payload)
       const remember = 'remember' in payload ? payload.remember : state.user.remember
       storage.save(STORAGE_KEY_USER, state.user, remember ? 'local' : 'session')
-    }, 
-    [SET_DEVICES_STATUS_MUTATION] (state, payload) {
-      const now = new Date()
-      for (const device_id in payload) {        
-        const tstamp = new Date(payload[device_id].last_tstamp)
-        const device = state.devices.find(item => item.id == payload[device_id].id)
-        if (device) {
-          Vue.set(device, 'last_tstamp', tstamp)
-          Vue.set(device, 'timeout', now - tstamp > 600000)
-        }
-      }
+    },
+    [DEVICE_STATUS_MUTATION] (state, payload) {
+      set_device_status(payload.device, payload.tstamp, payload.timeout)
     }
   },
   actions: {
@@ -114,12 +109,10 @@ const store = new Vuex.Store({
           commit(SET_USER_MUTATION, {user: data, remember: true}) 
         })
     },
-    [LOAD_DEVICES_ACTION] ({commit, dispatch}) {
+    [LOAD_DEVICES_ACTION] ({commit}) {
       return userDataPost('users_devices')
         .then(data => { 
           commit(SET_DEVICES_MUTATION, data) 
-          INTERVAL_HANDLES.devices_status_update = setInterval(
-            () => { dispatch(UPDATE_DEVICES_STATUS_ACTION) }, 6000)
         })
     }, 
     [LOAD_DEVICES_TYPES_ACTION] ({commit}) {
@@ -129,10 +122,6 @@ const store = new Vuex.Store({
     [LOAD_SCHEDULES_ACTION] ({commit}) {
       userDataPost('users_device_schedules')
         .then(data => { commit(SET_SCHEDULES_MUTATION, data) })
-    },
-    [UPDATE_DEVICES_STATUS_ACTION] ({commit}) {
-      userDataPost('devices_status')
-        .then(data => { commit(SET_DEVICES_STATUS_MUTATION, data) })
     }
   },
   strict: process.env.NODE_ENV !== 'production'

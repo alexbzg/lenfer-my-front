@@ -153,10 +153,19 @@ input.btn[type="button"][disabled]{
 
 /* ==================================== L O G I N =======================================*/
 
+#wrap{
+	display: table;
+	border-collapse: collapse;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	background-color: #ddd;
+}
+
 #login_form{
 	display: inline-block;
 	width: 500px;
-	height: 300px;
 	margin: 100px auto;
 	padding: 10px 0;
 	text-align: center;
@@ -165,6 +174,12 @@ input.btn[type="button"][disabled]{
 	vertical-align: top;
 	box-shadow: 0 .125rem .25rem rgba(0,0,0,.1);
 	background-color: #fff;
+	position: relative;
+}
+#login_form img{
+	position: absolute;
+	top: 15px;
+	left: 15px;
 }
 
 input#login_input, input#password_input{
@@ -176,6 +191,7 @@ input#login_input, input#password_input{
 
 input#login_btn{
 	font-size: 18px;
+	margin-bottom: 50px;
 }
 
 
@@ -856,15 +872,20 @@ table#setting_login td.email{
 	font-size: 18px;
 }
 
+#settings_link a{
+	display: inline-block;
+	padding: 0 0 4px 0;
+	font-weight: bold;
+	font-size: 20px;
+	text-decoration: none;
+	color: #009;
+	border-bottom: 2px solid #009;
+}
+
 #settings_link span.subnote{
 	font-size: 12px;
 	font-style: italic;
 	color: #aaa;
-}
-#settings_link span#link{
-	font-weight: bold;
-	font-size: 20px;
-	color: #555;text-decoration: underline;
 }
 
 
@@ -874,16 +895,12 @@ table#setting_login td.email{
 	font-size: 18px;
 	border-radius: 0px;
 	border: none;
+	border-bottom: 2px solid #333;
 	padding: 0;
 	text-align: left;
 	color: #333;
 	margin: 0 20px 0px 0;
 	padding-left: 5px;
-}
-#settings_link a{
-	color: #009;
-	font-weight: bold;
-	text-decoration: none;
 }
 
 #settings_profile input.error, #settings_link input#input_link_nickname.error{

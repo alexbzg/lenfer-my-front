@@ -41,7 +41,8 @@
 
 <script>
 
-import {LOAD_DEVICES_ACTION, SET_USER_MUTATION, userDataPost} from '../store'
+import {LOAD_DEVICES_ACTION, SET_USER_MUTATION, DEVICE_STATUS_MUTATION, set_device_status,
+  userDataPost} from '../store'
 import messageBox from '../message-box'
 import {get} from '../api'
 
@@ -62,12 +63,14 @@ export default {
   mounted () {
     if (!this.userLogin && !this.public_id) {
       this.login()
+      return
     } else if (this.public_id) {
       this.load_public_devices()
     }
+    setInterval(this.update_devices_status, 10 * 1000)
   },
-  methods: {
-   async load_public_devices () {
+  methods: {   
+    async load_public_devices () {
       get(`/api/users_device/public/${this.public_id}`)
         .then(rsp => {
           this.public_devices = rsp.data
@@ -78,8 +81,32 @@ export default {
             this.$router.push(def_path)
           }
         })
-   },
-   login () {
+    },
+    async get_public_devices_status () {
+      return get(`/api/devices_status/public/${this.public_id}`)
+        .then(response => response.data)
+    },
+    async update_devices_status () {
+      (this.public_id ? this.get_public_devices_status() : userDataPost('devices_status'))
+        .then(data => {
+            const now = new Date()
+            for (const device_id in data) {        
+              const tstamp = new Date(data[device_id].last_tstamp)
+              const device = this.devices.find(item => item.id == data[device_id].id)
+              if (device) {
+                const timeout = now - tstamp > 600000
+                this.public_id ? set_device_status(device, tstamp, timeout) :
+                  this.$store.commit(DEVICE_STATUS_MUTATION, {
+                    device: device,
+                    tstamp: tstamp,
+                    timeout: timeout
+                  })
+
+              }
+            }
+        })
+    },
+    login () {
       this.$router.push('/login')
     },
     logout () {

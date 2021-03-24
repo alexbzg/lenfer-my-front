@@ -1,6 +1,7 @@
 <template>
+    <div id="wrap">
     <div id="login_form">
-
+        <img src="/images/logo_lk2.png" />
         <template v-if="mode !== 'password_change'">
             <b>Email</b><br/>
             <input type="text" name="login_input" id="login_input" v-model.trim="post_data.login"
@@ -15,7 +16,7 @@
         </template>
 
         <div id="recap"  v-if="mode === 'register' || mode === 'password_request'">
-            <vue-recaptcha 
+            <vue-recaptcha
             ref="recaptcha"
             @verify="recaptcha_verify"
             @expired="recaptcha_expired"
@@ -37,15 +38,15 @@
                 {{mode === 'register' ? 'Вход' : 'Регистрация'}}
             </a>
             <br/>
-           
-            <a id="pass_recovery" href="#" 
+
+            <a id="pass_recovery" href="#"
                 @click="set_mode(mode === 'password_request' ? 'login' : 'password_request')">
                 {{mode === 'password_request' ? 'Вход/Регистрация' : 'Восстановление пароля'}}
             </a>
 
 
         </div>
-
+      </div>
     </div>
 </template>
 
@@ -109,7 +110,7 @@ export default {
       this.pending = true
       if (this.mode === 'login' || this.mode === 'register') {
         const action = (this.mode === 'login' ? LOGIN_ACTION : REGISTER_ACTION)
-        this.$store.dispatch(action, this.post_data)          
+        this.$store.dispatch(action, this.post_data)
           .then(() => {
             this.$emit('login')
             this.$router.push('/')
@@ -122,7 +123,7 @@ export default {
         const url = (this.mode === 'password_request' ? 'password_recovery_request' : 'password_recovery')
         dataPost(url, this.post_data)
           .then(() => {
-            const msg = (this.mode === 'password_request' ? 
+            const msg = (this.mode === 'password_request' ?
               'На ваш почтовый адрес было отправлено письмо с инструциями.' :
               'Пароль был изменен.')
             messageBox('Восстановление пароля', msg)
