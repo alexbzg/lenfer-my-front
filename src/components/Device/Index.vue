@@ -13,8 +13,8 @@
                 <th v-for="param in sensors_charts" :key="param.id" class="parameter">
                     {{param.title}}
                 </th>
-                <th class="schedule_day">День</th>
-                <th id="schedule">Таблица работы</th>
+                <th class="schedule_day" v-if="schedule && schedule.today.day_no">День</th>
+                <th id="schedule" v-if="schedule && schedule.title">Таблица работы</th>
             </tr>
             <tr v-else>
                 <template v-for="param in sensors_charts">
@@ -38,10 +38,10 @@
                       <template v-if="!schedule || !schedule.today.params"></template>
                     </span>
                 </td>
-                <td class="schedule_day">
-                    <template v-if="schedule">{{schedule.today.day_no}}</template>
+                <td class="schedule_day" v-if="schedule && schedule.today.day_no">
+                    <template>{{schedule.today.day_no}}</template>
                 </td>
-                <td id="schedule">
+                <td id="schedule" v-if="schedule && schedule.title">
                     <router-link :to="'/settings/schedules/' + device.schedule_id" v-if="schedule">
                         {{schedule.title}}
                     </router-link>
@@ -266,12 +266,12 @@ export default {
       if (this.device && this.device.schedule_id) {
         const schedule = this.$store.state.schedules.find(
           schedule => schedule.id === this.device.schedule_id)
+        const start = this.device.props_values[0]
+        const now = new Date()
+        const day = Math.floor((now - start) / (1000 * 60 * 60 * 24))
         if (schedule) {
           r = {title: schedule.title}
-          const start = this.device.props_values[0]
-          const now = new Date()
           if (now > start) {
-            const day = Math.floor((now - start) / (1000 * 60 * 60 * 24))
             if (day < schedule.days) {
               r.today = schedule.items[day]
             } else {
@@ -283,7 +283,10 @@ export default {
           if (!r.today) {
            r.today = {day_no: '-'}
           }
+        } else {
+          r = {today: {day_no: day > 0 ? day : null}}
         }
+
       }
       return r
     }

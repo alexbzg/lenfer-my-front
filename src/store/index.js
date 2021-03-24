@@ -65,6 +65,8 @@ const store = new Vuex.Store({
           clearTimeout(INTERVAL_HANDLES[interval_id])
           INTERVAL_HANDLES[interval_id] = null
         }
+        state.devices = []
+        state.schedules = []
       }
     },
     [SET_DEVICES_MUTATION] (state, payload) {
