@@ -73,6 +73,40 @@
     "required": ["token", "data", "device_id"]
 },
 
+"post_switches_state": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 1
+        },
+        "device_id": {
+            "type":"integer"
+        },
+        "data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "device_type_switch_id": {
+                        "type": "integer"
+                    },
+                    "tstamp": {
+                        "type": "string",
+                        "minLength" : 1
+                    },
+                    "state": {
+                        "type": ["number", "null"]
+                    }
+                },
+                "required": ["device_type_switch_id", "tstamp", "state"]
+            },
+            "minItems": 1
+        }
+    },
+    "required": ["token", "data", "device_id"]
+},
+
 "post_user_public_settings": {
     "type": "object",
     "properties": {
@@ -231,6 +265,28 @@
     },
     "required": ["token", "login", "is_master", "enabled"]
 },
+
+"post_switch_props": {
+    "type": "object",
+    "properties": {
+        "token": {
+            "type": "string",
+            "minLength": 1
+        },
+        "title": {
+            "type": ["string", "null"]
+        },
+        "enabled": {
+            "type": "boolean"
+        },
+        "login": {
+            "type": "string",
+            "minLength": 1
+        }
+    },
+    "required": ["token", "login", "enabled"]
+},
+
 
 "post_user_settings": {
     "type": "object",
