@@ -96,7 +96,7 @@
                         "minLength" : 1
                     },
                     "state": {
-                        "type": ["number", "null"]
+                        "type": ["boolean"]
                     }
                 },
                 "required": ["device_type_switch_id", "tstamp", "state"]
