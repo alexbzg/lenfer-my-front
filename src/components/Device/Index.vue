@@ -79,6 +79,12 @@
             </sensor-chart>
         </div>
 
+        <div v-for="switch_item in switches_enabled" :key="switch_item.id" class="switch_chart">
+            <h4>{{switch_item.title || switch_item.default_title}}</h4>
+            <switch-chart :switch="switch_item" :device_id="device.id" :interval="chart_interval">
+            </switch-chart>
+        </div>
+
         <router-link :to="'/settings/devices/' + device_id"
             v-if="device_props.custom.length || device_props.standart.length"
             tag="div" class="border">
@@ -125,6 +131,7 @@ import {DEVICE_SENSORS_PARAMS} from '../../definitions'
 import {display_datetime} from '../../utils'
 
 import SensorChart from './SensorChart'
+import SwitchChart from './SwitchChart'
 import LogSummary from './LogSummary'
 import Loading from '../Loading'
 
@@ -138,7 +145,7 @@ const CHART_INTERVALS_SETTINGS = [
 
 export default {
   name: 'DeviceIndex',
-  components: {SensorChart, LogSummary, Loading},
+  components: {SensorChart, SwitchChart, LogSummary, Loading},
   CHART_INTERVALS_SETTINGS: CHART_INTERVALS_SETTINGS,
   props: ['device_id'],
   data () {
@@ -210,6 +217,10 @@ export default {
     ...mapState(['devices']),
     userLogin () {
       return this.$store.getters.userLogin
+    },
+
+    switches_enabled () {
+      return this.device.switches ? this.device.switches.filter(item => item.enabled) : []
     },
 
     chart_interval () {

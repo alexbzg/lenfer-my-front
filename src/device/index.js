@@ -7,6 +7,7 @@ class Device {
 
     this.id = id
     this.sensors = params.sensors
+    this.switches = params.switches
     this.type = params.device_type
     this.type_id = params.device_type_id
     this.title = params.title

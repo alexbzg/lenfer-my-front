@@ -51,6 +51,24 @@
             </td>
           </tr>
         </table>
+        <table id="device_switches_setup" class="switches_param" v-if="edit_device.switches">
+          <tr>
+            <th>Подключен</th>
+            <th>Переключатель</th>
+            <th>Название переключателя на графике</th>
+          </tr>
+          <tr class="switch" v-for="entry in edit_device.switches"
+            :key="entry.id">
+            <td class="sensor_checkbox">
+              <input type="checkbox" v-model="entry.enabled"/>
+            </td>
+            <td class="sensor">{{entry.default_title}}</td>
+            <td class="sensor_graf_title">
+              <input type="text" v-model="entry.title"/>
+            </td>
+          </tr>
+        </table>
+
         <component v-for="(prop, prop_id) in edit_device.custom_props"
             :is="prop.component"
             :key="prop_id"
@@ -232,6 +250,21 @@ export default {
           })
         }
       }
+      const switches_length = this.edit_device.switches.length
+      for (let co = 0; co < switches_length; co++) {
+        const switch_item = this.edit_device.switches[co]
+        const switch_cache = this.device_cache.switches[co]
+        if (switch_item.title !== switch_cache.title || switch_item.enabled !== switch_cache.enabled) {
+          queries.push({
+            url: `switch/${this.edit_device.id}/${switch_item.id}`,
+            data: {
+              title: switch_item.title,
+              enabled: switch_item.enabled
+            }
+          })
+        }
+      }
+
       if (queries.length) {
         this.pending = true
         let p = null
