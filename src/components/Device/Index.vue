@@ -32,7 +32,7 @@
                     <span class="schedule_data">
                       <template
                           v-if="schedule &&
-                          schedule.today.params"> {{schedule.today.params[param.id].value}}<template
+                          schedule.today.params"> {{schedule.today.params[param.id]}}<template
                               v-if="param.unit">{{param.unit}}</template>
                       </template>
                       <template v-if="!schedule || !schedule.today.params"></template>
@@ -134,6 +134,8 @@ import SensorChart from './SensorChart'
 import SwitchChart from './SwitchChart'
 import LogSummary from './LogSummary'
 import Loading from '../Loading'
+
+//import {debugLog} from '../../utils'
 
 const SHOW_LOG_DEVICE_TYPES = ["Feeder"]
 
@@ -280,19 +282,28 @@ export default {
         const start = this.device.props_values[0]
         const now = new Date()
         const day = Math.floor((now - start) / (1000 * 60 * 60 * 24))
+        let day_idx = -1
         if (schedule) {
           r = {title: schedule.title}
           if (now > start) {
             if (day < schedule.days) {
-              r.today = schedule.items[day]
+              day_idx = day
             } else {
-              r.today = schedule.items[schedule.days - 1]
+              day_idx = schedule.days - 1
             }
           } else if  (schedule.days > 0) {
-            r.today = schedule.items[0]
+            day_idx = 0
+          }
+          if (day_idx !== -1) {
+            const schedule_item = schedule.items[day_idx]
+            r.today = {day_no: schedule_item.day_no, params: {}}
+            const params_length = this.device_type.schedule_params.length
+            for (let param_co = 0; param_co < params_length; param_co++) {
+              r.today.params[this.device_type.schedule_params[param_co].id] = schedule_item.params[param_co]
+            }
           }
           if (!r.today) {
-           r.today = {day_no: '-'}
+            r.today = {day_no: '-'}
           }
         } else {
           r = {today: {day_no: day > 0 ? day : null}}

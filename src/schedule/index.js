@@ -1,15 +1,22 @@
 import {get} from '../api'
-import {DEVICE_SENSORS_PARAMS} from '../definitions'
+import {DEVICE_SENSORS_PARAMS, ADDITIONAL_SCHEDULE_PARAMS} from '../definitions'
+
+const PARAMS_DEFS = DEVICE_SENSORS_PARAMS.concat(ADDITIONAL_SCHEDULE_PARAMS)
 
 export class Schedule {
   constructor (params, devices_types) {
     params = params || {}
     this.devices_types = devices_types
     this.id = params.id || null
+    this.params = {}
+    this.params_list = []
     this.items = []
     this.device_type_id = params.device_type_id || null
     if (params.items) {
       this.items = params.items
+    }
+    if (params.params) {
+      this.params = params.params
     }
     this.title = params.title || null
   }
@@ -26,15 +33,7 @@ export class Schedule {
   }
 
   create_day (no) {
-    const item = {day_no: no, params:{}}
-    for (const param of this.params) {
-      let param_item = {value: null}
-      if (param.type === 'float_delta') {
-        param_item = {value: null, delta: null}
-      }
-      item.params[param.id] = param_item
-    }
-    return item
+    return{day_no: no, params: new Array(this.params_list.length)}
   }
 
   get days () {
@@ -44,14 +43,13 @@ export class Schedule {
   set device_type_id (val) {
     if (this._device_type_id !== val) {
       this._device_type_id = val
-      this.params = []
       const device_type = this.devices_types.find(item => item.id === val)
       if (device_type) {
-        for (const param of DEVICE_SENSORS_PARAMS) {
-          if (param.id in device_type.schedule_params) {
-            this.params.push({...param, ...device_type.schedule_params[param.id]})
-          }
-        }
+        this.params_list = JSON.parse(JSON.stringify(device_type.schedule_params))
+        this.params = {delta: new Array(this.params_list.length)}
+      }
+      for (const entry of this.params_list) {
+        entry.def = PARAMS_DEFS.find(item => item.id === entry.id)
       }
       const days = this.days
       this.items = []

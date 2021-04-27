@@ -3,6 +3,7 @@
       type="text"
       v-model="edit_value"
       placeholderChar="0"
+      class="time_input"
       :mask="$options.MASK">
     </masked-input>
 </template>

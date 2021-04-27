@@ -30,20 +30,11 @@ class Device {
     }
 
     this.sensors_params = {}
-    this.sensors_titles = {}
     if (this.sensors) {
       for (const sensor of this.sensors) {
         if (!this.sensors_params[sensor.type]) {
           this.sensors_params[sensor.type] = {sensors: []}
         }
-        if (!this.sensors_titles[sensor.default_title]) {
-          this.sensors_titles[sensor.default_title] = {
-            sensors: [],
-            enabled: sensor.enabled,
-            title: sensor.title
-          }
-        }
-        this.sensors_titles[sensor.default_title].sensors.push(sensor)
         this.sensors_params[sensor.type].sensors.push(sensor)
         if (sensor.is_master) {
           this.sensors_params[sensor.type].master = sensor

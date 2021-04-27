@@ -1,91 +1,91 @@
 <template>
     <div id="device_settings">
 
-      <div id="device_setup" v-if="edit_device">
+        <div id="device_setup" v-if="edit_device">
 
-        <device-props :props_headers="edit_device.props_titles"
-            :device_type_id="edit_device.type_id"
-            @validated="edit_device_props_validated"
-            v-model="edit_device.props_values">
+            <device-props :props_headers="edit_device.props_titles"
+                :device_type_id="edit_device.type_id"
+                @validated="edit_device_props_validated"
+                v-model="edit_device.props_values">
+    
+                <template v-slot:device_title>
 
-            <template v-slot:device_title>
+                    <div class="title">
+                        <input type="text" v-model="edit_device.title"/><br/>
+                        <span class="title">название устройства на сайте</span>
+                    </div>
 
-                <div class="title">
-                    <input type="text" v-model="edit_device.title"/><br/>
-                    <span class="title">название устройства на сайте</span>
-                </div>
+                    <div id="device_code">
+                        {{edit_device.hash}}<br/>
+                        <span>код устройства</span>
+                    </div>
 
-                <div id="device_code">
-                    {{edit_device.hash}}<br/>
-                    <span>код устройства</span>
-                </div>
+                    <template v-if="edit_device.enable_schedule">
+                        <select v-model="edit_device.schedule_id">
+                            <option v-for="schedule in schedules" :key="schedule.id"
+                                :value="schedule.id">{{schedule.title}}</option>
+                            </select><br/>
+                        <span class="title">таблица работы</span>
+                    </template>
 
-                <template v-if="edit_device.enable_schedule">
-                    <select v-model="edit_device.schedule_id">
-                        <option v-for="schedule in schedules" :key="schedule.id"
-                            :value="schedule.id">{{schedule.title}}</option>
-                        </select><br/>
-                    <span class="title">таблица работы</span>
                 </template>
+            </device-props>
 
-            </template>
-        </device-props>
+        </div>
 
-      </div>
+        <div id="function_setup" v-if="edit_device">
+            <table id="device_sensor_setup" class="sensors_param" v-if="edit_device.sensors">
+                <tr>
+                    <th>Подключен</th>
+                    <th>Датчик</th>
+                    <th>Поправка</th>
+                    <th>Название датчика на графике</th>
+                </tr>
+                <tbody v-for="entry in edit_device.sensors_settings" :key="entry.id">
+                    <tr class="sensor_type">
+                        <td colspan="4">{{entry.title}}</td>
+                    </tr>
+                    <tr class="sensor" v-for="sensor in entry.sensors" :key="sensor.id">
+                        <td class="checkbox">
+                            <input type="checkbox" v-model="sensor.enabled"/>
+                        </td>
+                        <td class="def_title">{{sensor.default_title}}</td>
+                        <td class="correction"><input type="text" v-model.number="sensor.correction"/></td>
+                        <td class="graph_title"><input type="text" v-model="sensor.title"/></td>
+                    </tr>
+                </tbody>
+            </table>
 
-      <div id="function_setup" v-if="edit_device">
-        <table id="device_sensor_setup" class="sensors_param" v-if="edit_device.sensors">
-          <tr>
-            <th>Подключен</th>
-            <th>Датчик</th>
-            <th>Название датчика на графике</th>
-          </tr>
-          <tr class="sensor" v-for="(entry, title) in edit_device.sensors_titles"
-            :key="title">
-            <td class="sensor_checkbox">
-              <input type="checkbox" v-model="entry.enabled"/>
-            </td>
-            <td class="sensor">{{title}}</td>
-            <td class="sensor_graf_title">
-              <input type="text" v-model="entry.title"/>
-            </td>
-          </tr>
-        </table>
-        <table id="device_switches_setup" class="switches_param" v-if="edit_device.switches">
-          <tr>
-            <th>Подключен</th>
-            <th>Переключатель</th>
-            <th>Название переключателя на графике</th>
-          </tr>
-          <tr class="switch" v-for="entry in edit_device.switches"
-            :key="entry.id">
-            <td class="sensor_checkbox">
-              <input type="checkbox" v-model="entry.enabled"/>
-            </td>
-            <td class="sensor">{{entry.default_title}}</td>
-            <td class="sensor_graf_title">
-              <input type="text" v-model="entry.title"/>
-            </td>
-          </tr>
-        </table>
+            <table id="device_switches_setup" class="switches_param" v-if="edit_device.switches">
+                <tr>
+                    <th>Подключен</th>
+                    <th>Переключатель</th>
+                    <th>Название переключателя на графике</th>
+                </tr>
+                <tr class="switch" v-for="entry in edit_device.switches" :key="entry.id">
+                    <td class="sensor_checkbox"><input type="checkbox" v-model="entry.enabled"/></td>
+                    <td class="sensor">{{entry.default_title}}</td>
+                    <td class="sensor_graf_title"><input type="text" v-model="entry.title"/></td>
+                </tr>
+             </table>
 
-        <component v-for="(prop, prop_id) in edit_device.custom_props"
-            :is="prop.component"
-            :key="prop_id"
-            :props_headers="prop.title"
-            :value="prop.value"
-            @validated="edit_device_custom_prop_validated">
-        </component>
-      </div>
+            <component v-for="(prop, prop_id) in edit_device.custom_props"
+                :is="prop.component"
+                :key="prop_id"
+                :props_headers="prop.title"
+                :value="prop.value"
+                @validated="edit_device_custom_prop_validated">
+            </component>
+        </div>
 
-      <div id="buttons_setup" v-if="edit_device">
-        <input class="btn cancel" type="submit" value="Отмена" @click="open_device_index"/>
-        <input class="btn" type="submit" value="Сохранить"
-          :disabled="pending" @click="post_device"/>
-        <br/>
-        <input class="btn delete" type="submit" value="Удалить устройство"
-          :disabled="pending" @click="delete_device"/>
-      </div>
+        <div id="buttons_setup" v-if="edit_device">
+            <input class="btn cancel" type="submit" value="Отмена" @click="open_device_index"/>
+            <input class="btn" type="submit" value="Сохранить"
+                :disabled="pending" @click="post_device"/>
+            <br/>
+            <input class="btn delete" type="submit" value="Удалить устройство"
+                :disabled="pending" @click="delete_device"/>
+        </div>
     </div>
 </template>
 
@@ -236,15 +236,14 @@ export default {
         const sensor = this.edit_device.sensors[co]
         const sensor_cache = this.device_cache.sensors[co]
         sensor.is_master = this.edit_device.sensors_params[sensor.type].master == sensor
-        sensor.title = this.edit_device.sensors_titles[sensor.default_title].title
-        sensor.enabled = this.edit_device.sensors_titles[sensor.default_title].enabled
         if (sensor.title !== sensor_cache.title || sensor.is_master !== sensor_cache.is_master ||
-          sensor.enabled !== sensor_cache.enabled) {
+          sensor.enabled !== sensor_cache.enabled || sensor.correction !== sensor_cache.correction) {
           queries.push({
             url: 'sensor/' + sensor.id,
             data: {
               title: sensor.title,
               is_master: sensor.is_master,
+              correction: sensor.correction,
               enabled: sensor.enabled
             }
           })

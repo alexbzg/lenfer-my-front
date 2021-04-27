@@ -14,7 +14,7 @@
                     </seconds-edit>
                 </td>
                 <td :class="{error: item in validation_errors && 1 in validation_errors[item]}">
-                    <input type="number" v-model="value[item][1]"
+                    <input type="number" v-model.number="value[item][1]"
                         @input="$emit('input', Number($event.target.value))"/>
                 </td>
                 <td @click="delete_item(props_headers, value, item)">

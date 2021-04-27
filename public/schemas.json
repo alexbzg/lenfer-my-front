@@ -4,7 +4,7 @@
         "login": {
             "type": "string",
             "minLength": 5,
-            "maxLength": 16
+            "maxLength": 32
         },
         "password": {
             "type": "string",

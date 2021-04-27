@@ -42,6 +42,7 @@ const DATASET_TMPLT = {
   borderWidth: 3,
   pointRadius: 0,
   pointHitRadius: 0.4,
+  lineTension: 0,
   spanGaps: false
 }
 

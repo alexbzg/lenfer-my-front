@@ -163,14 +163,18 @@ export default {
                     y: x.value
                   })
                 }
-                
-                ready[co] = true
-                if (!ready.filter(item => !item).length) {
-                  this.chart_options.scales.yAxes[0].ticks.min = Math.floor(Math.min(...data_min)/5)*5
-                  this.chart_options.scales.yAxes[0].ticks.max = Math.floor(Math.max(...data_max)/5)*5 + 5
-                  this.ready = true
-                }
+            }                
+            
+            ready[co] = true
+            if (!ready.filter(item => !item).length) {
+              if (data_min.length) {
+                this.chart_options.scales.yAxes[0].ticks.min = Math.floor(Math.min(...data_min)/5)*5
               }
+              if (data_max.length) {
+                this.chart_options.scales.yAxes[0].ticks.max = Math.floor(Math.max(...data_max)/5)*5 + 5
+              }
+              this.ready = true
+            }
 
            })
         }

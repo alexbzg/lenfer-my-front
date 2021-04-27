@@ -106,6 +106,7 @@ input.btn[type="button"][disabled]{
 	font-size: 16px;
 	border-top: 1px solid #ddd;
 	border-bottom: 1px solid #ddd;
+	min-height: 60px;
 }
 #logo{
 	position: fixed;
@@ -623,7 +624,7 @@ table#device_sensor_setup th, table#device_switches_setup th{
 table#device_sensor_setup td, table#device_switches_setup td{
     border: none;
     line-height: 14px;
-    padding: 10px 5px;
+    padding: 10px;
     text-align: center;
     font-size: 16px;
     vertical-align: middle;
@@ -633,6 +634,15 @@ table#device_sensor_setup input, table#device_switches_setup input{
     margin: 0;
 }
 
+table#device_sensor_setup tr.sensor_type td{
+    padding: 20px 0 0 0;
+    font-size: 12px;
+    color: #777;
+}
+
+table#device_sensor_setup tr.sensor td.correction input{
+    width: 50px;
+}
 
 
 
@@ -778,7 +788,7 @@ td#active_schedule{
 
 td#active_schedule span{
 	display: inline-block;
-	width: 180px;
+	width: 250px;
 	text-align: right;
 	padding-right: 10px;
 	font-size: 14px;
@@ -806,28 +816,57 @@ table#schedule_days{
 	margin: 30px auto;
 	border-collapse: collapse;
 	text-align: center;
-	border-bottom: 1px solid #eee;
+	border: 1px solid #eee;
 	padding-bottom: 10px;
 }
+
 table#schedule_days th{
 	font-size: 14px;
 	line-height: 14px;
 	color: #777;
-	border-bottom: 1px solid #eee;
-	padding: 0px 20px 10px 20px;
+	padding: 10px 10px 0px 10px;
 }
+
+table#schedule_days tr.deltas td{
+	padding: 3px 20px;
+	color: #777;
+}
+table#schedule_days tr.deltas input{
+	font-size: 14px;
+	color: #333;
+	padding: 2px 2px 2px 0px;
+	border-bottom: 1px solid #eee;
+}
+
 table#schedule_days td{
-	padding: 5px 20px;
+	line-height: 14px;
+	padding: 1px 20px;
+	border-bottom: 1px solid #eee;
+}
+table#schedule_days td.copy_row{
+	line-height: 14px;
+	padding: 0px;
+	vertical-align: middle;
+	cursor: pointer;
+}
+table#schedule_days td.copy_row img{
+	display: none;
+}
+table#schedule_days td.copy_row:hover img{
+	display: block;
 }
 
 table#schedule_days input{
+	padding: 2px 5px;
 	margin: 0;
 	border: 1px solid #eee;
 	font-size: 18px;
 	font-weight: bold;
 	width: 30px;
 	text-align: center;
-	padding: 5px;
+}
+table#schedule_days input.time_input{
+	width: 60px;
 }
 table#schedule_days input.param_delta{
 	font-weight: normal;
