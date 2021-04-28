@@ -243,7 +243,7 @@ export default {
             data: {
               title: sensor.title,
               is_master: sensor.is_master,
-              correction: sensor.correction,
+              correction: sensor.correction === "" ? null : sensor.correction,
               enabled: sensor.enabled
             }
           })
