@@ -7,7 +7,7 @@
                 :device_type_id="edit_device.type_id"
                 @validated="edit_device_props_validated"
                 v-model="edit_device.props_values">
-    
+
                 <template v-slot:device_title>
 
                     <div class="title">
@@ -38,8 +38,8 @@
                 <tr>
                     <th>Подключен</th>
                     <th>Датчик</th>
-                    <th>Поправка</th>
                     <th>Название датчика на графике</th>
+                    <th>Поправка</th>
                 </tr>
                 <tbody v-for="entry in edit_device.sensors_settings" :key="entry.id">
                     <tr class="sensor_type">
@@ -50,8 +50,8 @@
                             <input type="checkbox" v-model="sensor.enabled"/>
                         </td>
                         <td class="def_title">{{sensor.default_title}}</td>
-                        <td class="correction"><input type="text" v-model.number="sensor.correction"/></td>
                         <td class="graph_title"><input type="text" v-model="sensor.title"/></td>
+                        <td class="correction"><input type="text" v-model.number="sensor.correction"/></td>
                     </tr>
                 </tbody>
             </table>
@@ -79,9 +79,9 @@
         </div>
 
         <div id="buttons_setup" v-if="edit_device">
-            <input class="btn cancel" type="submit" value="Отмена" @click="open_device_index"/>
             <input class="btn" type="submit" value="Сохранить"
                 :disabled="pending" @click="post_device"/>
+            <input class="btn cancel" type="submit" value="Отмена" @click="open_device_index"/>
             <br/>
             <input class="btn delete" type="submit" value="Удалить устройство"
                 :disabled="pending" @click="delete_device"/>

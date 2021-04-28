@@ -520,31 +520,38 @@ table#climat_informer td.current_time span.timeout{
 
 
 #device_settings {
+	display: inline-block;
+	width: 90%;
 	text-align: center;
-	display: flex;
 	padding-bottom: 100px;
+	margin: 0 auto;
 }
 
-
 #device_setup{
+	display: inline-block;
+	vertical-align: top;
 	margin: 0 20px 0 auto;
 	padding: 0;
 	text-align: center;
 	line-height: 12px;
 	border: 1px solid #ddd;
 	border-radius: 10px;
-	padding: 0 20px;
+	padding: 0 20px 30px 20px;
 }
 #function_setup{
-	margin: 0px 20px 0 0;
+	display: inline-block;
+	vertical-align: top;
+	margin: 0px 20px 30px 0;
 	border: 1px solid #ddd;
 	border-radius: 10px;
-	padding: 0 20px;
+	padding: 0 0px 20px 0px;
 
 }
 #buttons_setup{
+	display: inline-block;
+	vertical-align: top;
 	width: 220px;
-	margin: 10px auto 0 0;
+	margin: 0px auto 0 0;
 }
 
 
@@ -575,11 +582,11 @@ table#climat_informer td.current_time span.timeout{
 
 
 
-#device_setup .prop{
+#device_setup .device_props{
 	line-height: 12px;
 }
-#device_setup .prop input{
-	width: 250px;
+#device_setup .device_props input{
+	width: 200px;
 	margin: 30px 0 0 0;
 	padding: 0;
 	border: none;
@@ -610,21 +617,21 @@ table#climat_informer td.current_time span.timeout{
 
 table#device_sensor_setup, table#device_switches_setup{
     border-collapse: collapse;
-    margin: 10px auto 50px auto;
+    margin: 10px auto 30px auto;
 }
 table#device_sensor_setup th, table#device_switches_setup th{
     border: none;
     line-height: 14px;
     color: #777;
     font-size: 14px;
-    padding: 5px;
+    padding: 5px 10px;
     text-align: center;
     border-bottom: 1px solid #eee;
 }
 table#device_sensor_setup td, table#device_switches_setup td{
     border: none;
     line-height: 14px;
-    padding: 10px;
+    padding: 10px 0;
     text-align: center;
     font-size: 16px;
     vertical-align: middle;
@@ -635,11 +642,21 @@ table#device_sensor_setup input, table#device_switches_setup input{
 }
 
 table#device_sensor_setup tr.sensor_type td{
-    padding: 20px 0 0 0;
+    padding: 3px 0;
     font-size: 12px;
     color: #777;
+    background-color: #eee;
 }
 
+table#device_sensor_setup tr.sensor td.graph_title{
+    padding: 10px 15px;
+}
+table#device_sensor_setup tr.sensor td.graph_title input{
+    width: 200px;
+}
+table#device_sensor_setup tr.sensor td.correction{
+    padding: 10px 15px;
+}
 table#device_sensor_setup tr.sensor td.correction input{
     width: 50px;
 }
