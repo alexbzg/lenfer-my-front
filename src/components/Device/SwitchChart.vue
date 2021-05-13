@@ -64,7 +64,8 @@ export default {
 		responsive: true,
 		maintainAspectRatio: false,
         tooltips: {
-          mode: 'x',
+          mode: 'nearest',
+          axis: 'x',
           intersect: false,
           position: 'nearest',
           callbacks: {

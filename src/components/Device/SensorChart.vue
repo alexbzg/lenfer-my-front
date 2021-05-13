@@ -66,7 +66,8 @@ export default {
 		responsive: true,
 		maintainAspectRatio: false,
         tooltips: {
-          mode: 'x',
+          mode: 'nearest',
+          axis: 'x',
           intersect: false,
           position: 'nearest',
           itemSort: (a, b) => b.value - a.value
