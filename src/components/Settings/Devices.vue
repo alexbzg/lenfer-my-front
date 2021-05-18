@@ -28,6 +28,15 @@
                         <span class="title">таблица работы</span>
                     </template>
 
+                    <div id="timezone">
+                        Часовой пояс
+                        <select v-model="edit_device.timezone">
+                            <option v-for="entry in $options.TIMEZONES" :value="entry.id" :key="entry.id">
+                                {{entry.title}}
+                            </option>
+                        </select>
+                    </div>
+
                 </template>
             </device-props>
 
@@ -94,6 +103,7 @@
 import {mapState} from 'vuex'
 
 import DeviceProps from './DeviceProps'
+import TIMEZONES from '../../timezones'
 
 import messageBox from '../../message-box'
 import {userDataPost, LOAD_DEVICES_ACTION} from '../../store'
@@ -101,6 +111,7 @@ import load_device from '../../device'
 import {DEVICE_SENSORS_PARAMS, DEVICE_CUSTOM_PROPS} from '../../definitions'
 
 export default {
+  TIMEZONES: TIMEZONES,
   name: 'SettingsDevicesIndex',
   components: {DeviceProps},
   props: ['device_id'],
@@ -210,7 +221,8 @@ export default {
         }
       }
       let device_update = this.edit_device.title !== this.device_cache.title ||
-        this.edit_device.schedule_id !== this.device_cache.schedule_id
+        this.edit_device.schedule_id !== this.device_cache.schedule_id ||
+        this.edit_device.timezone !== this.device_cache.timezone
       const queries = []
       if (!device_update) {
         const device_props_length = this.edit_device.props_titles.length
@@ -227,6 +239,7 @@ export default {
           data: {
             title: this.edit_device.title,
             schedule_id: this.edit_device.schedule_id,
+            timezone: this.edit_device.timezone,
             props: this.edit_device.props_values
           }
         })

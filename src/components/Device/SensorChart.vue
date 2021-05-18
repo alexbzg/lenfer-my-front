@@ -136,6 +136,7 @@ export default {
 
           dataPost('sensor/data', {
             sensor_id: sensor.id,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             begin: strftime('%Y-%m-%d %H:%M:%S', this.interval[0]),
             end:  strftime('%Y-%m-%d %H:%M:%S', this.interval[1])
           })

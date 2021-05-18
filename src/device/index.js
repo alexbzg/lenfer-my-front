@@ -14,6 +14,7 @@ class Device {
     this.hash = params.hash
     this.schedule_id = params.schedule_id
     this.props_titles = params.props_titles
+    this.timezone = params.timezone
 
     this.props_values = []
     this.props_display = []
