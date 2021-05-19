@@ -12,8 +12,15 @@
                     <seconds-edit v-model="value[idx]"></seconds-edit>
                 </template>
                 <template v-if="prop.type === 'integer'">
-                    <input type="number" v-model="value[idx]"/>
+                    <input type="number" v-model.number="value[idx]"/>
                 </template>
+                <template v-if="prop.type === 'float_delta'">
+                    <input type="number" v-model.number="value[idx][0]"/>
+                    &plusmn;
+                    <input type="number" v-model.number="value[idx][1]"/>
+                </template>
+                <span v-if="prop.unit" v-html="prop.unit"></span>
+
                 <br/><span class="title">{{prop.title}}</span>
                 <template v-if="'items' in prop">
                     <div v-for="(item, item_idx) in value[idx]" class="prop_item" :key="item_idx">
