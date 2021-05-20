@@ -28,14 +28,6 @@
                         <span class="title">таблица работы</span>
                     </template>
 
-                    <div id="timezone">
-                        Часовой пояс
-                        <select v-model="edit_device.timezone">
-                            <option v-for="entry in $options.TIMEZONES" :value="entry.id" :key="entry.id">
-                                {{entry.title}}
-                            </option>
-                        </select>
-                    </div>
 
                 </template>
             </device-props>
@@ -103,7 +95,6 @@
 import {mapState} from 'vuex'
 
 import DeviceProps from './DeviceProps'
-import TIMEZONES from '../../timezones'
 
 import messageBox from '../../message-box'
 import {userDataPost, LOAD_DEVICES_ACTION} from '../../store'
@@ -111,7 +102,6 @@ import load_device from '../../device'
 import {DEVICE_SENSORS_PARAMS, DEVICE_CUSTOM_PROPS} from '../../definitions'
 
 export default {
-  TIMEZONES: TIMEZONES,
   name: 'SettingsDevicesIndex',
   components: {DeviceProps},
   props: ['device_id'],

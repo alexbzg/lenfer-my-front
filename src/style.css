@@ -601,6 +601,8 @@ table#climat_informer td.current_time span.timeout{
 #device_setup select{
 	margin: 30px 0 0 0;
 	padding: 0 5px;
+	width: 200px;
+	text-align: center;
 }
 #device_setup option{
 	text-align: center;
@@ -926,6 +928,16 @@ table#setting_login td{
 }
 table#setting_login td.email{
 	font-weight: bold;
+}
+
+#timezone{
+	margin: 0 auto 50px auto;
+	width: 400px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	padding: 30px 50px 20px 50px;
+	line-height: 14px;
+	font-size: 18px;
 }
 
 #settings_link{

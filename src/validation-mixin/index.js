@@ -18,10 +18,14 @@ export default {
       ignoreFields: ['login', 'token']
     }
   },
+  mounted () {
+    this.validate()
+  },
   methods: {
     validate() {
       const valid = validators[this.validationSchema](this.validationData)
       this.validateCallback(valid, validators[this.validationSchema].errors)
+      this.$emit('validation', this.validated, this.validationData)
     },
     validateCallback (valid, errors) {
       this.$set(this, 'validationErrors', {})
