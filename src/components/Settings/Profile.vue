@@ -87,7 +87,7 @@ export default {
           this.$store.dispatch(LOAD_DEVICES_ACTION)
         })
       )
-      Promise(requests).all()
+      Promise.all(requests)
         .then(() => {
           messageBox("Настройки пользователя", "Изменения сохранены.")
         })
