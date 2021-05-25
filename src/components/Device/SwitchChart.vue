@@ -47,7 +47,7 @@ const DATASET_TMPLT = {
 }
 
 export default {
-  name: 'SensorChart',
+  name: 'SwitchChart',
   components: {LineChart},
   props: ['device_id', 'switch', 'interval'],
   data () {
