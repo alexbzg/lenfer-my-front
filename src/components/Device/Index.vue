@@ -30,10 +30,9 @@
                         {{param.value}}<template v-if="param.unit">{{param.unit}}</template>
                     </span>
                     <span class="schedule_data">
-                      <template
-                          v-if="schedule &&
-                          schedule.today.params"> {{schedule.today.params[param.id]}}<template
-                              v-if="param.unit">{{param.unit}}</template>
+                      <template v-if="schedule && schedule.today.params && schedule.today.params[param.id]">
+                        {{schedule.today.params[param.id]}}
+                        <template v-if="param.unit">{{param.unit}}</template>
                       </template>
                       <template v-if="!schedule || !schedule.today.params"></template>
                     </span>
