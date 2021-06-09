@@ -27,12 +27,11 @@
             <tr v-if="device_type && device_type.schedule_params">
                 <td v-for="param in sensors_charts" :key="param.id" class="parameter">
                     <span class="current_data" >
-                        {{param.value}}<template v-if="param.unit">{{param.unit}}</template>
+                        {{param.value}}<template v-if="param.unit && param.value">{{param.unit}}</template>
                     </span>
                     <span class="schedule_data">
                       <template v-if="schedule && schedule.today.params && schedule.today.params[param.id]">
-                        {{schedule.today.params[param.id]}}
-                        <template v-if="param.unit">{{param.unit}}</template>
+                        {{schedule.today.params[param.id]}}<template v-if="param.unit">{{param.unit}}</template>
                       </template>
                       <template v-if="!schedule || !schedule.today.params"></template>
                     </span>
@@ -140,8 +139,8 @@ const SHOW_LOG_DEVICE_TYPES = ["Feeder"]
 
 const CUSTOM_PROPS = {timers: () => import('./Timers')}
 const CHART_INTERVALS_SETTINGS = [
-  {title: '4 часа', hours: 4},
-  {title: '24 часа', hours: 24}
+  {title: '4 часа', interval: '4 hours'},
+  {title: '24 часа', interval: '24 hours'}
 ]
 
 export default {
@@ -225,10 +224,7 @@ export default {
     },
 
     chart_interval () {
-      const end = new Date()
-      const begin = new Date()
-      begin.setHours(begin.getHours() - CHART_INTERVALS_SETTINGS[this.chart_interval_idx].hours)
-      return [begin, end]
+      return CHART_INTERVALS_SETTINGS[this.chart_interval_idx].interval
     },
 
     chart_interval_idx_next () {

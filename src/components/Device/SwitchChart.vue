@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import strftime from 'strftime'
 
 import {dataPost} from '../../api'
 import LineChart from '../LineChart'
@@ -133,9 +132,7 @@ export default {
       dataPost('switch/state', {
         device_id: this.device_id,
         device_type_switch_id: this.switch.id,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        begin: strftime('%Y-%m-%d %H:%M:%S', this.interval[0]),
-        end:  strftime('%Y-%m-%d %H:%M:%S', this.interval[1])
+        interval: this.interval
       })
         .then(data => {
 
