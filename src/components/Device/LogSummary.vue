@@ -52,10 +52,10 @@ export default {
     entries () {
       const r = []
       if (this.log) {
-        const log_length = this.log.length
+        const log_length = this.log.log.length
         let aggregates = init_aggregates()
         for (let co = log_length - 1; co > -1; co--) {
-          const line = this.log[co].txt
+          const line = this.log.log[co].txt
           if (line.includes('current:')) {
             const current = parseFloat(line.split('current: ')[1])
             aggregates.current.count++
@@ -69,7 +69,7 @@ export default {
             }
 
           } else {
-            const entry = create_entry(this.log[co])
+            const entry = create_entry(this.log.log[co])
             if (line == 'device start' || line == 'disconnected') {
               entry.class = 'connection'
               entry.status = line == 'disconnected' ? 'Нет связи с сервером' : 'Подключено к серверу'

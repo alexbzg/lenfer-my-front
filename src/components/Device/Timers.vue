@@ -58,9 +58,9 @@ export default {
           return 0
         }).map(item => { return {time: item, status: null} })
       }
-      if (this.log) { //timer jobs' status
-        let log_idx = this.log.length - 1
-        const now = new Date((new Date()).getTime() - 120000)
+      if (this.log && this.log.log) { //timer jobs' status
+        let log_idx = this.log.log.length - 1
+        const now = new Date(this.log.device_timestamp)
         for (const timer of r) {
           const start = timer_timestamp(timer.time[0])
           if (start > now) {
@@ -68,11 +68,11 @@ export default {
           }
           let evt_start = false, evt_stop = false, evt_reverse = false
           const stop = timer_timestamp(timer.time[0] + timer.time[1] + 60)
-          for (; log_idx >= 0 && log_timestamp(this.log[log_idx]) < start; log_idx--) {
+          for (; log_idx >= 0 && log_timestamp(this.log.log[log_idx]) < start; log_idx--) {
             continue
           }
-          for (; log_idx >= 0 && log_timestamp(this.log[log_idx]) <= stop; log_idx--) {
-            const line = this.log[log_idx].txt
+          for (; log_idx >= 0 && log_timestamp(this.log.log[log_idx]) <= stop; log_idx--) {
+            const line = this.log.log[log_idx].txt
             if (line === 'Feeder start timer') {
               evt_start = true
             } else if (line.includes(' reverse ')){

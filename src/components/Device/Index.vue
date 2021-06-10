@@ -96,7 +96,7 @@
             </table>
         </router-link>
 
-        <div class="border" v-if="log && log.length">
+        <div class="border" v-if="log && log.log && log.log.length">
             <log-summary :log="log"></log-summary>
         </div>
 <!--
@@ -120,8 +120,6 @@
 
 <script>
 import {mapState} from 'vuex'
-
-import strftime from 'strftime'
 
 import load_device from '../../device'
 import {dataPost} from '../../api'
@@ -193,13 +191,8 @@ export default {
           }
 
           if (SHOW_LOG_DEVICE_TYPES.includes(this.device.type)) {
-            const end = new Date()
-            const begin = new Date()
-            begin.setDate(begin.getDate() - 1)
             dataPost('devices_log', {
-              device_id: this.device_id,
-              begin: strftime('%Y-%m-%d %H:%M:%S', begin),
-              end:  strftime('%Y-%m-%d %H:%M:%S', end)
+              device_id: this.device_id
             })
               .then(data => {
                 this.log = data
