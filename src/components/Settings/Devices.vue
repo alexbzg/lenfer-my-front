@@ -20,6 +20,16 @@
                         <span>код устройства</span>
                     </div>
 
+                    <div id="device_mode" v-if="edit_device_type && edit_device_type.modes">
+                        <select v-model="edit_device.mode">
+                            <option v-for="mode in edit_device_type.modes" :value="mode.id" 
+                                :key="mode.id">
+                                {{mode.name}}
+                            </option>
+                        </select><br/>
+                        <span>тип устройства</span>
+                    </div>
+
                     <template v-if="edit_device.enable_schedule">
                         <select v-model="edit_device.schedule_id">
                             <option v-for="schedule in schedules" :key="schedule.id"
@@ -130,6 +140,11 @@ export default {
       } else {
         return []
       }
+    },
+    edit_device_type () {
+      return this.devices_types && this.edit_device ?
+        this.devices_types.find(item => item.id === this.edit_device.type_id) :
+        null
     }
   },
   methods: {
@@ -212,7 +227,8 @@ export default {
       }
       let device_update = this.edit_device.title !== this.device_cache.title ||
         this.edit_device.schedule_id !== this.device_cache.schedule_id ||
-        this.edit_device.timezone !== this.device_cache.timezone
+        this.edit_device.timezone !== this.device_cache.timezone ||
+        this.edit_device.mode !== this.device_cache.mode
       const queries = []
       if (!device_update) {
         const device_props_length = this.edit_device.props_titles.length
@@ -230,6 +246,7 @@ export default {
             title: this.edit_device.title,
             schedule_id: this.edit_device.schedule_id,
             timezone: this.edit_device.timezone,
+            mode: this.edit_device.mode,
             props: this.edit_device.props_values
           }
         })

@@ -15,6 +15,7 @@ class Device {
     this.schedule_id = params.schedule_id
     this.props_titles = params.props_titles
     this.timezone = params.timezone
+    this.mode = params.mode
 
     this.props_values = []
     this.props_display = []

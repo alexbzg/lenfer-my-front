@@ -2,7 +2,7 @@
   <div>
 
 
-      <loading v-if="load_in_progress"></loading>
+  <loading v-if="load_in_progress"></loading>
 
   <div class="device_index" v-if="device">
 
@@ -71,11 +71,13 @@
           </div>
         </div>
 
-        <div v-for="sensors_param in sensors_charts" :key="sensors_param.id" class="sensor_data_chart">
-            <h4>{{sensors_param.title}}</h4>
-            <sensor-chart :sensors="sensors_param.sensors" :interval="chart_interval">
-            </sensor-chart>
-        </div>
+        <template v-if="!load_in_progress"> 
+            <div v-for="sensors_param in sensors_charts" :key="sensors_param.id" class="sensor_data_chart">
+                <h4>{{sensors_param.title}}</h4>
+                <sensor-chart :sensors="sensors_param.sensors" :interval="chart_interval">
+                </sensor-chart>
+            </div>
+        </template>
 
         <div v-for="switch_item in switches_enabled" :key="switch_item.id" class="switch_chart">
             <h4>{{switch_item.title || switch_item.default_title}}</h4>
@@ -159,10 +161,10 @@ export default {
     this.load_device()
   },
   methods: {
-    async toggle_chart_interval () {
+    toggle_chart_interval () {
       this.chart_interval_idx = this.chart_interval_idx_next
     },
-    async load_device () {
+    load_device () {
       this.device = {}
       this.log = null
       this.sensors_charts = []
