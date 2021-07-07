@@ -5,6 +5,7 @@
 
             <device-props :props_headers="edit_device.props_titles"
                 :device_type_id="edit_device.type_id"
+                :device_mode="edit_device.mode"
                 @validated="edit_device_props_validated"
                 v-model="edit_device.props_values">
 
@@ -67,26 +68,29 @@
                 </tbody>
             </table>
 
-            <table id="device_switches_setup" class="switches_param" v-if="edit_device.switches">
+            <table id="device_switches_setup" class="switches_param" v-if="edit_device_switches.length">
                 <tr>
                     <th>Подключен</th>
                     <th>Переключатель</th>
                     <th>Название переключателя на графике</th>
                 </tr>
-                <tr class="switch" v-for="entry in edit_device.switches" :key="entry.id">
+                <tr class="switch" v-for="entry in edit_device_switches" :key="entry.id">
                     <td class="sensor_checkbox"><input type="checkbox" v-model="entry.enabled"/></td>
                     <td class="sensor">{{entry.default_title}}</td>
                     <td class="sensor_graf_title"><input type="text" v-model="entry.title"/></td>
                 </tr>
              </table>
 
-            <component v-for="(prop, prop_id) in edit_device.custom_props"
-                :is="prop.component"
-                :key="prop_id"
-                :props_headers="prop.title"
-                :value="prop.value"
-                @validated="edit_device_custom_prop_validated">
-            </component>
+            <template v-for="(prop, prop_id) in edit_device.custom_props">
+                <component v-if="(!edit_device.mode || 
+                    (!prop.title.modes || prop.title.modes.includes(edit_device.mode)))"
+                    :is="prop.component"
+                    :key="prop_id"
+                    :props_headers="prop.title"
+                    :value="prop.value"
+                    @validated="edit_device_custom_prop_validated">
+                </component>
+            </template>
         </div>
 
         <div id="buttons_setup" v-if="edit_device">
@@ -120,7 +124,7 @@ export default {
       register_device: false,
       register_device_hash: '',
       edit_device: null,
-      pending: false,
+      pending: false
     }
   },
   async mounted () {
@@ -145,6 +149,11 @@ export default {
       return this.devices_types && this.edit_device ?
         this.devices_types.find(item => item.id === this.edit_device.type_id) :
         null
+    },
+    edit_device_switches () {
+      return this.edit_device ? this.edit_device.switches.filter(entry =>
+        !this.edit_device.mode || !entry.modes || 
+        entry.modes.includes(this.edit_device.mode)) : []
     }
   },
   methods: {

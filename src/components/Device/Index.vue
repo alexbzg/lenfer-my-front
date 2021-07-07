@@ -215,7 +215,8 @@ export default {
     },
 
     switches_enabled () {
-      return this.device.switches ? this.device.switches.filter(item => item.enabled) : []
+      return this.device.switches ? this.device.switches.filter(entry => entry.enabled &&
+        (!this.device.mode || !entry.modes || entry.modes.includes(this.device.mode))) : []
     },
 
     chart_interval () {

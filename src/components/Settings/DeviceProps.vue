@@ -3,7 +3,10 @@
         <slot name="device_title"></slot>
 
         <template v-for="(prop, idx) in props_headers">
-            <div class="prop" v-if="!custom_props[prop.id]" :key="idx">
+            <div class="prop" 
+                v-if="!custom_props[prop.id] && 
+                (!device_mode || (!prop.modes || prop.modes.includes(device_mode)))" 
+                :key="idx">
                 <template v-if="prop.type === 'date'">
                     <date-picker v-model="value[idx]" locale="ru"
                         :masks="{input: 'DD MMMM'}"></date-picker>
@@ -54,7 +57,7 @@ import {DEVICE_CUSTOM_PROPS} from '../../definitions'
 export default {
   DEVICE_CUSTOM_PROPS: DEVICE_CUSTOM_PROPS,
   name: "DeviceProps",
-  props: ["props_headers", "value", "device_type_id"],
+  props: ["props_headers", "value", "device_type_id", "device_mode"],
   components: {DatePicker, SecondsEdit}, 
   data () {
     return {
