@@ -107,8 +107,8 @@ export default {
       const sensors_idxs = {}
       const ready = this.sensors.map(() => false)
       const sensors_count = this.sensors.length
-      const data_min = this.sensors.map(() => null)
-      const data_max = this.sensors.map(() => null)
+      let data_min = this.sensors.map(() => null)
+      let data_max = this.sensors.map(() => null)
       this.chart_data.datasets = []
 
       for (let co=0; co < sensors_count; co++) {
@@ -166,9 +166,11 @@ export default {
             
             ready[co] = true
             if (!ready.filter(item => !item).length) {
+              data_min = data_min.filter(item => item !== null)
               if (data_min.length) {
                 this.chart_options.scales.yAxes[0].ticks.min = Math.floor(Math.min(...data_min)/5)*5
               }
+              data_max = data_max.filter(item => item !== null)
               if (data_max.length) {
                 this.chart_options.scales.yAxes[0].ticks.max = Math.floor(Math.max(...data_max)/5)*5 + 5
               }
