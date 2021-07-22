@@ -151,7 +151,7 @@ export default {
         null
     },
     edit_device_switches () {
-      return this.edit_device ? this.edit_device.switches.filter(entry =>
+      return this.edit_device && this.edit_device.switches ? this.edit_device.switches.filter(entry =>
         !this.edit_device.mode || !entry.modes || 
         entry.modes.includes(this.edit_device.mode)) : []
     }
