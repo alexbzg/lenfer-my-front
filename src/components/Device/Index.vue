@@ -74,7 +74,8 @@
         <template v-if="!load_in_progress"> 
             <div v-for="sensors_param in sensors_charts" :key="sensors_param.id" class="sensor_data_chart">
                 <h4>{{sensors_param.title}}</h4>
-                <sensor-chart :sensors="sensors_param.sensors" :interval="chart_interval">
+                <sensor-chart :sensors="sensors_param.sensors" :interval="chart_interval"
+                    :chart_break_interval="chart_break_interval">
                 </sensor-chart>
             </div>
         </template>
@@ -221,6 +222,22 @@ export default {
 
     chart_interval () {
       return CHART_INTERVALS_SETTINGS[this.chart_interval_idx].interval
+    },
+
+    chart_break_interval () {
+      if (this.device) {
+        let upd_interval = 5
+        const upd_interval_prop_idx = this.device.props_titles.findIndex(item => {
+          return item.id === 'deepsleep'
+        })
+        if (upd_interval_prop_idx !== -1 && this.device.props_values[upd_interval_prop_idx]) {
+          upd_interval = this.device.props_values[upd_interval_prop_idx]
+        }
+        return upd_interval * 120000
+      }
+      else {
+        return null
+      }
     },
 
     chart_interval_idx_next () {

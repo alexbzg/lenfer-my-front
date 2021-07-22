@@ -50,7 +50,7 @@ const DATASET_TMPLT = {
 export default {
   name: 'SensorChart',
   components: {LineChart},
-  props: ['sensors', 'interval'],
+  props: ['sensors', 'interval', 'chart_break_interval'],
   data () {
     return {
       ready: false,
@@ -150,9 +150,9 @@ export default {
                     data_max[co] = x.value
                   }
                   const x_date = new Date(x.tstamp)
-                  if (prev_date && x_date - prev_date > 600000) {
+                  if (this.chart_break_interval && prev_date && x_date - prev_date > this.chart_break_interval) {
                     dataset.data.push({
-                      x: new Date(x_date.getTime() + 300000),
+                      x: new Date(x_date.getTime() + this.chart_break_interval / 2),
                       y: NaN
                     })
                   }
