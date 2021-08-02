@@ -10,7 +10,16 @@
             </tr>
             <tr v-for="(item, item_idx) in timers_order" class="timer" :key="item_idx">
                 <td :class="{error: item in validation_errors && 0 in validation_errors[item]}">
-                    <seconds-edit v-model="value[item][0]">
+                    <v-select v-model="value[item][2]" :options="$options.timer_types"
+                        :reduce="timer_type => timer_type.code">
+                        <template #selected-option="option">
+                            <img :src="'/images/' + option.icon"/>
+                        </template>
+                        <template #option="option">
+                            <img :src="'/images/' + option.icon"/>
+                        </template>
+                    </v-select>
+                    <seconds-edit v-model="value[item][0]" :sign="value[item][2] !== 0">
                     </seconds-edit>
                 </td>
                 <td :class="{error: item in validation_errors && 1 in validation_errors[item]}">
@@ -34,6 +43,11 @@ export default {
   name: "FeederTimers",
   extends: DeviceProps,
   components: {SecondsEdit},
+  timer_types: [
+    {code: 1, label: 'Рассвет', icon: 'icon_timer_sunrise.png'},
+    {code: -1, label: 'Закат', icon: 'icon_timer_sunset.png'},
+    {code: 0, label: 'Время', icon: 'icon_timer_clock.png'}
+  ],
   data () {
     return {
       timers_order: this.order_timers(),

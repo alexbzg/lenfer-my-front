@@ -12,6 +12,10 @@ import 'chartjs-adapter-date-fns'
 import capitalizeDirective from './capitalize-directive'
 capitalizeDirective()
 
+import vSelect from 'vue-select'
+Vue.component('v-select', vSelect)
+import 'vue-select/dist/vue-select.css'
+
 new Vue({
   store: store,
   router: router,
