@@ -11,7 +11,11 @@
             <tr v-for="(item, item_idx) in timers_order" class="timer" :key="item_idx">
                 <td :class="{error: item in validation_errors && 0 in validation_errors[item]}">
                     <v-select v-model="value[item][2]" :options="$options.timer_types"
-                        :reduce="timer_type => timer_type.code">
+                        :reduce="timer_type => timer_type.code" :clearable="false" 
+						:searchable="false" :tabindex="1"
+                        :ref="'timer_type_select_' + item_idx" 
+                        @open="timer_type_select_open(item_idx)" 
+                        >
                         <template #selected-option="option">
                             <img :src="'/images/' + option.icon"/>
                         </template>
@@ -36,8 +40,11 @@
 </template>
 
 <script>
+
 import DeviceProps from './DeviceProps'
 import SecondsEdit from '../SecondsEdit'
+
+let timer_type_select_active_idx = -1
 
 export default {
   name: "FeederTimers",
@@ -48,10 +55,11 @@ export default {
     {code: -1, label: 'Закат', icon: 'icon_timer_sunset.png'},
     {code: 0, label: 'Время', icon: 'icon_timer_clock.png'}
   ],
+  timer_type_select_active_idx: -1,
   data () {
     return {
       timers_order: this.order_timers(),
-      validation_errors: {}
+      validation_errors: {},
     }
   },
   computed: {
@@ -60,6 +68,14 @@ export default {
     }
   },
   methods: {
+    timer_type_select_open (idx) {
+      if (timer_type_select_active_idx !== idx) {
+        if (timer_type_select_active_idx !== -1) {
+          this.$refs['timer_type_select_' + timer_type_select_active_idx][0].open = false
+        }
+        timer_type_select_active_idx = idx
+      }
+    },
     new_item () {
       return new Array(this.props_headers.items.length).fill(0)
     },
@@ -126,6 +142,19 @@ export default {
 </script>
 
 <style scoped>
+.vs__search {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  border: 0 !important;
+  clip: rect(0 0 0 0) !important;
+}
+.form-control {
+  position: absolute
+}
 </style>
 
 

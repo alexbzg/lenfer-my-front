@@ -711,15 +711,21 @@ table#timers_setup th.add_timer img{
 table#timers_setup td{
 	border: none;
 	padding: 5px 20px;
-	vertical-align: middle;
+	vertical-align: top;
 }
 table#timers_setup input{
-	width: 50px;
+	width: 60px;
 	margin: 0;
 	font-size: 18px;
 }
 table#timers_setup input[type='number'] {
 	padding-right: 3px;
+}
+table#timers_setup input[type='search'] {
+	display: none;
+}
+table#timers_setup input.time_input {
+	display: inline-block;
 }
 table#timers_setup img{
 	width: 20px;
@@ -728,6 +734,30 @@ table#timers_setup img{
 #feeder_timers button{
 	cursor: pointer;
 }
+
+table#timers_setup div.v-select{
+	display: inline-block;
+	cursor: pointer;
+	margin-right: 10px;
+}
+table#timers_setup div.vs__dropdown-toggle{
+	border: none;
+}
+table#timers_setup div.vs__actions{
+	display: none;
+}
+table#timers_setup ul.vs__dropdown-menu{
+	width: 40px;
+	min-width: 40px;
+	margin: 0;
+	left: -20px;
+}
+table#timers_setup li{
+	padding: 10px 5px 0px 10px;
+
+}
+
+
 
 
 table#timers_setup td.error input{

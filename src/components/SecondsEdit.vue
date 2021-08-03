@@ -23,7 +23,7 @@ export default {
     edit_value: {
       get  () {
         let value = seconds_to_timestring(this.value)
-        if (this.sign && this.value > 0) {
+        if (this.sign && this.value >= 0) {
           value = '+' + value
         }
         return value
