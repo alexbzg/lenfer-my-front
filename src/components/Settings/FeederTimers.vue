@@ -83,6 +83,12 @@ export default {
       let timers_order = []
         if (this.value) {
           timers_order = [...this.value].sort((a, b) => {
+            if (a[2] > b[2]) {
+              return -1
+            }
+            if (a[2] < b[2]) {
+              return 1
+            }
             if (a[0] < b[0]){
               return -1
             }
@@ -120,11 +126,14 @@ export default {
             this.validation_errors[co] = {1: 1}
             break
           }
-          const limits = [this.value[co][0], this.value[co][0] + this.value[co][1]]
+          const limits = [this.value[co][0], this.value[co][0] + this.value[co][1], this.value[co][2]]
           for (let check_co = 0; check_co < co; check_co++) {
-            const check = [this.value[check_co][0], this.value[check_co][0] + this.value[check_co][1]]
-            if ((limits[0] >= check[0] && limits[0] <= check[1]) ||
-                (limits[1] >= check[0] && limits[1] <= check[1])) {
+            const check = [
+              this.value[check_co][0],
+              this.value[check_co][0] + this.value[check_co][1],
+              this.value[check_co][2]]
+            if (limits[2] === check[2] && ((limits[0] >= check[0] && limits[0] <= check[1]) ||
+                (limits[1] >= check[0] && limits[1] <= check[1]))) {
                 r = 'Конфликт периодов.'
                 this.validation_errors[co] = {0: 1, 1: 1}
                 this.validation_errors[check_co] = {0: 1, 1: 1}
