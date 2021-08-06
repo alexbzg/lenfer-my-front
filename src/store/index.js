@@ -57,6 +57,10 @@ const store = new Vuex.Store({
       state.user = payload.user
       storage.remove(STORAGE_KEY_USER, state.remember ? 'local' : 'session')
       if (payload.user) {
+        if (payload.user['location']) {
+          payload.user['location'] = payload.user['location'].replace('(', '').replace(')', '').split(',').map(
+            item => parseFloat(item))
+        }
         storage.save(STORAGE_KEY_USER, state.user,
           payload.remember ? 'local' : 'session')
         state.remember = payload.remember
