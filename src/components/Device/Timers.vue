@@ -7,7 +7,9 @@
         </tr>
         <tr v-for="(item, idx) in timers" class="timer" :key="idx">
             <td class="start">
+                <img :src="'/images/' + item.icon.icon" :title="item.icon.title"/>
                 {{seconds_to_timestring(item.time[0])}}
+                <span v-if="item.time[2]">{{seconds_to_timestring(item.time[3])}}</span>
             </td>
             <td class="duration">
                 {{item.time[1]}} сек
@@ -22,6 +24,7 @@
 <script>
 
 import {seconds_to_timestring} from '../../utils'
+import {timer_type_icon} from '../../definitions'
 
 function timer_timestamp(value) {
   const today = new Date((new Date()).toDateString())
@@ -42,32 +45,29 @@ export default {
     return {}
   },
   methods: {
-    seconds_to_timestring: seconds_to_timestring
+    seconds_to_timestring: seconds_to_timestring,
   },
   computed: {
     timers () {
       let r = []
       if (this.prop.value) {
-        r = [...this.prop.value].sort((a, b) => {
-          if (a[0] < b[0]){
-            return -1
-          }
-          if (a[0] > b[0]){
-            return 1
-          }
-          return 0
-        }).map(item => { return {time: item, status: null} })
+        r = this.prop.value.map(item => { 
+          return {
+            time: item,
+            status: null,
+            icon: timer_type_icon(item[2])}
+          })
       }
       if (this.log && this.log.log) { //timer jobs' status
         let log_idx = this.log.log.length - 1
         const now = new Date(this.log.device_timestamp)
         for (const timer of r) {
-          const start = timer_timestamp(timer.time[0])
+          const start = timer_timestamp(timer.time[3])
           if (start > now) {
             break
           }
           let evt_start = false, evt_stop = false, evt_reverse = false
-          const stop = timer_timestamp(timer.time[0] + timer.time[1] + 60)
+          const stop = timer_timestamp(timer.time[3] + timer.time[1] + 60)
           for (; log_idx >= 0 && log_timestamp(this.log.log[log_idx]) < start; log_idx--) {
             continue
           }

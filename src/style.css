@@ -935,9 +935,27 @@ table#schedule_days input.param_delta{
 
 /* =======================  S E T T I N G S   P R O F I L E  ===================================*/
 
+#settings_profile{
+	display: inline-block;
+	vertical-align: top;
+}
+
 #settings_profile span.note{
 	color: #777;
 }
+
+
+
+#button_save,  #margin_block{
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+	width: 200px;
+	height: 100px;
+	margin-top: 20px;
+}
+
+
 
 table#setting_login{
 	margin: 0px auto 50px auto;
@@ -960,7 +978,7 @@ table#setting_login td.email{
 	font-weight: bold;
 }
 
-#timezone{
+#timezone, #location{
 	margin: 0 auto 50px auto;
 	width: 400px;
 	border: 1px solid #ddd;
@@ -1041,4 +1059,5 @@ table#setting_link_devices td.device{
 	text-align: left;
 	padding-left: 10px;
 }
+
 

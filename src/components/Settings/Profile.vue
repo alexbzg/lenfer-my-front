@@ -1,6 +1,7 @@
 <template>
-    <div id="settings_profile">
-
+    <div>
+      <div id="margin_block"> </div>
+      <div id="settings_profile">
         <span class="note">Смена пароля доступа</span>
         <table id="setting_login">
             <tr>
@@ -25,15 +26,19 @@
 
         <span class="note">Координаты</span>
         <div id="location">
-            <input type="text" v-model="location_edit" :class="{error: !location_validated}"/>
-            <input type="button" @click="geolocate" value="Получить" class="btn"
+            <input type="text" v-model="location_edit" :class="{error: !location_validated}"/><Br/>
+            <input type="button" @click="geolocate" value="Получить автоматически" class="btn"
                 v-if="geolocation_enabled"/>
         </div>
 
         <span class="note">Ссылка для просмотра статистики ваших устройств</span><br/>
         <settings-public-access @validation="public_access_validation"></settings-public-access>
+
+      </div>
+      <div id="button_save">
         <input type="button" :disabled="pending || !validated || !public_access.validated || !location_validated"
             value="Сохранить" @click="post" class="btn" />
+      </div>
 
     </div>
 </template>
@@ -83,7 +88,7 @@ export default {
     geolocate () {
       navigator.geolocation.getCurrentPosition((position) => {
         this.location_edit = `${position.coords.latitude}, ${position.coords.longitude}`
-      })  
+      })
     },
     post () {
       this.pending = true
@@ -142,7 +147,7 @@ export default {
     },
     location_validated () {
       return this.location === null || !isNaN(this.location[0])
-    }, 
+    },
     geolocation_enabled () {
       return 'geolocation' in navigator
     }
