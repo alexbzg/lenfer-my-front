@@ -8,8 +8,19 @@
         <tr v-for="(item, idx) in timers" class="timer" :key="idx">
             <td class="start">
                 <img :src="'/images/' + item.icon.icon" :title="item.icon.title"/>
-                {{seconds_to_timestring(item.time[0])}}
-                <span v-if="item.time[2]">{{seconds_to_timestring(item.time[3])}}</span>
+                <span class="set_time">
+                    <template v-if="item.time[2]">
+                        {{seconds_to_timestring(item.time[0])}}
+                    </template>
+                </span>
+                <span class="clock_time">
+                    <template v-if="item.time[2]">
+                        {{seconds_to_timestring(item.time[3])}}
+                    </template>
+                    <template v-else>
+                        {{seconds_to_timestring(item.time[0])}}
+                    </template>
+                </span>
             </td>
             <td class="duration">
                 {{item.time[1]}} сек
@@ -22,9 +33,13 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+
+import SunCalc from 'suncalc'
 
 import {seconds_to_timestring} from '../../utils'
 import {timer_type_icon} from '../../definitions'
+import {TZ_OFFSETS} from '../../timezones'
 
 function timer_timestamp(value) {
   const today = new Date((new Date()).toDateString())
@@ -48,14 +63,45 @@ export default {
     seconds_to_timestring: seconds_to_timestring,
   },
   computed: {
+    ...mapGetters(['location', 'timezone']),
     timers () {
       let r = []
       if (this.prop.value) {
+        let suntimes = null
+        if (this.location && this.timezone) {
+          const tz_offset = TZ_OFFSETS[this.timezone]
+          const date_local = new Date()
+          const utc = date_local.getTime() + date_local.getTimezoneOffset() * 60000
+          const date_device = new Date(utc + 3600000 * tz_offset)
+          const sun_data = SunCalc.getTimes(date_device,
+            this.location[0], this.location[1])
+          suntimes = ['sunrise', 'sunset'].map(
+              entry => (sun_data[entry].getUTCHours() + tz_offset) * 3600 +
+                sun_data[entry].getUTCMinutes() * 60)
+        }
         r = this.prop.value.map(item => { 
+          let due_time = null
+          if (item[2]) {
+            if (suntimes) {
+              due_time = suntimes[item[2] == 1 ? 0 : 1] + item[0]
+            }
+          } else {
+            due_time = item[0]
+          }
+          const time = [...item]
+          time.push(due_time)
           return {
-            time: item,
+            time: time,
             status: null,
             icon: timer_type_icon(item[2])}
+          }).sort((a, b) => {
+            if (a.time[3] < b.time[3]){
+              return -1
+            }
+            if (a.time[3] > b.time[3]){
+              return 1
+            }
+            return 0
           })
       }
       if (this.log && this.log.log) { //timer jobs' status

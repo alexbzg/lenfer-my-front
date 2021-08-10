@@ -86,9 +86,8 @@
             </switch-chart>
         </div>
 
-        <router-link :to="'/settings/devices/' + device_id"
-            v-if="device_props.custom.length || device_props.standart.length"
-            tag="div" class="border">
+        <div class="border"
+            v-if="device_props.custom.length || device_props.standart.length">
             <component v-for="(prop, idx) in device_props.custom" :is="prop.component"
                 :prop="prop" :key="idx" :log="log"></component>
             <table id="props" v-if="device_props.standart.length">
@@ -97,7 +96,7 @@
                     <td class="prop_value">{{prop.value}}</td>
                 </tr>
             </table>
-        </router-link>
+        </div>
 
         <div class="border" v-if="log && log.log && log.log.length">
             <log-summary :log="log"></log-summary>

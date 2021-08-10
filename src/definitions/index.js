@@ -26,8 +26,8 @@ export const DEVICE_CUSTOM_PROPS = [
 ]
 
 export const TIMER_TYPE_ICONS = [
-    {code: 1, title: 'Рассвет', icon: 'icon_timer_sunrise.png'},
-    {code: -1, title: 'Закат', icon: 'icon_timer_sunset.png'},
+    {code: 1, title: 'Восход', icon: 'icon_timer_sunrise.png'},
+    {code: -1, title: 'Заход', icon: 'icon_timer_sunset.png'},
     {code: 0, title: 'Время', icon: 'icon_timer_clock.png'}
 ]
 

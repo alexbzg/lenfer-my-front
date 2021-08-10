@@ -17,6 +17,7 @@ const SET_DEVICES_MUTATION = 'setDevicesMttn'
 const SET_DEVICES_TYPES_MUTATION = 'setDevicesTypesMttn'
 const SET_SCHEDULES_MUTATION = 'setSchedulessMttn'
 export const DEVICE_STATUS_MUTATION = 'deviceStatusMttn'
+const PUBLIC_USER_DATA_MUTATION = 'publicUsrMttn'
 
 export const LOGIN_ACTION = 'loginActn'
 export const REGISTER_ACTION = 'regActn'
@@ -24,6 +25,7 @@ const LOAD_USER_DATA_ACTION = 'loadUserDataActn'
 export const LOAD_DEVICES_ACTION = 'loadDeviceActn'
 export const LOAD_SCHEDULES_ACTION = 'loadSchedulesActn'
 const LOAD_DEVICES_TYPES_ACTION = 'loadDevicesTypesActn'
+export const LOAD_PUBLIC_USER_DATA_ACTION = 'loadPublicUsrActn'
 
 const INTERVAL_HANDLES = {
 }
@@ -39,7 +41,8 @@ const store = new Vuex.Store({
     remember: true,
     devices: [],
     schedules: [],
-    devices_types: []
+    devices_types: [],
+    public_user_data: null
   },
   getters: {
     userLogin: state => {
@@ -47,20 +50,27 @@ const store = new Vuex.Store({
     },
     userToken: state => {
       return state.user ? state.user.token : null
+    },
+    location: state => {
+      return state.public_user_data ? state.public_user_data.location : 
+        (state.user ? state.user.location : null)
+    },
+    timezone: state => {
+      return state.public_user_data ? state.public_user_data.timezone : 
+        (state.user ? state.user.timezone : null)
     }
   },
   mutations: {
     [INIT_MUTATION] (state) {
       state.user = storage.load(STORAGE_KEY_USER)
-    },      
+    },
+    [PUBLIC_USER_DATA_MUTATION] (state, payload) {
+      state.public_user_data = payload
+    },
     [SET_USER_MUTATION] (state, payload) {
       state.user = payload.user
       storage.remove(STORAGE_KEY_USER, state.remember ? 'local' : 'session')
       if (payload.user) {
-        if (payload.user['location']) {
-          payload.user['location'] = payload.user['location'].replace('(', '').replace(')', '').split(',').map(
-            item => parseFloat(item))
-        }
         storage.save(STORAGE_KEY_USER, state.user,
           payload.remember ? 'local' : 'session')
         state.remember = payload.remember
@@ -113,6 +123,12 @@ const store = new Vuex.Store({
       return userDataPost('user_data')
         .then(data => { 
           commit(SET_USER_MUTATION, {user: data, remember: true}) 
+        })
+    },
+    [LOAD_PUBLIC_USER_DATA_ACTION] ({commit}, payload) {
+      return get('/api/user_data/' + payload)
+        .then(response => { 
+          commit(PUBLIC_USER_DATA_MUTATION, response.data) 
         })
     },
     [LOAD_DEVICES_ACTION] ({commit}) {

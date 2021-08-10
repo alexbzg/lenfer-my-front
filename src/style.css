@@ -385,9 +385,24 @@ table#timers th{
 }
 table#timers td{
 	border-top: 1px solid #ddd;
-	padding: 0 50px;
+	padding: 5px 50px;
 	vertical-align: middle;
 }
+table#timers td img{
+	vertical-align: middle;
+}
+table#timers td span.set_time{
+	width: 50px;
+	font-size: 12px;
+	color: #777;
+	display: inline-block;
+}
+table#timers td span.clock_time{
+}
+
+
+
+
 table#timers th.report, table#timers td.report{
 	padding: 5px 10px ;
 	line-height: 10px;
