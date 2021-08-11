@@ -41,8 +41,8 @@
 
 <script>
 
-import {LOAD_DEVICES_ACTION, SET_USER_MUTATION, DEVICE_STATUS_MUTATION, set_device_status,
-  userDataPost} from '../store'
+import {LOAD_DEVICES_ACTION, LOAD_PUBLIC_USER_DATA_ACTION, SET_USER_MUTATION,
+  DEVICE_STATUS_MUTATION, set_device_status, userDataPost} from '../store'
 import messageBox from '../message-box'
 import {get} from '../api'
 
@@ -66,6 +66,7 @@ export default {
       return
     } else if (this.public_id) {
       this.load_public_devices()
+      this.$store.dispatch(LOAD_PUBLIC_USER_DATA_ACTION, this.public_id)
     }
     setInterval(this.update_devices_status, 10 * 1000)
   },

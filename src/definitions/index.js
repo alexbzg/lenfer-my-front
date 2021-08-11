@@ -25,12 +25,12 @@ export const DEVICE_CUSTOM_PROPS = [
   }
 ]
 
-export const TIMER_TYPE_ICONS = [
+export const TIMER_TYPES = [
     {code: 1, title: 'Восход', icon: 'icon_timer_sunrise.png'},
     {code: -1, title: 'Заход', icon: 'icon_timer_sunset.png'},
     {code: 0, title: 'Время', icon: 'icon_timer_clock.png'}
 ]
 
 export function timer_type_icon(code) {
-  return TIMER_TYPE_ICONS.find(item => item.code === code)
+  return TIMER_TYPES.find(item => item.code === code)
 }

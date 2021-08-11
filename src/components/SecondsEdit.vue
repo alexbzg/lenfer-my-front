@@ -1,45 +1,62 @@
 <template>
-    <masked-input
-      type="text"
-      v-model="edit_value"
-      placeholderChar="0"
-      class="time_input"
-      :mask="mask">
-    </masked-input>
+    <div class="time_input">
+        <input id="hours" v-model="edit_hours" :class="{error: isNaN(hours) || hours > 12}"
+            />:<input id="minutes" v-model="edit_minutes" :class="{error: isNaN(minutes) || minutes > 60}"/>
+    </div>
 </template>
 
 <script>
-import {seconds_to_timestring} from '../utils'
-import MaskedInput, {conformToMask} from 'vue-text-mask'
-
-const MASK = [/\d/, /\d/, ':',  /\d/, /\d/]
-const MASK_SIGN = [/[+-]/]
+import {seconds_to_timetuple} from '../utils'
 
 export default {
   name: "SecondsEdit",
-  components: {MaskedInput},
   props: ["value", "sign"],
+  data () {
+    const time = seconds_to_timetuple(this.value)
+    return {
+      edit_sign: this.sign && time[0] < 0 ? -1 : 1,
+      hours: Math.abs(time[0]),
+      minutes: Math.abs(time[1])
+    }
+  },
   computed: {
-    edit_value: {
-      get  () {
-        let value = seconds_to_timestring(this.value)
-        if (this.sign && this.value >= 0) {
-          value = '+' + value
-        }
-        return value
+    edit_hours: {
+      get () {
+        return this.format(this.hours, true)
       },
       set (value) {
-        const conformed_value = conformToMask(value, this.mask, {placeholderChar: '0'}).conformedValue
-        const sign_length = this.sign ? 1 : 0
-        const sign_mult = conformed_value.startsWith('-') ? -1 : 1
-        this.$emit('input', 
-          sign_mult *
-          (Number(conformed_value.substring(sign_length, 2 + sign_length))*3600 + 
-            Number(conformed_value.substring(3 + sign_length, 5 + sign_length))*60))
+        if (value.startsWith('+') || value.startsWith('-')) {
+          this.edit_sign = value.startsWith('-') ? -1 : 1
+          value = value.replace(/^[+-]+/, "")
+        } else if (this.sign) {
+          this.edit_sign = 1
+        }
+        this.hours = parseInt(value)
+        this.input()
       }
     },
-    mask () {
-      return this.sign ? MASK_SIGN.concat(MASK) : MASK
+    edit_minutes: {
+      get () {
+        return this.format(this.minutes)
+      },
+      set (value) {
+        this.minutes = parseInt(value)
+        this.input()
+      }
+    }
+  },
+  methods: {
+    format (value, sign) {
+      if (isNaN(value))
+        return null
+      let str_value = value < 10 ? "0" + value : value
+      if (this.sign && sign) {
+        str_value = (this.edit_sign === -1 ? "-" : "+") + str_value
+      }
+      return str_value
+    },
+    input () {
+      this.$emit('input', this.edit_sign * (this.hours * 3600 + this.minutes * 60))
     }
   }
 }

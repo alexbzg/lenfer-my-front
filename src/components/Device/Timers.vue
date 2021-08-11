@@ -7,10 +7,10 @@
         </tr>
         <tr v-for="(item, idx) in timers" class="timer" :key="idx">
             <td class="start">
-                <img :src="'/images/' + item.icon.icon" :title="item.icon.title"/>
+                <img :src="'/images/' + item.icon.icon"/>
                 <span class="set_time">
                     <template v-if="item.time[2]">
-                        {{seconds_to_timestring(item.time[0])}}
+                        {{(item.time[0] >= 0 ? '+' : '') + seconds_to_timestring(item.time[0])}}
                     </template>
                 </span>
                 <span class="clock_time">
@@ -20,6 +20,9 @@
                     <template v-else>
                         {{seconds_to_timestring(item.time[0])}}
                     </template>
+                </span>
+                <span class="tooltip" v-if="item.time[2]">
+                    {{tooltip_text(item)}}
                 </span>
             </td>
             <td class="duration">
@@ -61,29 +64,39 @@ export default {
   },
   methods: {
     seconds_to_timestring: seconds_to_timestring,
+    get_suntime (timer_type) {
+      return this.suntimes[timer_type == 1 ? 0 : 1]
+    }, 
+    tooltip_text (timer) {
+      return `${timer.icon.title} ${seconds_to_timestring(this.get_suntime(timer.time[2]))} ` +
+        `${timer.time[0] >= 0 ? '+' : ''}${seconds_to_timestring(timer.time[0])} \u2014 ` + 
+        `начало в ${seconds_to_timestring(timer.time[3])}`
+    }
   },
   computed: {
     ...mapGetters(['location', 'timezone']),
+    suntimes () {
+      let r = null
+      if (this.location && this.timezone) {
+        const tz_offset = TZ_OFFSETS[this.timezone]
+        const date_local = new Date()
+        const utc = date_local.getTime() + date_local.getTimezoneOffset() * 60000
+        const date_device = new Date(utc + 3600000 * tz_offset)
+        const sun_data = SunCalc.getTimes(date_device, this.location[0], this.location[1])
+        r = ['sunrise', 'sunset'].map(
+          entry => (sun_data[entry].getUTCHours() + tz_offset) * 3600 +
+            sun_data[entry].getUTCMinutes() * 60)
+      }
+      return r
+    },
     timers () {
       let r = []
       if (this.prop.value) {
-        let suntimes = null
-        if (this.location && this.timezone) {
-          const tz_offset = TZ_OFFSETS[this.timezone]
-          const date_local = new Date()
-          const utc = date_local.getTime() + date_local.getTimezoneOffset() * 60000
-          const date_device = new Date(utc + 3600000 * tz_offset)
-          const sun_data = SunCalc.getTimes(date_device,
-            this.location[0], this.location[1])
-          suntimes = ['sunrise', 'sunset'].map(
-              entry => (sun_data[entry].getUTCHours() + tz_offset) * 3600 +
-                sun_data[entry].getUTCMinutes() * 60)
-        }
         r = this.prop.value.map(item => { 
           let due_time = null
           if (item[2]) {
-            if (suntimes) {
-              due_time = suntimes[item[2] == 1 ? 0 : 1] + item[0]
+            if (this.suntimes) {
+              due_time = this.get_suntime(item[2]) + item[0]
             }
           } else {
             due_time = item[0]

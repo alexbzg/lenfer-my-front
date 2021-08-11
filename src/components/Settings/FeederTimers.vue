@@ -10,17 +10,17 @@
             </tr>
             <tr v-for="(item, item_idx) in timers_order" class="timer" :key="item_idx">
                 <td :class="{error: item in validation_errors && 0 in validation_errors[item]}">
-                    <v-select v-model="value[item][2]" :options="$options.timer_types"
+                    <v-select v-model="value[item][2]" :options="$options.TIMER_TYPES"
                         :reduce="timer_type => timer_type.code" :clearable="false" 
 						:searchable="false" :tabindex="1"
                         :ref="'timer_type_select_' + item_idx" 
                         @open="timer_type_select_open(item_idx)" 
                         >
                         <template #selected-option="option">
-                            <img :src="'/images/' + option.icon"/>
+                            <img :src="'/images/' + option.icon" :title="option.title"/>
                         </template>
                         <template #option="option">
-                            <img :src="'/images/' + option.icon"/>
+                            <img :src="'/images/' + option.icon" :title="option.title"/>
                         </template>
                     </v-select>
                     <seconds-edit v-model="value[item][0]" :sign="value[item][2] !== 0">
@@ -43,6 +43,7 @@
 
 import DeviceProps from './DeviceProps'
 import SecondsEdit from '../SecondsEdit'
+import {TIMER_TYPES} from '../../definitions'
 
 let timer_type_select_active_idx = -1
 
@@ -50,11 +51,7 @@ export default {
   name: "FeederTimers",
   extends: DeviceProps,
   components: {SecondsEdit},
-  timer_types: [
-    {code: 1, label: 'Рассвет', icon: 'icon_timer_sunrise.png'},
-    {code: -1, label: 'Закат', icon: 'icon_timer_sunset.png'},
-    {code: 0, label: 'Время', icon: 'icon_timer_clock.png'}
-  ],
+  TIMER_TYPES: TIMER_TYPES,
   timer_type_select_active_idx: -1,
   data () {
     return {
