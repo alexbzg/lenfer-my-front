@@ -121,12 +121,12 @@ export default {
         let log_idx = this.log.log.length - 1
         const now = new Date(this.log.device_timestamp)
         for (const timer of r) {
-          const start = timer_timestamp(timer.time[3])
+          const start = timer_timestamp(timer.time[3] - 60)
           if (start > now) {
             break
           }
           let evt_start = false, evt_stop = false, evt_reverse = false
-          const stop = timer_timestamp(timer.time[3] + timer.time[1] + 60)
+          const stop = timer_timestamp(timer.time[3] + timer.time[1] + 120)
           for (; log_idx >= 0 && log_timestamp(this.log.log[log_idx]) < start; log_idx--) {
             continue
           }
