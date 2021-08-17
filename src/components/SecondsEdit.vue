@@ -58,6 +58,14 @@ export default {
     input () {
       this.$emit('input', this.edit_sign * (this.hours * 3600 + this.minutes * 60))
     }
+  },
+  watch: {
+    value (val) {
+      const time = seconds_to_timetuple(val)
+      this.edit_sign = this.sign && time[0] < 0 ? -1 : 1,
+      this.hours = Math.abs(time[0]),
+      this.minutes = Math.abs(time[1])
+    }
   }
 }
 </script>

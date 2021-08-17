@@ -65,7 +65,7 @@ export default {
   methods: {
     seconds_to_timestring: seconds_to_timestring,
     get_suntime (timer_type) {
-      return this.suntimes[timer_type == 1 ? 0 : 1]
+      return this.suntimes ? this.suntimes[timer_type == 1 ? 0 : 1] : null
     }, 
     tooltip_text (timer) {
       return `${timer.icon.title} ${seconds_to_timestring(this.get_suntime(timer.time[2]))} ` +
@@ -121,7 +121,7 @@ export default {
         let log_idx = this.log.log.length - 1
         const now = new Date(this.log.device_timestamp)
         for (const timer of r) {
-          const start = timer_timestamp(timer.time[3] - 60)
+          const start = timer_timestamp(timer.time[3] - 120)
           if (start > now) {
             break
           }
