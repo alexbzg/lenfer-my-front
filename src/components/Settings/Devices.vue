@@ -46,14 +46,14 @@
         </div>
 
         <div id="function_setup" v-if="edit_device">
-            <table id="device_sensor_setup" class="sensors_param" v-if="edit_device.sensors">
+            <table id="device_sensor_setup" class="sensors_param" v-if="edit_device_sensors_settings.length">
                 <tr>
                     <th>Подключен</th>
                     <th>Датчик</th>
                     <th>Название датчика на графике</th>
                     <th>Поправка</th>
                 </tr>
-                <tbody v-for="entry in edit_device.sensors_settings" :key="entry.id">
+                <tbody v-for="entry in edit_device_sensors_settings" :key="entry.id">
                     <tr class="sensor_type">
                         <td colspan="4">{{entry.title}}</td>
                     </tr>
@@ -154,6 +154,22 @@ export default {
       return this.edit_device && this.edit_device.switches ? this.edit_device.switches.filter(entry =>
         !this.edit_device.mode || !entry.modes || 
         entry.modes.includes(this.edit_device.mode)) : []
+    },
+    edit_device_sensors_settings () {
+      const r = []
+      if (this.edit_device && this.edit_device.sensors_settings) {
+        for (const sensors_settings_entry of this.edit_device.sensors_settings) {
+          const sensors = sensors_settings_entry.sensors.filter(sensor =>
+            !this.edit_device.mode || !sensor.modes || sensor.modes.includes(this.edit_device.mode))
+          if (sensors.length) {
+            r.push({
+              ...sensors_settings_entry,
+              sensors: sensors
+            })
+          }
+        }
+      }
+      return r
     }
   },
   methods: {

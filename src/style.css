@@ -645,7 +645,9 @@ table#climat_informer td.current_time span.timeout{
 	font-size: 14px;
 }
 
-
+#device_setup .device_props .prop input{
+	width: 50px;
+}
 
 
 table#device_sensor_setup, table#device_switches_setup{
