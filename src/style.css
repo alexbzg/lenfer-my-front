@@ -386,7 +386,7 @@ table#timers th{
 }
 table#timers td{
 	border-top: 1px solid #ddd;
-	padding: 5px 50px;
+	padding: 7px 50px;
 	vertical-align: middle;
 }
 table#timers td img{
@@ -744,7 +744,7 @@ table#timers_setup th.add_timer img{
 }
 table#timers_setup td{
 	border: none;
-	padding: 5px 20px;
+	padding: 7px 20px;
 	vertical-align: top;
 	font-size: 18px;
 }

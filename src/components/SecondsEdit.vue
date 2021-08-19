@@ -1,7 +1,7 @@
 <template>
     <div class="time_input">
-        <input id="hours" v-model="edit_hours" :class="{error: isNaN(hours) || hours > 23}"
-            />:<input id="minutes" v-model="edit_minutes" :class="{error: isNaN(minutes) || minutes > 59}"/>
+        <input class="seconds_edit_hours" v-model="edit_hours" :class="{error: isNaN(hours) || hours > 23}"
+            />:<input class="seconds_edit_minutes" v-model="edit_minutes" :class="{error: isNaN(minutes) || minutes > 59}"/>
     </div>
 </template>
 

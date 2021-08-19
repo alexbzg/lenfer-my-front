@@ -12,9 +12,10 @@
                 <td :class="{error: item in validation_errors && 0 in validation_errors[item]}">
                     <v-select v-model="value[item][2]" :options="$options.TIMER_TYPES"
                         :reduce="timer_type => timer_type.code" :clearable="false" 
-						:searchable="false" :tabindex="1"
+						:searchable="false" :tabindex="1" label="title"
                         :ref="'timer_type_select_' + item_idx" 
                         @open="timer_type_select_open(item_idx)" 
+                        @input="value[item][0] = 0"
                         >
                         <template #selected-option="option">
                             <img :src="'/images/' + option.icon" :title="option.title"/>
@@ -73,6 +74,9 @@ export default {
         timer_type_select_active_idx = idx
       }
     },
+    timer_type_select_change (timer_idx) {
+      this.value[timer_idx][0] = 0
+    }, 
     new_item () {
       return new Array(this.props_headers.items.length).fill(0)
     },
