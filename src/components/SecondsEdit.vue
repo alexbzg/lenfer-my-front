@@ -14,7 +14,7 @@ export default {
   data () {
     const time = seconds_to_timetuple(this.value)
     return {
-      edit_sign: this.sign && !(time[0] > 0) ? -1 : 1,
+      edit_sign: this.sign && (time[0] < 0 || (time[0] === 0 && time[1] < 0)) ? -1 : 1,
       hours: Math.abs(time[0]),
       minutes: Math.abs(time[1])
     }
@@ -49,6 +49,9 @@ export default {
         this.minutes = parseInt(value)
         this.input()
       }
+    },
+    edit_value () {
+      return this.edit_sign * (this.hours * 3600 + this.minutes * 60)
     }
   },
   methods: {
@@ -62,15 +65,17 @@ export default {
       return str_value
     },
     input () {
-      this.$emit('input', this.edit_sign * (this.hours * 3600 + this.minutes * 60))
+      this.$emit('input', this.edit_value)
     }
   },
   watch: {
     value (val) {
-      const time = seconds_to_timetuple(val)
-      this.edit_sign = this.sign && !(time[0] > 0) ? -1 : 1,
-      this.hours = Math.abs(time[0]),
-      this.minutes = Math.abs(time[1])
+      if (val !== this.edit_value) {
+        const time = seconds_to_timetuple(val)
+        this.edit_sign = this.sign && (time[0] < 0 || (time[0] === 0 && time[1] < 0)) ? -1 : 1,
+        this.hours = Math.abs(time[0]),
+        this.minutes = Math.abs(time[1])
+      }
     }
   }
 }
