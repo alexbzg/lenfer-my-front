@@ -406,12 +406,13 @@ table#timers tr.timer span.tooltip{
 }
 table#timers tr.timer:hover span.tooltip{
 	display: block;
-	font-size: 12px;
+	font-size: 14px;
 	color: #000;
 	background-color: #ffffdd;
-	padding: 10px 20px;
+	padding: 5px 20px;
 	position: absolute;
 	border :1px solid #ccc;
+	box-shadow: 4px 4px 8px rgba(0,0,0, 0.5);
 }
 
 
@@ -646,8 +647,11 @@ table#climat_informer td.current_time span.timeout{
 }
 
 #device_setup .device_props .prop input{
-	width: 50px;
+	width: 70px;
 }
+
+
+
 
 
 table#device_sensor_setup, table#device_switches_setup{
@@ -782,6 +786,7 @@ table#timers_setup ul.vs__dropdown-menu{
 	min-width: 40px;
 	margin: 0;
 	left: -20px;
+	box-shadow: 4px 4px 8px rgba(0,0,0, 0.5);
 }
 table#timers_setup li{
 	padding: 10px 5px 0px 10px;

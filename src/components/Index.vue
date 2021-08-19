@@ -22,7 +22,7 @@
         <router-link :to="'/settings/devices/' + current_device.id"
             v-if="current_device && !public_id" tag="img" id="icon_settings"
             src="/images/icon_settings.png" title="Настройки устройства" />
-        <router-link v-if="!public_id && userLogin"
+        <router-link v-if="!public_id && userLogin && schedules_enabled"
             :to="'/settings/schedules' + 
                 ((current_device && current_device.schedule_id) ? '/' + current_device.schedule_id : '')"
             tag="img" id="icon_tables" src="/images/icon_tables.png"
@@ -134,6 +134,15 @@ export default {
     }
   },
   computed: {
+    schedules_enabled () {
+      let r = false
+      if (this.current_device) {
+        const device_type = this.$store.state.devices_types.find(
+          device_type => device_type.id === this.current_device.type_id)
+        r = device_type && device_type.schedule_params
+      }
+      return r
+    },
     devices () {
       return this.public_id ? this.public_devices : this.$store.state.devices
     },
