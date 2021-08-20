@@ -90,12 +90,12 @@
             v-if="device_props.custom.length || device_props.standart.length">
             <component v-for="(prop, idx) in device_props.custom" :is="prop.component"
                 :prop="prop" :key="idx" :log="log"></component>
-            <table id="props" v-if="device_props.standart.length">
+            <!--table id="props" v-if="device_props.standart.length">
                 <tr v-for="(prop, idx) in device_props.standart" :key="idx">
-                    <td class="prop_title">{{prop.title.title}}</td>
+                    <td class="prop_title">{{prop.title}}</td>
                     <td class="prop_value">{{prop.value}}</td>
                 </tr>
-            </table>
+            </table-->
         </div>
 
         <div class="border" v-if="log && log.log && log.log.length">
@@ -226,11 +226,11 @@ export default {
     chart_break_interval () {
       if (this.device) {
         let upd_interval = 5
-        const upd_interval_prop_idx = this.device.props_titles.findIndex(item => {
+        const upd_interval_prop_idx = this.device.props.findIndex(item => {
           return item.id === 'deepsleep'
         })
-        if (upd_interval_prop_idx !== -1 && this.device.props_values[upd_interval_prop_idx]) {
-          upd_interval = this.device.props_values[upd_interval_prop_idx]
+        if (upd_interval_prop_idx !== -1 && this.device.props[upd_interval_prop_idx].value) {
+          upd_interval = this.device.props[upd_interval_prop_idx].value
         }
         return upd_interval * 120000
       }
@@ -262,21 +262,16 @@ export default {
     device_props () {
       let r = {'custom': [], 'standart': []}
       if (this.device_type) {
-        const props_length = this.device.props_titles.length
-        for (let co = 0; co < props_length; co++) {
-          if (this.device.props_titles[co].display) {
-            const prop = {
-              'title': this.device.props_titles[co],
-              'value': this.device.props_values[co]
-            }
-            if (prop.title.id in CUSTOM_PROPS) {
-              prop.component = CUSTOM_PROPS[prop.title.id]
-              r.custom.push(prop)
-            } else {
-              r.default.push(prop)
-            }
+        this.device.props.forEach(prop => {
+          if (prop.id in CUSTOM_PROPS) {
+            r.custom.push({
+              ...prop,
+              component: CUSTOM_PROPS[prop.id]
+            })
+          } else {
+            r.standart.push(prop)
           }
-        }
+        })
       }
       return r
     },
@@ -286,7 +281,7 @@ export default {
       if (this.device && this.device.schedule_id) {
         const schedule = this.$store.state.schedules.find(
           schedule => schedule.id === this.device.schedule_id)
-        const start = this.device.props_values[0]
+        const start = this.device.props[0].value
         const now = new Date()
         const day = Math.floor((now - start) / (1000 * 60 * 60 * 24))
         let day_idx = -1

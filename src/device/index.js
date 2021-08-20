@@ -2,48 +2,74 @@ import {display_date} from '../utils'
 import {get} from '../api'
 
 class Device {
+  #sensors
+  #switches
+  #props
 
   constructor(params, id) {
 
     this.id = id
-    this.sensors = params.sensors
-    this.switches = params.switches
+    this.#sensors = params.sensors ? [...params.sensors] : null
+    this.#switches = params.switches ? [...params.switches] : null
+    this.#props = params.props_titles ? params.props_titles.map( (prop, idx) => {
+      let value = params.props_values[idx]
+      let display = value
+      if (prop.title == 'date') {
+        value = new Date(value)
+        display = display_date(value)
+      }
+      return {
+        ...prop,
+        value: value,
+        display: display
+      }
+    }) : null
     this.type = params.device_type
     this.type_id = params.device_type_id
     this.title = params.title
     this.hash = params.hash
     this.schedule_id = params.schedule_id
-    this.props_titles = params.props_titles
     this.timezone = params.timezone
     this.mode = params.mode
 
-    this.props_values = []
-    this.props_display = []
-    const props_length = this.props_titles.length
-    for (let co = 0; co < props_length; co++) {
-      let value = params.props_values[co]
-      let value_display = value
-      if (this.props_titles[co].type === 'date') {
-        value = new Date(value)
-        value_display = display_date(value)
-      }
-      this.props_values.push(value)
-      this.props_display.push(value_display)
-    }
+  }
 
-    this.sensors_params = {}
+  mode_filter (data) {
+    return data ? data.filter(item =>
+      !this.mode || !item.modes || item.modes.includes(this.mode)) :
+      null
+  }
+
+  get props () {
+    return this.mode_filter(this.#props)
+  }
+
+  get all_props_values () {
+    return this.#props ? this.#props.map(prop => prop.value) : null
+  }
+
+  get sensors () {
+    return this.mode_filter(this.#sensors)
+  }
+
+  get switches () {
+    return this.mode_filter(this.#switches)
+  }
+
+  get sensors_params () {
+    const r = {}
     if (this.sensors) {
       for (const sensor of this.sensors) {
-        if (!this.sensors_params[sensor.type]) {
-          this.sensors_params[sensor.type] = {sensors: []}
+        if (!r[sensor.type]) {
+          r[sensor.type] = {sensors: []}
         }
-        this.sensors_params[sensor.type].sensors.push(sensor)
+        r[sensor.type].sensors.push(sensor)
         if (sensor.is_master) {
-          this.sensors_params[sensor.type].master = sensor
+          r[sensor.type].master = sensor
         }
       }
     }
-    
+    return r
   }
 
 }

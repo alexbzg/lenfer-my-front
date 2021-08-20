@@ -42,7 +42,6 @@
 
 <script>
 
-import DeviceProps from './DeviceProps'
 import SecondsEdit from '../SecondsEdit'
 import {TIMER_TYPES} from '../../definitions'
 
@@ -50,7 +49,7 @@ let timer_type_select_active_idx = -1
 
 export default {
   name: "FeederTimers",
-  extends: DeviceProps,
+  props: ["value"],
   components: {SecondsEdit},
   TIMER_TYPES: TIMER_TYPES,
   timer_type_select_active_idx: -1,
@@ -75,10 +74,10 @@ export default {
       }
     },
     timer_type_select_change (timer_idx) {
-      this.value[timer_idx][0] = 0
+      this.value[timer_idx].va[0] = 0
     }, 
     new_item () {
-      return new Array(this.props_headers.items.length).fill(0)
+      return new Array(this.value.items.length).fill(0)
     },
     order_timers () {
       let timers_order = []
@@ -117,8 +116,7 @@ export default {
       handler () {
         let r = null
         this.validation_errors = {}
-        const timers_count = this.value.length
-        for (let co = 0; co < timers_count; co++) {
+        for (let co = 0; co < this.timers_count; co++) {
           if (this.value[co][1] !== parseInt(Number(this.value[co][1]))) {
             this.value[co][1] = parseInt(Number(this.value[co][1]))
           }
@@ -127,7 +125,8 @@ export default {
             this.validation_errors[co] = {1: 1}
             break
           }
-          const limits = [this.value[co][0], this.value[co][0] + this.value[co][1], this.value[co][2]]
+          const limits = [this.value[co][0], this.value[co][0] + this.value[co][1],
+            this.value[co][2]]
           for (let check_co = 0; check_co < co; check_co++) {
             const check = [
               this.value[check_co][0],

@@ -147,7 +147,7 @@ export default {
       return this.public_id ? this.public_devices : this.$store.state.devices
     },
     current_device () {
-      if (this.$route.name == 'Device') {
+      if (this.$route.name == 'Device' || this.$route.name == 'SettingsDevices' ) {
         return this.devices.find(item => item.id == parseInt(this.$route.params.device_id))
       } else {
         return null

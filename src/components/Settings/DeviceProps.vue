@@ -2,40 +2,37 @@
     <div class="device_props">
         <slot name="device_title"></slot>
 
-        <template v-for="(prop, idx) in props_headers">
-            <div class="prop" 
-                v-if="!custom_props[prop.id] && 
-                (!device_mode || (!prop.modes || prop.modes.includes(device_mode)))" 
-                :key="idx">
+        <template v-for="(prop, idx) in props">
+            <div class="prop" :key="idx" v-if="!custom_props[prop.id]">
                 <template v-if="prop.type === 'date'">
-                    <date-picker v-model="value[idx]" locale="ru"
+                    <date-picker v-model="prop.value" locale="ru"
                         :masks="{input: 'DD MMMM'}"></date-picker>
                 </template>
                 <template v-if="prop.type === 'seconds'">
-                    <seconds-edit v-model="value[idx]"></seconds-edit>
+                    <seconds-edit v-model="prop.value"></seconds-edit>
                 </template>
                 <template v-if="prop.type === 'integer'">
-                    <input type="number" v-model.number="value[idx]"/>
+                    <input type="number" v-model.number="prop.value"/>
                 </template>
                 <template v-if="prop.type === 'float_delta'">
-                    <input type="number" v-model.number="value[idx][0]"/>
+                    <input type="number" v-model.number="prop.value[0]"/>
                     &plusmn;
-                    <input type="number" v-model.number="value[idx][1]"/>
+                    <input type="number" v-model.number="prop.value[1]"/>
                 </template>
                 <span v-if="prop.unit" v-html="prop.unit"></span>
 
                 <br/><span class="title">{{prop.title}}</span>
                 <template v-if="'items' in prop">
-                    <div v-for="(item, item_idx) in value[idx]" class="prop_item" :key="item_idx">
-                        <device-props :props_headers="prop.items" :value="item">
+                    <div v-for="(item, item_idx) in prop.value" class="prop_item" :key="item_idx">
+                        <device-props v-model="prop_items[idx][item_idx]">
                         </device-props>
                         <button class="delete_prop_item" 
-                            @click="delete_item(prop, value[idx], item_idx)">
+                            @click="delete_item(prop, item_idx)">
                             Удалить {{prop.title_item}}
                         </button>
                     </div>
                     <br/>
-                    <button class="add_prop_item" @click="value[idx].push(new_item())">
+                    <button class="add_prop_item" @click="new_item(prop)">
                         Добавить {{prop.title_item}}
                     </button>
                 </template>
@@ -57,7 +54,7 @@ import {DEVICE_CUSTOM_PROPS} from '../../definitions'
 export default {
   DEVICE_CUSTOM_PROPS: DEVICE_CUSTOM_PROPS,
   name: "DeviceProps",
-  props: ["props_headers", "value", "device_type_id", "device_mode"],
+  props: ["value", "device_type_id"],
   components: {DatePicker, SecondsEdit}, 
   data () {
     return {
@@ -65,15 +62,15 @@ export default {
     }
   },
   methods: {
-    new_item () {
-      return new Array(this.props_headers.length).fill(null)
+    new_item (prop) {
+      prop.value.push(new Array(prop.items.length).fill(null))
     },
-    delete_item (header, items, idx) {
-      messageBox(`Удаление ${header.title_item_genitive}`,
-        `Вы действительно хотите удалить этот ${header.title_item}?`,
+    delete_item (prop, idx) {
+      messageBox(`Удаление ${prop.title_item_genitive}`,
+        `Вы действительно хотите удалить этот ${prop.title_item}?`,
         true)
         .then(() => {
-            items.splice(idx, 1)
+            prop.value.splice(idx, 1)
         })
     },
     on_validated (prop_id, msg) {
@@ -82,6 +79,27 @@ export default {
     }
   }, 
   computed: {
+    props () {
+      return Array.isArray(this.value) ? this.value : [this.value]
+    },
+    prop_items () {
+      let r = []
+      this.props.forEach(prop => {
+        if ('items' in prop) {
+          const items = prop.value.map(item => {
+            return {
+              ...prop.items,
+              value: item
+            }
+          })
+          r.push(items)
+        } else {
+          r.push(null)
+        }
+      })
+      return r
+    },
+
     custom_props () {
       const r = {}
       for (const custom_prop_def of DEVICE_CUSTOM_PROPS) {
@@ -96,13 +114,11 @@ export default {
     value: {
       deep: true,
       handler () {
-        const props_count = this.props_headers.length
-        for (let co = 0; co < props_count; co++) {
-          if (this.props_headers[co].type === 'integer' &&  
-            this.value[co] !== parseInt(Number(this.value[co]))) {
-            this.value[co] = parseInt(Number(this.value[co]))
+        this.props.forEach(prop => {
+          if (prop.type === 'integer' && prop.value !== parseInt(Number(prop.value))) {
+            prop.value = parseInt(Number(prop.value))
           }
-        }
+        })
       }
     }
   }
