@@ -4,7 +4,7 @@
             <tr>
                 <th>Начало</th>
                 <th>Длительность, сек</th>
-                <th class="add_timer" @click="value.push(new_item())">
+                <th class="add_timer" @click="new_item()">
                   <img src="/images/icon_add.jpg" title="Добавить период"/>
                 </th>
             </tr>
@@ -15,7 +15,7 @@
 						:searchable="false" :tabindex="1" label="title"
                         :ref="'timer_type_select_' + item_idx" 
                         @open="timer_type_select_open(item_idx)" 
-                        @input="value[item][0] = 0"
+                        @input="timer_type_input(item)"
                         >
                         <template #selected-option="option">
                             <img :src="'/images/' + option.icon" :title="option.title"/>
@@ -24,14 +24,14 @@
                             <img :src="'/images/' + option.icon" :title="option.title"/>
                         </template>
                     </v-select>
-                    <seconds-edit v-model="value[item][0]" :sign="value[item][2] !== 0">
+                    <seconds-edit v-model="value[item][0]" :sign="value[item][2] !== 0"
+                        @input="value_input">
                     </seconds-edit>
                 </td>
                 <td :class="{error: item in validation_errors && 1 in validation_errors[item]}">
-                    <input type="number" v-model.number="value[item][1]"
-                        @input="$emit('input', Number($event.target.value))"/>
+                    <input type="number" v-model.number="value[item][1]" @input="value_input"/>
                 </td>
-                <td @click="delete_item(props_headers, value, item)">
+                <td @click="delete_item(item)">
                     <img src="/images/icon_close.png" title="Удалить период"/>
                 </td>
             </tr>
@@ -44,8 +44,10 @@
 
 import SecondsEdit from '../SecondsEdit'
 import {TIMER_TYPES} from '../../definitions'
+import messageBox from '../../message-box'
 
 let timer_type_select_active_idx = -1
+const TIMER_VALUE_LENGTH = 3
 
 export default {
   name: "FeederTimers",
@@ -59,11 +61,6 @@ export default {
       validation_errors: {},
     }
   },
-  computed: {
-    timers_count () {
-      return this.value ? this.value.length : 0
-    }
-  },
   methods: {
     timer_type_select_open (idx) {
       if (timer_type_select_active_idx !== idx) {
@@ -73,11 +70,27 @@ export default {
         timer_type_select_active_idx = idx
       }
     },
-    timer_type_select_change (timer_idx) {
-      this.value[timer_idx].va[0] = 0
-    }, 
+    value_input () {
+      this.$emit('input', this.value)
+    },
+    timer_type_input (idx) {
+      this.value[idx][0] = 0
+      this.value_input()
+    },
     new_item () {
-      return new Array(this.value.items.length).fill(0)
+      this.value.push(new Array(TIMER_VALUE_LENGTH).fill(0))
+      this.timers_order = this.order_timers()
+      this.value_input()
+    },
+    delete_item (idx) {
+      messageBox('Удаление периода',
+        'Вы действительно хотите удалить этот период?',
+        true)
+        .then(() => {
+            this.value.splice(idx, 1)
+            this.timers_order = this.order_timers()
+            this.value_input()
+        })
     },
     order_timers () {
       let timers_order = []
@@ -108,15 +121,13 @@ export default {
     }
   },
   watch: {
-    timers_count () {
-      this.timers_order = this.order_timers()
-    },
     value: {
       deep: true,
       handler () {
         let r = null
         this.validation_errors = {}
-        for (let co = 0; co < this.timers_count; co++) {
+        const timers_count = this.value.length
+        for (let co = 0; co < timers_count; co++) {
           if (this.value[co][1] !== parseInt(Number(this.value[co][1]))) {
             this.value[co][1] = parseInt(Number(this.value[co][1]))
           }
@@ -143,7 +154,7 @@ export default {
         }
         this.$emit('validated', 'timers', r)
         this.validated = r
-        }
+      }
     }
   }
 }

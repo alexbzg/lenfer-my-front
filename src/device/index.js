@@ -5,6 +5,7 @@ class Device {
   #sensors
   #switches
   #props
+  #mode
 
   constructor(params, id) {
 
@@ -40,37 +41,33 @@ class Device {
       null
   }
 
-  get props () {
-    return this.mode_filter(this.#props)
+  get mode () {
+    return this.#mode
+  }
+
+  set mode (value) {
+    this.#mode = value
+    this.props = this.mode_filter(this.#props)
+    this.sensors = this.mode_filter(this.#sensors)
+    this.switches = this.mode_filter(this.#switches)
+    this.sensors_params = {}
+    if (this.sensors) {
+      for (const sensor of this.sensors) {
+        if (!this.sensors_params[sensor.type]) {
+          this.sensors_params[sensor.type] = {sensors: []}
+        }
+        this.sensors_params[sensor.type].sensors.push(sensor)
+        if (sensor.is_master) {
+          this.sensors_params[sensor.type].master = sensor
+        }
+      }
+    }
   }
 
   get all_props_values () {
     return this.#props ? this.#props.map(prop => prop.value) : null
   }
 
-  get sensors () {
-    return this.mode_filter(this.#sensors)
-  }
-
-  get switches () {
-    return this.mode_filter(this.#switches)
-  }
-
-  get sensors_params () {
-    const r = {}
-    if (this.sensors) {
-      for (const sensor of this.sensors) {
-        if (!r[sensor.type]) {
-          r[sensor.type] = {sensors: []}
-        }
-        r[sensor.type].sensors.push(sensor)
-        if (sensor.is_master) {
-          r[sensor.type].master = sensor
-        }
-      }
-    }
-    return r
-  }
 
 }
 

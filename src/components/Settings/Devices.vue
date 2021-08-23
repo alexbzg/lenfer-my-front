@@ -68,7 +68,8 @@
                 </tbody>
             </table>
 
-            <table id="device_switches_setup" class="switches_param" v-if="device.switches">
+            <table id="device_switches_setup" class="switches_param" 
+                v-if="device.switches && device.switches.legnth">
                 <tr>
                     <th>Подключен</th>
                     <th>Переключатель</th>
@@ -85,7 +86,7 @@
                 <component 
                     :is="prop.component"
                     :key="prop_id"
-                    v-model="custom_props[prop_id].prop.value"
+                    v-model="device.props[prop.idx].value"
                     :device_type_id="device.type_id"
                     @validated="device_custom_prop_validated">
                 </component>
@@ -121,9 +122,7 @@ export default {
   data () {
     return {
       device: null,
-      custom_props: {},
       props_validation: {}, 
-      sensors_settings: [],
       pending: false
     }
   },
@@ -149,7 +148,39 @@ export default {
       return this.devices_types && this.device ?
         this.devices_types.find(item => item.id === this.device.type_id) :
         null
+    },
+    sensors_settings () {
+      const r = []
+      if (this.device) {
+        for (const SENSOR_PARAM of DEVICE_SENSORS_PARAMS) {
+          if (SENSOR_PARAM.id in this.device.sensors_params) {
+            r.push({
+              ...SENSOR_PARAM,
+              sensors: this.device.sensors_params[SENSOR_PARAM.id].sensors
+            })
+          }
+        }
+      }
+      return r
+    },
+    custom_props () {
+      const r = []
+      if (this.device) {
+        for (const custom_prop_def of DEVICE_CUSTOM_PROPS) {
+          if (custom_prop_def.device_type_id === this.device.type_id) {
+            const prop_idx = this.device.props.findIndex(item => item.id === custom_prop_def.prop_id)
+            if (prop_idx !== -1) {
+              r.push({
+                  idx: prop_idx,
+                  component: custom_prop_def.component
+              })
+            }
+          }
+        }
+      }
+      return r
     }
+ 
   },
   methods: {
     device_props_validated (validation_data) {
@@ -168,25 +199,6 @@ export default {
           this.device_cache = JSON.parse(JSON.stringify(device))
           for (const prop of ['props', 'sensors', 'switches']) {
             this.device_cache[prop] = JSON.parse(JSON.stringify(device[prop]))
-          }
-          const sp_length = DEVICE_SENSORS_PARAMS.length
-          for (let co = 0; co < sp_length; co++) {
-            if (DEVICE_SENSORS_PARAMS[co].id in device.sensors_params) {
-               this.sensors_settings.push({
-                 ...DEVICE_SENSORS_PARAMS[co],
-                 sensors: device.sensors_params[DEVICE_SENSORS_PARAMS[co].id].sensors
-               })
-            }
-          }
-          for (const custom_prop_def of DEVICE_CUSTOM_PROPS) {
-            if (custom_prop_def.device_type_id === this.device.type_id) {
-              const prop = this.device.props.find(
-                  item => item.id === custom_prop_def.prop_id)
-              this.custom_props[custom_prop_def.prop_id] = {
-                  prop: prop,
-                  component: custom_prop_def.component
-                }
-            }
           }
           this.props_validation = {}
         })
@@ -243,10 +255,12 @@ export default {
         const sensors_length = this.device.sensors.length
         for (let co = 0; co < sensors_length; co++) {
           const sensor = this.device.sensors[co]
-          const sensor_cache = this.device_cache.sensors[co]
+          const sensor_cache = this.device_cache.sensors ? this.device_cache.sensors.find(item =>
+                item.id === sensor.id) : null
           sensor.is_master = this.device.sensors_params[sensor.type].master == sensor
-          if (sensor.title !== sensor_cache.title || sensor.is_master !== sensor_cache.is_master ||
-            sensor.enabled !== sensor_cache.enabled || sensor.correction !== sensor_cache.correction) {
+          if (!sensor_cache || sensor.title !== sensor_cache.title ||
+            sensor.is_master !== sensor_cache.is_master || sensor.enabled !== sensor_cache.enabled ||
+            sensor.correction !== sensor_cache.correction) {
             queries.push({
               url: 'sensor/' + sensor.id,
               data: {
@@ -263,8 +277,10 @@ export default {
         const switches_length = this.device.switches.length
         for (let co = 0; co < switches_length; co++) {
           const switch_item = this.device.switches[co]
-          const switch_cache = this.device_cache.switches[co]
-          if (switch_item.title !== switch_cache.title || switch_item.enabled !== switch_cache.enabled) {
+          const switch_cache = this.device_cache.switches ? this.device_cache.switches.find(item =>
+                item.id === switch_item.id) : null
+          if (!switch_cache || switch_item.title !== switch_cache.title ||
+            switch_item.enabled !== switch_cache.enabled) {
             queries.push({
               url: `switch/${this.device.id}/${switch_item.id}`,
               data: {
