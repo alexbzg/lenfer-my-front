@@ -745,27 +745,22 @@ table#timers_setup th.add_timer img{
 table#timers_setup td{
 	border: none;
 	padding: 7px 20px;
-	vertical-align: top;
+	vertical-align: middle;
 	font-size: 18px;
 }
 table#timers_setup input{
 	width: 35px;
 	margin: 0;
 	font-size: 18px;
+	padding: 0px 5px;
 }
 table#timers_setup input[type='number'] {
-	padding-right: 3px;
+	width: 50px;
 }
 table#timers_setup input[type='search'] {
 	display: none;
 }
-table#timers_setup input.time_input {
-	display: inline-block;
-}
-table#timers_setup img{
-	cursor: pointer;
-}
-#feeder_timers button{
+table#timers_setup img, #feeder_timers button{
 	cursor: pointer;
 }
 
@@ -796,24 +791,21 @@ table#timers_setup div.time_input{
 	display: inline-block;
 	font-weight: bold;
 }
-table#timers_setup div.time_input input{
-	padding: 0px 5px;
-}
-table#timers_setup div.time_input input#hours{
-	text-align: right;
-}
-table#timers_setup div.time_input input#minutes{
-	text-align: left;
-}
 table#timers_setup div.time_input select{
 	width: 50px;
 	padding: 0px 5px;
 }
 
+table#timers_setup input.seconds_edit_hours{
+	text-align: right;
+}
+
+table#timers_setup input.seconds_edit_minutes{
+	text-align: left;
+}
 
 
-
-table#timers_setup td input.error{
+table#timers_setup td.error input{
 	background-color: #fde7e8;
 	border-color: #f3424d;
 }

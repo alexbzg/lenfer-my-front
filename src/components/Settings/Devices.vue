@@ -69,7 +69,7 @@
             </table>
 
             <table id="device_switches_setup" class="switches_param" 
-                v-if="device.switches && device.switches.legnth">
+                v-if="device.switches && device.switches.length">
                 <tr>
                     <th>Подключен</th>
                     <th>Переключатель</th>
@@ -219,9 +219,9 @@ export default {
       this.$router.push('/device/' + this.device.id)
     },
     post_device () {
-      for (const field in this.device.props_validation) {
-        if (this.device.props_validation[field]) {
-          messageBox('Изменение устройства', this.device.props_validation[field])
+      for (const field in this.props_validation) {
+        if (this.props_validation[field]) {
+          messageBox('Изменение настроек', `Настройки некорректны: ${this.props_validation[field]}`)
           return
         }
       }
