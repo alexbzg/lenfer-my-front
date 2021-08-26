@@ -2,32 +2,26 @@
     <div id="feeder_timers">
         <table id="timers_setup">
             <tr>
-                <th>Начало</th>
-                <th>Длительность, сек</th>
+                <template v-if="timers_type === 'feeder'">
+                    <th>Начало</th>
+                    <th>Длительность, сек</th>
+                </template>
+                <template v-if="timers_type === 'switch'">
+                    <th>Включить</th>
+                    <th>Выключить</th>
+                </template>
                 <th class="add_timer" @click="new_item()">
                   <img src="/images/icon_add.jpg" title="Добавить период"/>
                 </th>
             </tr>
             <tr v-for="(item, item_idx) in timers_order" class="timer" :key="item_idx">
-                <td :class="{error: item in validation_errors && 0 in validation_errors[item]}">
-                    <v-select v-model="value[item][2]" :options="$options.TIMER_TYPES"
-                        :reduce="timer_type => timer_type.code" :clearable="false" 
-						:searchable="false" :tabindex="1" label="title"
-                        :ref="'timer_type_select_' + item_idx" 
-                        @open="timer_type_select_open(item_idx)" 
-                        @input="timer_type_input(item)"
-                        >
-                        <template #selected-option="option">
-                            <img :src="'/images/' + option.icon" :title="option.title"/>
-                        </template>
-                        <template #option="option">
-                            <img :src="'/images/' + option.icon" :title="option.title"/>
-                        </template>
-                    </v-select>
-                    <seconds-edit v-model="value[item][0]" :sign="value[item][2] !== 0"
-                        @input="value_input">
-                    </seconds-edit>
-                </td>
+                <timer-entry v-model="value[item]"
+                    :timer_type_select_active="timer_type_select_active_idx == item_idx"
+                    :validation_errors="validation_errors[item]"
+                    @timer-type-select-open="timer_type_select_open(item_idx)" 
+                    @input="timer_type_input(item)"
+                    >
+                </timer-entry>
                 <td :class="{error: item in validation_errors && 1 in validation_errors[item]}">
                     <input type="number" v-model.number="value[item][1]" @input="value_input"/>
                 </td>
@@ -42,33 +36,27 @@
 
 <script>
 
-import SecondsEdit from '../SecondsEdit'
+import TimerEntry from './TimerEntry'
 import {TIMER_TYPES} from '../../definitions'
 import messageBox from '../../message-box'
 
-let timer_type_select_active_idx = -1
 const TIMER_VALUE_LENGTH = 3
 
 export default {
   name: "FeederTimers",
-  props: ["value"],
-  components: {SecondsEdit},
+  props: ["value", "prop_header"],
+  components: {TimerEntry},
   TIMER_TYPES: TIMER_TYPES,
-  timer_type_select_active_idx: -1,
   data () {
     return {
       timers_order: this.order_timers(),
+      timer_type_select_active_idx: -1,
       validation_errors: {},
     }
   },
   methods: {
     timer_type_select_open (idx) {
-      if (timer_type_select_active_idx !== idx) {
-        if (timer_type_select_active_idx !== -1) {
-          this.$refs['timer_type_select_' + timer_type_select_active_idx][0].open = false
-        }
-        timer_type_select_active_idx = idx
-      }
+      this.timer_type_select_active_idx = idx
     },
     value_input () {
       this.$emit('input', this.value)
@@ -118,6 +106,11 @@ export default {
         }).map(item => this.value.indexOf(item))
       }
       return timers_order
+    }
+  },
+  computed: {
+    timers_type () {
+      return this.prop_header && this.prop_header.timers_type ? this.prop_header.timer_type : 'feeder'
     }
   },
   watch: {

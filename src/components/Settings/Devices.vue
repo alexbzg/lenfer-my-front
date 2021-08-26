@@ -86,6 +86,7 @@
                 <component 
                     :is="prop.component"
                     :key="prop_id"
+                    :prop_header="device_prop_header(prop.idx)"
                     v-model="device.props[prop.idx].value"
                     :device_type_id="device.type_id"
                     @validated="device_custom_prop_validated">
@@ -183,6 +184,11 @@ export default {
  
   },
   methods: {
+    device_prop_header (idx) {
+      /* eslint-disable no-unused-vars */
+      const {value, ...header} = this.device.props[idx]
+      return header
+    },
     device_props_validated (validation_data) {
       for (const field in validation_data) {
         this.props_validation[field] = validation_data[field]
