@@ -11,6 +11,7 @@ export const ADDITIONAL_SCHEDULE_PARAMS = [
 
 export const DEVICE_TYPE_FEEDER_ID = 3
 export const DEVICE_TYPE_THERMO_RELAY_ID = 6
+export const DEVICE_TYPE_GATES_ID = 7
 
 export const DEVICE_CUSTOM_PROPS = [
   {
@@ -20,6 +21,11 @@ export const DEVICE_CUSTOM_PROPS = [
   },
   {
     device_type_id: DEVICE_TYPE_THERMO_RELAY_ID,
+    prop_id: 'timers',
+    component: (() => import('../components/Settings/FeederTimers'))
+  },
+  {
+    device_type_id: DEVICE_TYPE_GATES_ID,
     prop_id: 'timers',
     component: (() => import('../components/Settings/FeederTimers'))
   }

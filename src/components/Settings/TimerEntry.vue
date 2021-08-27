@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     timer_type_select_open () {
-      this.$emit('TimerTypeSelectOpen')
+      this.$emit('timer-type-select-open')
     },
     timer_type_input (idx) {
       this.value[idx][0] = 0
@@ -41,7 +41,7 @@ export default {
   },
   watch: {
     timer_type_select_active () {
-      this.$refs['timer_type_select'][0].open = this.timer_type_select_active
+      this.$refs['timer_type_select'].open = this.timer_type_select_active
     }
   }
 }

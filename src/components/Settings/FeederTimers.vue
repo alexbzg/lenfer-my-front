@@ -14,18 +14,20 @@
                   <img src="/images/icon_add.jpg" title="Добавить период"/>
                 </th>
             </tr>
-            <tr v-for="(item, item_idx) in timers_order" class="timer" :key="item_idx">
-                <timer-entry v-model="value[item]"
-                    :timer_type_select_active="timer_type_select_active_idx == item_idx"
-                    :validation_errors="validation_errors[item]"
-                    @timer-type-select-open="timer_type_select_open(item_idx)" 
-                    @input="timer_type_input(item)"
-                    >
-                </timer-entry>
-                <td :class="{error: item in validation_errors && 1 in validation_errors[item]}">
-                    <input type="number" v-model.number="value[item][1]" @input="value_input"/>
-                </td>
-                <td @click="delete_item(item)">
+            <tr v-for="(row, row_idx) in timers" class="timer" :key="row_idx">
+                <template v-for="timer_idx in row">
+                    <timer-entry v-model="value[timer_idx]" :key="'timer' + row_idx + '_' + timer_idx"
+                        :timer_type_select_active="timer_type_select_active_idx == timer_idx"
+                        :validation_errors="validation_errors[timer_idx]"
+                        @timer-type-select-open="timer_type_select_open(timer_idx)" 
+                        >
+                    </timer-entry>
+                    <td :class="{error: timer_idx in validation_errors && 1 in validation_errors[timer_idx]}"
+                        v-if="timers_type === 'feeder'" :key="'duration' + row_idx + '_' + timer_idx">
+                        <input type="number" v-model.number="value[timer_idx][1]"/>
+                    </td>
+                </template>
+                <td @click="delete_item(row_idx)">
                     <img src="/images/icon_close.png" title="Удалить период"/>
                 </td>
             </tr>
@@ -40,7 +42,16 @@ import TimerEntry from './TimerEntry'
 import {TIMER_TYPES} from '../../definitions'
 import messageBox from '../../message-box'
 
-const TIMER_VALUE_LENGTH = 3
+const TIMERS_SETTINGS = {
+  feeder: {
+    columns: 1,
+    new_row: [[0, 0, 0]]
+  },
+  switch: {
+    columns: 2,
+    new_row: [[0, 0, 0], [0, -1, 0]]
+  }
+}
 
 export default {
   name: "FeederTimers",
@@ -49,68 +60,79 @@ export default {
   TIMER_TYPES: TIMER_TYPES,
   data () {
     return {
-      timers_order: this.order_timers(),
+      timers: [],
       timer_type_select_active_idx: -1,
       validation_errors: {},
     }
+  },
+  created () {
+    this.order_timers()
   },
   methods: {
     timer_type_select_open (idx) {
       this.timer_type_select_active_idx = idx
     },
-    value_input () {
-      this.$emit('input', this.value)
-    },
-    timer_type_input (idx) {
-      this.value[idx][0] = 0
-      this.value_input()
-    },
     new_item () {
-      this.value.push(new Array(TIMER_VALUE_LENGTH).fill(0))
-      this.timers_order = this.order_timers()
-      this.value_input()
+      TIMERS_SETTINGS[this.timers_type].new_row.map(item => this.value.push([...item]))
+      this.order_timers()
     },
-    delete_item (idx) {
+    delete_item (row_idx) {
       messageBox('Удаление периода',
         'Вы действительно хотите удалить этот период?',
         true)
         .then(() => {
-            this.value.splice(idx, 1)
-            this.timers_order = this.order_timers()
-            this.value_input()
+            this.timers[row_idx].reverse().map(timer_idx => this.value.splice(timer_idx, 1))
+            this.order_timers()
         })
     },
-    order_timers () {
-      let timers_order = []
-        if (this.value) {
-          timers_order = [...this.value].sort((a, b) => {
-            if (a[2] > b[2]) {
-              return -1
-            }
-            if (a[2] < b[2]) {
-              return 1
-            }
-            if (a[0] < b[0]){
-              return -1
-            }
-            if (a[0] > b[0]){
-              return 1
-            }
-            if (a[1] < b[1]){
-              return -1
-            }
-            if (a[1] > b[1]){
-              return 1
-            }
-            return 0
-        }).map(item => this.value.indexOf(item))
+    timers_sort (a, b) {
+      if (this.value[a[0]][2] > this.value[b[0]][2]) {
+        return -1
       }
-      return timers_order
+      if (this.value[a[0]][2] < this.value[b[0]][2]) {
+        return 1
+      }
+      if (this.value[a[0]][0] < this.value[b[0]][0]){
+        return -1
+      }
+      if (this.value[a[0]][0] > this.value[b[0]][0]){
+        return 1
+      }
+      if (this.value[a[0]][1] < this.value[b[0]][1]){
+        return -1
+      }
+      if (this.value[a[0]][1] > this.value[b[0]][1]){
+        return 1
+      }
+      return 0
+    },
+    order_timers () {
+      this.timers = []
+      const columns = TIMERS_SETTINGS[this.timers_type].columns
+      if (this.value) {
+        const rows = this.value.length / columns
+        for (let row_idx = 0; row_idx < rows; row_idx++) {
+          const row = []
+          for (let col_idx = 0; col_idx < columns; col_idx++) {
+            row.push(row_idx * columns + col_idx)
+          }
+          this.timers.push(row)
+        }
+        this.timers = this.timers.sort(this.timers_sort)
+      }
+    },
+    timer_limits (idx) {
+      return [
+        this.value[idx][0], 
+        this.timers_type === 'feeder' ? this.value[idx][0] + this.value[idx][1] : this.value[idx + 1][0],
+        this.value[idx][2],
+        this.timers_type === 'feeder' ? this.value[idx][2] : this.value[idx + 1][2],
+      ]
     }
   },
   computed: {
     timers_type () {
-      return this.prop_header && this.prop_header.timers_type ? this.prop_header.timer_type : 'feeder'
+      return this.prop_header && this.prop_header.timers_type ? this.prop_header.timers_type : 'feeder'
     }
   },
   watch: {
@@ -120,27 +142,39 @@ export default {
         let r = null
         this.validation_errors = {}
         const timers_count = this.value.length
+        const columns = TIMERS_SETTINGS[this.timers_type].columns
         for (let co = 0; co < timers_count; co++) {
-          if (this.value[co][1] !== parseInt(Number(this.value[co][1]))) {
+          if (this.timers_type === 'feeder' && 
+            this.value[co][1] !== parseInt(Number(this.value[co][1]))) {
             this.value[co][1] = parseInt(Number(this.value[co][1]))
           }
-          if (this.value[co][1] === 0) {
+          if (co % columns) {
+            continue
+          }
+          if ((this.timers_type === 'feeder' && this.value[co][1] === 0) || 
+            (this.timers_type === 'switch' && this.value[co][0] === this.value[co + 1][0])) {
             r = 'Длительность периода должна быть больше 0.'
-            this.validation_errors[co] = {1: 1}
+            if (this.timer_type === 'feeder') {
+              this.validation_errors[co] = {1: 1}
+            } else if (this.timers_type === 'switch') {
+              this.validation_errors[co] = {0: 1}
+              this.validation_errors[co + 1] = {0: 1}
+            }
             break
           }
-          const limits = [this.value[co][0], this.value[co][0] + this.value[co][1],
-            this.value[co][2]]
-          for (let check_co = 0; check_co < co; check_co++) {
-            const check = [
-              this.value[check_co][0],
-              this.value[check_co][0] + this.value[check_co][1],
-              this.value[check_co][2]]
-            if (limits[2] === check[2] && ((limits[0] >= check[0] && limits[0] <= check[1]) ||
+          const limits = this.timer_limits(co)
+          for (let check_co = 0; check_co < co; check_co += columns) {
+            const check = this.timer_limits(check_co)
+            if (limits[2] === check[2] && limits[3] === check[3] && limits[2] === limits[3] && 
+                ((limits[0] >= check[0] && limits[0] <= check[1]) ||
                 (limits[1] >= check[0] && limits[1] <= check[1]))) {
                 r = 'Конфликт периодов.'
                 this.validation_errors[co] = {0: 1, 1: 1}
                 this.validation_errors[check_co] = {0: 1, 1: 1}
+                if (this.timers_type === 'switch') {
+                  this.validation_errors[co + 1] = {0: 1, 1: 1}
+                  this.validation_errors[check_co + 1] = {0: 1, 1: 1}
+                }
                 break
             }
           }

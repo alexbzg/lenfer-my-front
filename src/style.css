@@ -805,9 +805,9 @@ table#timers_setup input.seconds_edit_minutes{
 }
 
 
-table#timers_setup td.error input{
+table#timers_setup td.error input, table#timers td.error .clock_time{
 	background-color: #fde7e8;
-	border-color: #f3424d;
+	border: 1px solid #f3424d;
 }
 
 
