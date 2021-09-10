@@ -132,6 +132,7 @@ export default {
           }
 
           let prev_date = null
+          let prev_value = null
 
           dataPost('sensor/data', {
             sensor_id: sensor.id,
@@ -152,16 +153,25 @@ export default {
                   const x_date = new Date(x.tstamp)
                   if (this.chart_break_interval && prev_date && x_date - prev_date > this.chart_break_interval) {
                     dataset.data.push({
+                      x: new Date(prev_date.getTime() + 30000),
+                      y: prev_value
+                    })
+                    dataset.data.push({
                       x: new Date(x_date.getTime() + this.chart_break_interval / 2),
                       y: NaN
                     })
                   }
                   prev_date = x_date
+                  prev_value = x.value
                   dataset.data.push({
                     x: new Date(x.tstamp),
                     y: x.value
                   })
                 }
+                dataset.data.push({
+                    x: new Date(prev_date.getTime() + 30000),
+                    y: prev_value
+                })
             }                
             
             ready[co] = true
