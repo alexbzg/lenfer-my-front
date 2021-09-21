@@ -149,7 +149,7 @@ export default {
         const now = new Date(this.log.device_timestamp)
         for (const row of r) {
           for (const timer of row) {
-            const start = timer_timestamp(timer.time[3] - 120)
+            const start = timer_timestamp(timer.due - 120)
             if (start > now) {
               break
             }
