@@ -95,7 +95,8 @@ export default {
               const tstamp = new Date(data[device_id].last_tstamp)
               const device = this.devices.find(item => item.id == data[device_id].id)
               if (device) {
-                const timeout = now - tstamp > 600000
+                const timeout_int = 10 + (device.props.deepsleep ? device.props.deepsleep : 0)
+                const timeout = now - tstamp > timeout_int * 60000
                 this.public_id ? set_device_status(device, tstamp, timeout) :
                   this.$store.commit(DEVICE_STATUS_MUTATION, {
                     device: device,

@@ -186,7 +186,7 @@ export default {
                   sensors: sensors,
                   value: this.device.sensors_params[DEVICE_SENSORS_PARAMS[co].id].master.value,
                   tstamp: display_datetime(tstamp),
-                  timeout: now - tstamp > 600000
+                  timeout: now - tstamp > this.chart_break_interval
                 })
               }
             }

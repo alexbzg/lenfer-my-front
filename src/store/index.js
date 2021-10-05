@@ -85,6 +85,15 @@ const store = new Vuex.Store({
     },
     [SET_DEVICES_MUTATION] (state, payload) {
       state.devices = payload
+      for (const device of state.devices) {
+        device.props = {}
+        for (const prop of ['deepsleep']) {
+          const prop_idx = device.props_headers.findIndex(item => item.id === prop)
+          if (prop_idx != -1) {
+            device.props[prop] = device.props_values[prop_idx]
+          }
+        }
+      }
       if (payload.length) {
         router.addRoutes([{path: '/', redirect: '/device/' + payload[0].id}])
       }
