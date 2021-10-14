@@ -135,7 +135,12 @@ import Loading from '../Loading'
 
 //import {debugLog} from '../../utils'
 
-const SHOW_LOG_DEVICE_TYPES = ["Feeder"]
+const SHOW_LOG_DEVICE_TYPES = {
+    "Feeder": {}, 
+    "ThermoRelay": {
+        "modes": ["feeder"]
+    }
+}
 
 const CUSTOM_PROPS = {timers: () => import('./Timers')}
 const CHART_INTERVALS_SETTINGS = [
@@ -192,13 +197,16 @@ export default {
             }
           }
 
-          if (SHOW_LOG_DEVICE_TYPES.includes(this.device.type)) {
-            dataPost('devices_log', {
-              device_id: this.device_id
-            })
-              .then(data => {
-                this.log = data
+          if (this.device.type in SHOW_LOG_DEVICE_TYPES) {
+            const log_modes = SHOW_LOG_DEVICE_TYPES[this.device.type].modes
+            if (!log_modes || !this.device.mode || log_modes.includes(this.device.mode)) {
+              dataPost('devices_log', {
+                device_id: this.device_id
               })
+                .then(data => {
+                  this.log = data
+                })
+            }
           }
 
         })
