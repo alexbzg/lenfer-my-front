@@ -15,7 +15,7 @@ class Device {
     this.#props = params.props_titles ? params.props_titles.map( (prop, idx) => {
       let value = params.props_values[idx]
       let display = value
-      if (prop.title == 'date') {
+      if (prop.type == 'date') {
         value = new Date(value)
         display = display_date(value)
       }

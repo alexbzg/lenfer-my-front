@@ -203,7 +203,7 @@ export default {
           this.device = device
           this.device.enable_schedule = Boolean(this.device_type.schedule_params)
           this.device_cache = JSON.parse(JSON.stringify(device))
-          for (const prop of ['props', 'sensors', 'switches']) {
+          for (const prop of ['props', 'sensors', 'switches', 'mode']) {
             this.device_cache[prop] = JSON.parse(JSON.stringify(device[prop]))
           }
           this.props_validation = {}
@@ -225,6 +225,7 @@ export default {
       this.$router.push('/device/' + this.device.id)
     },
     post_device () {
+      
       for (const field in this.props_validation) {
         if (this.props_validation[field]) {
           messageBox('Изменение настроек', `Настройки некорректны: ${this.props_validation[field]}`)
@@ -239,7 +240,7 @@ export default {
       if (!device_update) {
         const device_props_length = this.device.props.length
         for (let co = 0; co < device_props_length; co++) {
-          if (this.device.props[co].value !== this.device_cache.props[co].values) {
+          if (this.device.props[co].value !== this.device_cache.props[co].value) {
             device_update = true
             break
           }
