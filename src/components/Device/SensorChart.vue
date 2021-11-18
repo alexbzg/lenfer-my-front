@@ -44,7 +44,8 @@ const DATASET_TMPLT = {
   borderWidth: 3,
   pointRadius: 0,
   pointHitRadius: 0.4,
-  spanGaps: false
+  spanGaps: false,
+  fill: 'start'
 }
 
 export default {
