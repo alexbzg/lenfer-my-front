@@ -66,8 +66,9 @@
         </div>
 
         <div class="right" v-if="sensors_charts.length">
-          <div id="charts_button" class="btn" @click="toggle_chart_interval">
-              {{$options.CHART_INTERVALS_SETTINGS[chart_interval_idx_next].title}}
+          <div class="btn charts_button" @click="chart_interval = entry.interval" v-for="entry in $options.CHART_INTERVALS_SETTINGS"
+              :class="{active: chart_interval === entry.interval}" :key="entry.interval">
+              {{entry.title}}
           </div>
         </div>
 
@@ -145,7 +146,8 @@ const SHOW_LOG_DEVICE_TYPES = {
 const CUSTOM_PROPS = {timers: () => import('./Timers')}
 const CHART_INTERVALS_SETTINGS = [
   {title: '4 часа', interval: '4 hours'},
-  {title: '24 часа', interval: '24 hours'}
+  {title: '24 часа', interval: '24 hours'},
+  {title: '7 дней', interval: '7 days'}
 ]
 
 export default {
@@ -157,7 +159,7 @@ export default {
     return {
       device: {},
       log: null,
-      chart_interval_idx: 0,
+      chart_interval: CHART_INTERVALS_SETTINGS[0].interval,
       sensors_charts: [],
       load_in_progress: false
     }
@@ -166,9 +168,6 @@ export default {
     this.load_device()
   },
   methods: {
-    toggle_chart_interval () {
-      this.chart_interval_idx = this.chart_interval_idx_next
-    },
     load_device () {
       this.device = {}
       this.log = null
@@ -218,6 +217,7 @@ export default {
   },
   computed: {
     ...mapState(['devices']),
+
     userLogin () {
       return this.$store.getters.userLogin
     },
@@ -225,10 +225,6 @@ export default {
     switches_enabled () {
       return this.device.switches ? this.device.switches.filter(entry => entry.enabled &&
         (!this.device.mode || !entry.modes || entry.modes.includes(this.device.mode))) : []
-    },
-
-    chart_interval () {
-      return CHART_INTERVALS_SETTINGS[this.chart_interval_idx].interval
     },
 
     chart_break_interval () {
@@ -244,14 +240,6 @@ export default {
       }
       else {
         return null
-      }
-    },
-
-    chart_interval_idx_next () {
-      if (this.chart_interval_idx === CHART_INTERVALS_SETTINGS.length - 1) {
-        return 0
-      } else {
-        return this.chart_interval_idx + 1
       }
     },
 

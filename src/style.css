@@ -343,17 +343,22 @@ table.controller_table td#schedule_start{
 
 
 
-#charts_button{
+.charts_button{
 	display: inline-block;
-	margin-right: 30px;
+	margin-right: 10px;
 	font-size: 12px;
 	line-height: 12px;
 	background-color: #eee;
 	border-radius: 5px;
 	border: 1px solid #ddd;
-	padding: 5px 20px;
 	cursor: pointer;
-	color: #333;
+	color: #777;
+}
+
+.charts_button.active{
+	font-weight: bold;
+	color: #000;
+	border: 1px solid #aaa;
 }
 
 .lk_sensor_graf {
