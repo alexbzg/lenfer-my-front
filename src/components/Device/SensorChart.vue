@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import {ru} from 'date-fns/locale'
 
 import {dataPost} from '../../api'
 import LineChart from '../LineChart'
@@ -78,13 +79,19 @@ export default {
         scales: {
           xAxes: [{
             type: 'time',
+            adapters: {
+              date: {
+                locale: ru
+              }
+            },
             time: {
               unit: 'hour',
               stepSize: 1,           
-              tooltipFormat: 'HH:mm',
+              tooltipFormat: 'dd MMMM HH:mm',
               displayFormats: {
                 hour: 'HH:mm',
-				minute: 'HH:mm'
+				minute: 'HH:mm',
+                day:'dd MMMM'
               }
             }
           }],
@@ -134,6 +141,8 @@ export default {
 
           let prev_date = null
           let prev_value = null
+
+          this.chart_options.scales.xAxes[0].time.unit = this.interval.includes('days') ? 'day' : 'hour'
 
           dataPost('sensor/data', {
             sensor_id: sensor.id,
