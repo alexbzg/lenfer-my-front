@@ -42,7 +42,7 @@ export function seconds_to_timestring (val) {
   return `${val < 0 ? '-' : ''}${string_pad(hr)}:${string_pad(mn)}`
 }
 
-export function seconds_to_timetuple (val) {
+export function seconds_to_timetuple (val, seconds) {
   let value = val || 0
   let sign = 1
   if (value < 0) {
@@ -51,7 +51,11 @@ export function seconds_to_timetuple (val) {
   }
   const hr = Math.floor(value/3600)
   const mn = Math.floor((value - hr*3600)/60)
-  return [sign * hr, sign * mn]
+  const r = [sign * hr, sign * mn]
+  if (seconds) {
+    r.push(value - hr*3600 - mn*60)
+  }
+  return r
 }
 
 

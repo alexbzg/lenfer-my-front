@@ -13,7 +13,7 @@
                 <img :src="'/images/' + option.icon" :title="option.title"/>
             </template>
         </v-select>
-        <seconds-edit v-model="value[0]" :sign="value[2] !== 0">
+        <seconds-edit v-model="value[0]" :sign="value[2] !== 0" :enable_seconds="value[1] === -1">
         </seconds-edit>
     </td>
 </template>

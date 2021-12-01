@@ -391,14 +391,20 @@ table#timers th{
 }
 table#timers td{
 	border-top: 1px solid #ddd;
-	padding: 7px 50px;
+	padding: 7px 10px;
 	vertical-align: middle;
+}
+table#timers td.start{
+	padding-left: 30px;
+}
+table#timers td.report img{
+	margin-right: 30px;
 }
 table#timers td img{
 	vertical-align: middle;
 }
 table#timers td span.set_time{
-	width: 50px;
+/*	width: 50px; */
 	font-size: 12px;
 	color: #777;
 	display: inline-block;
@@ -749,7 +755,7 @@ table#timers_setup th.add_timer img{
 }
 table#timers_setup td{
 	border: none;
-	padding: 7px 20px;
+	padding: 7px 20px 3px 20px;
 	vertical-align: middle;
 	font-size: 18px;
 }
