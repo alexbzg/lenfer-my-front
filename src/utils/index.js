@@ -32,14 +32,19 @@ export function debugLog (msg) {
   }
 }
 
-export function seconds_to_timestring (val) {
+export function seconds_to_timestring (val, seconds) {
   let value = val || 0
   if (value < 0) {
     value = -value
   }
   const hr = Math.floor(value/3600)
   const mn = Math.floor((value - hr*3600)/60)
-  return `${val < 0 ? '-' : ''}${string_pad(hr)}:${string_pad(mn)}`
+  const sc = seconds ? value - hr*3600 - mn*60 : 0
+  let r = `${val < 0 ? '-' : ''}${string_pad(hr)}:${string_pad(mn)}`
+  if (sc) {
+    r += `:${string_pad(sc)}`
+  }
+  return r
 }
 
 export function seconds_to_timetuple (val, seconds) {

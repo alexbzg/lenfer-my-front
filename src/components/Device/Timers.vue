@@ -19,15 +19,15 @@
                     <img :src="'/images/' + item.icon.icon"/>
                     <span class="set_time">
                         <template v-if="item.time[2]">
-                            {{(item.time[0] >= 0 ? '+' : '') + seconds_to_timestring(item.time[0])}}
+                            {{(item.time[0] >= 0 ? '+' : '') + seconds_to_timestring(item.time[0], item.time[1] == -1)}}
                         </template>
                     </span>
                     <span class="clock_time">
                         <template v-if="item.time[2]">
-                            {{seconds_to_timestring(item.due)}}
+                            {{seconds_to_timestring(item.due, item.time[1] === -1)}}
                         </template>
                         <template v-else>
-                            {{seconds_to_timestring(item.time[0])}}
+                            {{seconds_to_timestring(item.time[0], item.time[1] === -1)}}
                         </template>
                     </span>
                     <span class="tooltip" v-if="item.time[2]">
@@ -84,8 +84,8 @@ export default {
     }, 
     tooltip_text (timer) {
       return `${timer.icon.title} ${seconds_to_timestring(this.get_suntime(timer.time[2]))} ` +
-        `${timer.time[0] >= 0 ? '+' : ''}${seconds_to_timestring(timer.time[0])} \u2014 ` + 
-        `начало в ${seconds_to_timestring(timer.due)}`
+        `${timer.time[0] >= 0 ? '+' : ''}${seconds_to_timestring(timer.time[0])} \u21d2 ` + 
+        `${seconds_to_timestring(timer.due)}`
     }
   },
   computed: {
@@ -161,26 +161,40 @@ export default {
             for (; log_idx >= 0 && log_timestamp(this.log.log[log_idx]) <= stop; log_idx--) {
               const line = this.log.log[log_idx].txt
               if (line === 'Feeder start timer') {
-                evt_start = true
+                if (this.timers_type === 'switch') {
+                  if (timer.time[1] === 0) {
+                    evt_success = true
+                    break
+                  }
+                } else {
+                  evt_start = true
+                }
               } else if (line.includes(' reverse ')){
                 evt_reverse = true
               } else if (line === 'Feeder task success'){
                 evt_success = true
               } else if (line === 'Feeder stop timer') {
-                evt_stop = true
-                break
+                if (this.timers_type === 'switch') {
+                  if (timer.time[1] === -1) {
+                    evt_success = true
+                    break
+                  }
+                } else {
+                  evt_stop = true
+                  break
+                }
               }
             }
-            if (evt_start && evt_stop && !evt_reverse) {            
-              if (this.timers_type === 'feeder' || evt_success) {
+            if (this.timers_type === 'switch') {
+              timer.status = evt_success ? 'done' : 'undone'
+            } else if (this.timers_type === 'feeder') {
+              if (evt_start && evt_stop && !evt_reverse) {            
                 timer.status = 'done'
+              } else if (!evt_start && !evt_stop) {
+                timer.status = 'undone'
               } else {
                 timer.status = 'alert'
               }
-            } else if (!evt_start && !evt_stop) {
-              timer.status = 'undone'
-            } else {
-              timer.status = 'alert'
             }
           }
         }

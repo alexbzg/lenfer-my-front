@@ -417,10 +417,10 @@ table#timers tr.timer span.tooltip{
 }
 table#timers tr.timer:hover span.tooltip{
 	display: block;
-	font-size: 14px;
+	font-size: 12px;
 	color: #000;
 	background-color: #ffffdd;
-	padding: 5px 20px;
+	padding: 5px 10px;
 	position: absolute;
 	border :1px solid #ccc;
 	box-shadow: 4px 4px 8px rgba(0,0,0, 0.5);
@@ -807,12 +807,9 @@ table#timers_setup div.time_input select{
 	padding: 0px 5px;
 }
 
-table#timers_setup input.seconds_edit_hours{
-	text-align: right;
-}
-
-table#timers_setup input.seconds_edit_minutes{
-	text-align: left;
+table#timers_setup input.seconds_edit_seconds{
+	text-align: center;
+	color: #999;
 }
 
 
