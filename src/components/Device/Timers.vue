@@ -195,7 +195,16 @@ export default {
               } else {
                 timer.status = 'alert'
               }
+            } else if (this.timers_type === 'gate') {
+              if (evt_success && !evt_reverse) {            
+                timer.status = 'done'
+              } else if (!evt_start && !evt_stop) {
+                timer.status = 'undone'
+              } else {
+                timer.status = 'alert'
+              }
             }
+
           }
         }
       }

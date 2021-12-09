@@ -10,6 +10,10 @@
                     <th>Включить</th>
                     <th>Выключить</th>
                 </template>
+                <template v-if="timers_type === 'gate'">
+                    <th>Открыть</th>
+                    <th>Закрыть</th>
+                </template>
                 <th class="add_timer" @click="new_item()">
                   <img src="/images/icon_add.jpg" title="Добавить период"/>
                 </th>
