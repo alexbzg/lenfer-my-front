@@ -91,16 +91,10 @@
             v-if="device_props.custom.length || device_props.standart.length">
             <component v-for="(prop, idx) in device_props.custom" :is="prop.component"
                 :prop="prop" :key="idx" :log="log"></component>
-            <!--table id="props" v-if="device_props.standart.length">
-                <tr v-for="(prop, idx) in device_props.standart" :key="idx">
-                    <td class="prop_title">{{prop.title}}</td>
-                    <td class="prop_value">{{prop.value}}</td>
-                </tr>
-            </table-->
         </div>
 
         <div class="border" v-if="log && log.log && log.log.length">
-            <log-summary :log="log"></log-summary>
+            <log-summary :log="log" :device_props="device.props"></log-summary>
         </div>
 <!--
         <table id="log" v-if="log && log.length">
@@ -140,10 +134,19 @@ const SHOW_LOG_DEVICE_TYPES = {
     "Feeder": {}, 
     "ThermoRelay": {
         "modes": ["feeder"]
-    }
+    },
+    "Gate": {}
 }
 
-const CUSTOM_PROPS = {timers: () => import('./Timers')}
+const CUSTOM_PROPS = {
+  timers: {
+    component: () => import('./Timers')
+  },
+  light: {
+    device_type: 'Gate',
+    component: () => import('./Timers')
+  }
+}
 const CHART_INTERVALS_SETTINGS = [
   {title: '4 часа', interval: '4 hours'},
   {title: '24 часа', interval: '24 hours'},
@@ -259,10 +262,11 @@ export default {
       let r = {'custom': [], 'standart': []}
       if (this.device_type) {
         this.device.props.forEach(prop => {
-          if (prop.id in CUSTOM_PROPS) {
+          if (prop.id in CUSTOM_PROPS && 
+            (!CUSTOM_PROPS[prop.id].device_type || CUSTOM_PROPS[prop.id].device_type === this.device_type.title)) {
             r.custom.push({
               ...prop,
-              component: CUSTOM_PROPS[prop.id]
+              component: CUSTOM_PROPS[prop.id].component
             })
           } else {
             r.standart.push(prop)

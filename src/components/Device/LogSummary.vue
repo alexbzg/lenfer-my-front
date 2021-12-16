@@ -14,6 +14,9 @@
                 {{entry.device_time.h}}:{{entry.device_time.m}}<span>:{{entry.device_time.s}}</span>
             </td>
             <td class="status">
+                <span class="entry_prop" v-if="props[entry.prop] && props[entry.prop].title">
+                    {{props[entry.prop].title}}
+                </span>
                 <span :class="entry.class">{{entry.status}}</span>
                 <span v-if="entry.comments">{{entry.comments}}</span>
             </td>
@@ -45,31 +48,49 @@ function init_aggregates() {
   return {current: {count: 0, sum: 0, max: 0, last: 0, min: 0}}
 }
 
+const SUCCESS_TYPES = {
+  'open': 'Открыто',
+  'close': 'Закрыто'
+}
+
 export default {
   name: "LogSummary",
-  props: ["log"],
+  props: ["log", "device_props"],
   computed: {
+    props () {
+      const r = {}
+      for (const prop of this.device_props) {
+        r[prop.id] = prop
+      }
+      return r
+    },
     entries () {
       const r = []
       if (this.log) {
         const log_length = this.log.log.length
-        let aggregates = init_aggregates()
+        let aggregates = []
         for (let co = log_length - 1; co > -1; co--) {
+          let prop = null
           const line = this.log.log[co].txt
-          if (line.includes('current:')) {
+          const line_start = line.split(' ')[0]
+          if (line_start in this.props) {
+            prop = line_start
+          }
+          if (line.includes('current:') && prop in aggregates) {
             const current = parseFloat(line.split('current: ')[1])
-            aggregates.current.count++
-            aggregates.current.sum += current
-            aggregates.current.last = current
-            if (aggregates.current.max < current) {
-              aggregates.current.max = current
+            aggregates[prop].current.count++
+            aggregates[prop].current.sum += current
+            aggregates[prop].current.last = current
+            if (aggregates[prop].current.max < current) {
+              aggregates[prop].current.max = current
             }
-            if (aggregates.current.min > current || aggregates.current.min === 0) {
-              aggregates.current.min = current
+            if (aggregates[prop].current.min > current || aggregates[prop].current.min === 0) {
+              aggregates[prop].current.min = current
             }
 
           } else {
             const entry = create_entry(this.log.log[co])
+            entry.prop = prop
             if (line == 'device start' || line == 'disconnected') {
               entry.class = 'connection'
               entry.status = line == 'disconnected' ? 'Нет связи с сервером' : 'Подключено к серверу'
@@ -77,43 +98,53 @@ export default {
               entry.class = 'reverse'
               const reverse_on = line.includes(' on')
               entry.status = `${reverse_on ? 'Включен' : 'Выключен'} реверс`
-              if (reverse_on && aggregates.current.last) {
-                entry.comments = `(~${aggregates.current.last}мА)`
+              if (reverse_on && aggregates[prop] && aggregates[prop].current.last) {
+                entry.comments = `(~${aggregates[prop].current.last}мА)`
               }
-            } else if (line.includes('Feeder start')) {
+            } else if (line.includes(`${prop} start`)) {
               entry.class = 'on'
               entry.status = 'Включено'
-              entry.status += line.includes('timer') ? ' по таймеру' : ' вручную'
+              entry.status += line.includes(' timer') ? ' по таймеру' : ' вручную'
               entry.comments = ''
-              aggregates = init_aggregates()
-            } else if (line.includes('Feeder stop')) {
+              aggregates[prop] = init_aggregates()
+            } else if (line.includes('success')) {
+              entry.class = 'success'
+              for (const success_type in SUCCESS_TYPES) {
+                if (line.includes(success_type)) {
+                  entry.status = SUCCESS_TYPES[success_type]
+                }
+              }
+              if (!entry.status) {
+                entry.status = 'Выполнено'
+              }
+            } else if (line.includes(`${prop} stop`)) {
               entry.class = 'off'
               entry.status = 'Выключено'
               entry.status += line.includes('timer') ? ' по таймеру' : ' вручную'
               entry.comments = ''
               let current_avg = 0
-              if (aggregates.current.count) {
-                current_avg = Math.round(aggregates.current.sum/aggregates.current.count)
+              if (aggregates[prop] && aggregates[prop].current.count) {
+                current_avg = Math.round(aggregates[prop].current.sum/aggregates.current.count)
               }
-              if (current_avg || aggregates.current.max) {
+              if (current_avg || (aggregates[prop] && aggregates[prop].current.max)) {
                 entry.comments += ' ('
                 if (current_avg) {
-                  entry.comments += `~${aggregates.current.last} мА`
-                  if (aggregates.current.max || aggregates.current.min) {
+                  entry.comments += `~${aggregates[prop].current.last} мА`
+                  if (aggregates[prop] && (aggregates[prop].current.max || aggregates[prop].current.min)) {
                     entry.comments += `, `
                   }
                 }
-                if (aggregates.current.min)
+                if (aggregates[prop] && aggregates[prop].current.min)
                 {
-                  entry.comments += `мин.${Math.round(aggregates.current.min)}, `
+                  entry.comments += `мин.${Math.round(aggregates[prop].current.min)}, `
                 }
-                if (aggregates.current.max)
+                if (aggregates[prop] && aggregates[prop].current.max)
                 {
-                  entry.comments += `макс.${Math.round(aggregates.current.max)}`
+                  entry.comments += `макс.${Math.round(aggregates[prop].current.max)}`
                 }
                 entry.comments += ')'
               }
-              aggregates = init_aggregates()
+              aggregates[prop] = init_aggregates()
             }
             r.unshift(entry)
           }

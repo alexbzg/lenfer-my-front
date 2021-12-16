@@ -1,5 +1,8 @@
 <template>
     <table id="timers">
+        <tr v-if="prop.title">
+            <th :colspan="prop.timers_type === 'feeder' ? 3 : 4">{{prop.title}}</th>
+        </tr>
         <tr>
             <template v-if="prop.timers_type === 'feeder'">
                 <th>Начало</th>
@@ -7,10 +10,10 @@
                 <th class="report"></th>
             </template>
             <template v-if="prop.timers_type === 'switch'">
-                <th>Включить</th>
-                <th class="report"></th>
-                <th>Выключить</th>
-                <th class="report"></th>
+                <template v-for="(def_title, idx) in ['Включить', 'Выключить']">
+                    <th :key="idx + '_title'">{{prop.title_on_off ? prop.title_on_off[idx] : def_title}}</th>
+                    <th class="report" :key="idx + '_report'"></th>
+                </template>
             </template>
         </tr>
         <tr v-for="(row, row_idx) in timers" class="timer" :key="row_idx">
@@ -113,26 +116,26 @@ export default {
         const columns = TIMERS_COLUMNS[this.timers_type]
         const rows = this.prop.value.length / columns
         for (let row_idx = 0; row_idx < rows; row_idx++) {
-          const row = []
+          const new_row = []
           for (let col_idx = 0; col_idx < columns; col_idx++) {
-            const timer = this.prop.value[row_idx * columns + col_idx]
+            const timer_entry = this.prop.value[row_idx * columns + col_idx]
             let due_time = null
-            if (timer[2]) {
+            if (timer_entry[2]) {
               if (this.suntimes) {
-                due_time = this.get_suntime(timer[2]) + timer[0]
+                due_time = this.get_suntime(timer_entry[2]) + timer_entry[0]
               }
             } else {
-              due_time = timer[0]
+              due_time = timer_entry[0]
             }
-            const time = [...timer]
-            row.push({
+            const time = [...timer_entry]
+            new_row.push({
               time: time,
               due: due_time,
               status: null,
-              icon: timer_type_icon(timer[2])
+              icon: timer_type_icon(timer_entry[2])
             })
           }
-          r.push(row)
+          r.push(new_row)
         }
         r.sort((a, b) => {
           if (a[0].due < b[0].due){
@@ -160,9 +163,9 @@ export default {
             }
             for (; log_idx >= 0 && log_timestamp(this.log.log[log_idx]) <= stop; log_idx--) {
               const line = this.log.log[log_idx].txt
-              if (line === 'Feeder start timer') {
+              if (line === `${this.prop.id} start timer`) {
                 if (this.timers_type === 'switch') {
-                  if (timer.time[1] === 0) {
+                  if (timer.time[1] === 0 && !this.prop.require_success) {
                     evt_success = true
                     break
                   }
@@ -171,11 +174,12 @@ export default {
                 }
               } else if (line.includes(' reverse ')){
                 evt_reverse = true
-              } else if (line === 'Feeder task success'){
+              } else if (line.includes(`${this.prop.id} success`)) {
                 evt_success = true
-              } else if (line === 'Feeder stop timer') {
+                break
+              } else if (line === `${this.prop.id} stop timer`) {
                 if (this.timers_type === 'switch') {
-                  if (timer.time[1] === -1) {
+                  if (timer.time[1] === -1 && !this.prop.require_success) {
                     evt_success = true
                     break
                   }
@@ -186,17 +190,9 @@ export default {
               }
             }
             if (this.timers_type === 'switch') {
-              timer.status = evt_success ? 'done' : 'undone'
+              timer.status = evt_success && !evt_reverse ? 'done' : 'undone'
             } else if (this.timers_type === 'feeder') {
               if (evt_start && evt_stop && !evt_reverse) {            
-                timer.status = 'done'
-              } else if (!evt_start && !evt_stop) {
-                timer.status = 'undone'
-              } else {
-                timer.status = 'alert'
-              }
-            } else if (this.timers_type === 'gate') {
-              if (evt_success && !evt_reverse) {            
                 timer.status = 'done'
               } else if (!evt_start && !evt_stop) {
                 timer.status = 'undone'
