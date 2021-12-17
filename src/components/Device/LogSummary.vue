@@ -101,12 +101,43 @@ export default {
               if (reverse_on && aggregates[prop] && aggregates[prop].current.last) {
                 entry.comments = `(~${aggregates[prop].current.last}мА)`
               }
-            } else if (line.includes(`${prop} start`)) {
-              entry.class = 'on'
-              entry.status = 'Включено'
+            } else if (line.includes(`${prop} start`) || line.includes(`${prop} stop`)) {
+              const start = line.includes('start')
+              entry.class = start ? 'on' : 'off'
+              if (line.includes('open') || line.includes('close')) {
+                entry.status = line.includes('open') ? 'Открытие: ' : 'Закрытие: '
+              }
+              if (entry.status) {
+                entry.status += start ? 'вкл.' : 'выкл.'
+              } else {
+                entry.status = start ? 'Вкл.' : 'Выкл.'
+              }
               entry.status += line.includes(' timer') ? ' по таймеру' : ' вручную'
               entry.comments = ''
+              if (!start) {
+                let current_avg = 0
+                if (aggregates[prop] && aggregates[prop].current.count) {
+                 current_avg = Math.round(aggregates[prop].current.sum/aggregates.current.count)
+                }
+                if (current_avg || (aggregates[prop] && aggregates[prop].current.max)) {
+                  entry.comments += ' ('
+                  if (current_avg) {
+                    entry.comments += `~${aggregates[prop].current.last} мА`
+                    if (aggregates[prop] && (aggregates[prop].current.max || aggregates[prop].current.min)) {
+                      entry.comments += `, `
+                    }
+                  }
+                  if (aggregates[prop] && aggregates[prop].current.min) {
+                    entry.comments += `мин.${Math.round(aggregates[prop].current.min)}, `
+                  }
+                  if (aggregates[prop] && aggregates[prop].current.max) {
+                    entry.comments += `макс.${Math.round(aggregates[prop].current.max)}`
+                  }
+                  entry.comments += ')'
+                }
+              }
               aggregates[prop] = init_aggregates()
+                 
             } else if (line.includes('success')) {
               entry.class = 'success'
               for (const success_type in SUCCESS_TYPES) {
@@ -117,35 +148,7 @@ export default {
               if (!entry.status) {
                 entry.status = 'Выполнено'
               }
-            } else if (line.includes(`${prop} stop`)) {
-              entry.class = 'off'
-              entry.status = 'Выключено'
-              entry.status += line.includes('timer') ? ' по таймеру' : ' вручную'
-              entry.comments = ''
-              let current_avg = 0
-              if (aggregates[prop] && aggregates[prop].current.count) {
-                current_avg = Math.round(aggregates[prop].current.sum/aggregates.current.count)
-              }
-              if (current_avg || (aggregates[prop] && aggregates[prop].current.max)) {
-                entry.comments += ' ('
-                if (current_avg) {
-                  entry.comments += `~${aggregates[prop].current.last} мА`
-                  if (aggregates[prop] && (aggregates[prop].current.max || aggregates[prop].current.min)) {
-                    entry.comments += `, `
-                  }
-                }
-                if (aggregates[prop] && aggregates[prop].current.min)
-                {
-                  entry.comments += `мин.${Math.round(aggregates[prop].current.min)}, `
-                }
-                if (aggregates[prop] && aggregates[prop].current.max)
-                {
-                  entry.comments += `макс.${Math.round(aggregates[prop].current.max)}`
-                }
-                entry.comments += ')'
-              }
-              aggregates[prop] = init_aggregates()
-            }
+            } 
             r.unshift(entry)
           }
         }
