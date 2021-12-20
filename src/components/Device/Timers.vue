@@ -96,6 +96,13 @@ export default {
     timers_type () {
       return this.prop && this.prop.timers_type ? this.prop.timers_type : 'feeder'
     },
+    prop_id () {
+      if (this.prop) {
+        return this.prop.log_id || this.prop.id
+      } else {
+        return null
+      }
+    },
     suntimes () {
       let r = null
       if (this.location && this.timezone) {
@@ -163,7 +170,7 @@ export default {
             }
             for (; log_idx >= 0 && log_timestamp(this.log.log[log_idx]) <= stop; log_idx--) {
               const line = this.log.log[log_idx].txt
-              if (line === `${this.prop.id} start timer`) {
+              if (line === `${this.prop_id} start timer`) {
                 if (this.timers_type === 'switch') {
                   if (timer.time[1] === 0 && !this.prop.require_success) {
                     evt_success = true
@@ -174,10 +181,10 @@ export default {
                 }
               } else if (line.includes(' reverse ')){
                 evt_reverse = true
-              } else if (line.includes(`${this.prop.id} success`)) {
+              } else if (line.includes(`${this.prop_id} success`)) {
                 evt_success = true
                 break
-              } else if (line === `${this.prop.id} stop timer`) {
+              } else if (line === `${this.prop_id} stop timer`) {
                 if (this.timers_type === 'switch') {
                   if (timer.time[1] === -1 && !this.prop.require_success) {
                     evt_success = true

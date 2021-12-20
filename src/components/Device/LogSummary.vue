@@ -60,7 +60,8 @@ export default {
     props () {
       const r = {}
       for (const prop of this.device_props) {
-        r[prop.id] = prop
+        const prop_id = prop.log_id || prop.id
+        r[prop_id] = prop
       }
       return r
     },
@@ -117,7 +118,7 @@ export default {
               if (!start) {
                 let current_avg = 0
                 if (aggregates[prop] && aggregates[prop].current.count) {
-                 current_avg = Math.round(aggregates[prop].current.sum/aggregates.current.count)
+                 current_avg = Math.round(aggregates[prop].current.sum/aggregates[prop].current.count)
                 }
                 if (current_avg || (aggregates[prop] && aggregates[prop].current.max)) {
                   entry.comments += ' ('
