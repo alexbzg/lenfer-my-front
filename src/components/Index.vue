@@ -79,7 +79,9 @@ export default {
             const def_path = `/${this.public_id}/device/${this.public_devices[0].id}`
             this.$router.addRoutes([{path: '/:public_id',
                 redirect: def_path} ])
-            this.$router.push(def_path)
+            if (!this.$router.currentRoute.params.device_id) {
+              this.$router.push(def_path)
+            }
           }
         })
     },
