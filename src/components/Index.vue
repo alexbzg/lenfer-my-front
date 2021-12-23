@@ -45,6 +45,7 @@ import {LOAD_DEVICES_ACTION, LOAD_PUBLIC_USER_DATA_ACTION, SET_USER_MUTATION,
   DEVICE_STATUS_MUTATION, set_device_status, userDataPost} from '../store'
 import messageBox from '../message-box'
 import {get} from '../api'
+import {debugLog} from '../utils'
 
 import Modal from './Modal'
 
@@ -67,6 +68,11 @@ export default {
     } else if (this.public_id) {
       this.load_public_devices()
       this.$store.dispatch(LOAD_PUBLIC_USER_DATA_ACTION, this.public_id)
+    } else {
+      debugLog(this.$router.currentRoute)
+      if (this.$router.currentRoute.fullPath == '/') {
+        this.def_device()
+      }
     }
     setInterval(this.update_devices_status, 10 * 1000)
   },
@@ -109,6 +115,12 @@ export default {
               }
             }
         })
+    },
+    def_device () {
+      debugLog(this.devices)
+      if (this.devices.length) {
+        this.$router.push('/device/' + this.devices[0].id)
+      }
     },
     login () {
       this.$router.push('/login')
@@ -167,7 +179,15 @@ export default {
       } else {
         this.public_devices = []
       }
+    },
+    devices (new_val, old_val) {
+      if (!this.public_id && !old_val.length && new_val.length) {
+        if (this.$router.currentRoute.fullPath == '/') {
+          this.def_device()
+        }
+      }
     }
+
   }
 }
 </script>
