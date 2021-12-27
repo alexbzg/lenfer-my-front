@@ -148,10 +148,12 @@ const CUSTOM_PROPS = {
   }
 }
 const CHART_INTERVALS_SETTINGS = [
+  {title: '1 час', interval: '1 hour'},
   {title: '4 часа', interval: '4 hours'},
   {title: '24 часа', interval: '24 hours'},
   {title: '7 дней', interval: '7 days'}
 ]
+const DEF_CHART_INTERVAL_IDX = 1
 
 export default {
   name: 'DeviceIndex',
@@ -162,7 +164,7 @@ export default {
     return {
       device: {},
       log: null,
-      chart_interval: CHART_INTERVALS_SETTINGS[0].interval,
+      chart_interval: CHART_INTERVALS_SETTINGS[DEF_CHART_INTERVAL_IDX].interval,
       sensors_charts: [],
       load_in_progress: false
     }
