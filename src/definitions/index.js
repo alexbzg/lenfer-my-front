@@ -1,7 +1,9 @@
 export const DEVICE_SENSORS_PARAMS = [
   {id: 'temperature', title: 'Teмпература', unit:'\xB0'},
   {id: 'humidity', title: 'Влажность', 'unit': '%'},
-  {id: 'co2', title: 'CO2', 'unit': 'ppm'}
+  {id: 'co2', title: 'CO2', 'unit': 'ppm'},
+  {id: 'voltage', title: 'Напряжение', unit: 'V'},
+  {id: 'current', title: 'Сила тока', unit: 'A'}
 ]
 
 export const ADDITIONAL_SCHEDULE_PARAMS = [
