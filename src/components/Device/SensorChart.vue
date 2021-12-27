@@ -38,7 +38,25 @@ const SENSOR_TYPE_SETTINGS = {
        },
        borderColor: 'rgba(99, 255, 132, 1)'
     }]
+  },
+  voltage: {
+    dataset: [{
+       gradients: {
+         backgroundColor: ['rgba(153, 173, 234, 0.6)', 'rgba(153, 173, 234, 0.1)'],
+       },
+       borderColor: 'rgba(0, 51, 204, 1)'
+    }]
+  },
+  current: {
+    dataset: [{
+       gradients: {
+         backgroundColor: ['rgba(253, 175, 136, 0.6)', 'rgba(253, 175, 136, 0.1)'],
+       },
+       borderColor: 'rgba(251, 96, 18, 1)'
+    }]
   }
+
+
 }
 
 const DATASET_TMPLT = {
