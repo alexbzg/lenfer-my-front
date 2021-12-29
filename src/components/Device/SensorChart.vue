@@ -10,6 +10,27 @@ import {ru} from 'date-fns/locale'
 import {dataPost} from '../../api'
 import LineChart from '../LineChart'
 
+const POWER_SENSOR_SETTINGS = {
+    dataset: [{
+       gradients: {
+         backgroundColor: ['rgba(189,154,221, 0.6)', 'rgba(189,154,221, 0.1)'],
+       },
+       borderColor: 'rgba(107,28,178, 1)'
+    },
+    {
+       gradients: {
+         backgroundColor: ['rgba(131,129,212, 0.6)', 'rgba(7131,129,212, 0.1)'],
+       },
+       borderColor: 'rgba(7,3,170, 1)'
+    },
+    {
+       gradients: {
+         backgroundColor: ['rgba(128,177,178, 0.6)', 'rgba(128,177,178, 0.1)'],
+       },
+       borderColor: 'rgba(1,100,102, 1)'
+    }]
+}
+
 const SENSOR_TYPE_SETTINGS = {
   temperature: {
     dataset: [{
@@ -39,24 +60,8 @@ const SENSOR_TYPE_SETTINGS = {
        borderColor: 'rgba(99, 255, 132, 1)'
     }]
   },
-  voltage: {
-    dataset: [{
-       gradients: {
-         backgroundColor: ['rgba(153, 173, 234, 0.6)', 'rgba(153, 173, 234, 0.1)'],
-       },
-       borderColor: 'rgba(0, 51, 204, 1)'
-    }]
-  },
-  current: {
-    dataset: [{
-       gradients: {
-         backgroundColor: ['rgba(253, 175, 136, 0.6)', 'rgba(253, 175, 136, 0.1)'],
-       },
-       borderColor: 'rgba(251, 96, 18, 1)'
-    }]
-  }
-
-
+  voltage: POWER_SENSOR_SETTINGS,
+  current: POWER_SENSOR_SETTINGS
 }
 
 const DATASET_TMPLT = {
@@ -154,7 +159,8 @@ export default {
           }
 
           if (sensor.type in SENSOR_TYPE_SETTINGS) {
-            Object.assign(dataset, SENSOR_TYPE_SETTINGS[sensor.type].dataset[sensors_idxs[sensor.type]])
+            Object.assign(dataset, 
+                JSON.parse(JSON.stringify(SENSOR_TYPE_SETTINGS[sensor.type].dataset[sensors_idxs[sensor.type]])))
           }
 
           let prev_date = null
