@@ -177,13 +177,16 @@ export default {
               if (data.length) {
 
                 for (const x of data) {
+                  
+                  if (x.value != null) {
+                    if (data_min[co] === null || data_min[co] > x.value) {
+                      data_min[co] = x.value
+                    }
+                    if (data_max[co] === null || data_max[co] < x.value) {
+                      data_max[co] = x.value
+                    }
+                  }
 
-                  if (data_min[co] === null || data_min[co] > x.value) {
-                    data_min[co] = x.value
-                  }
-                  if (data_max[co] === null || data_max[co] < x.value) {
-                    data_max[co] = x.value
-                  }
                   const x_date = new Date(x.tstamp)
                   if (this.chart_break_interval && prev_date && x_date - prev_date > this.chart_break_interval) {
                     dataset.data.push({
