@@ -36,6 +36,7 @@ export default {
         } else if (this.sign) {
           this.edit_sign = 1
         }
+        value = this.trim0(value)
         if (value.length > 2) {
           value = value.substring(0, 2)
         }
@@ -48,6 +49,7 @@ export default {
         return this.format(this.minutes)
       },
       set (value) {
+        value = this.trim0(value)
         if (value.length > 2) {
           value = value.substring(0, 2)
         }
@@ -60,6 +62,7 @@ export default {
         return this.enable_seconds ? this.format(this.seconds) : 0
       },
       set (value) {
+        value = this.trim0(value)
         if (this.enable_seconds) {
           if (value.length > 2) {
             value = value.substring(0, 2)
@@ -82,6 +85,12 @@ export default {
         str_value = (this.edit_sign === -1 ? "-" : "+") + str_value
       }
       return str_value
+    },
+    trim0 (value) {
+      while (value.length > 2 && value.startsWith('0')) {
+        value = value.substring(1)
+      }
+      return value
     },
     input () {
       this.$emit('input', this.edit_value)

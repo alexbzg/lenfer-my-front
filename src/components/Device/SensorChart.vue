@@ -13,21 +13,21 @@ import LineChart from '../LineChart'
 const POWER_SENSOR_SETTINGS = {
     dataset: [{
        gradients: {
-         backgroundColor: ['rgba(189,154,221, 0.6)', 'rgba(189,154,221, 0.1)'],
+         backgroundColor: ['rgba(174,176,206, 0.6)', 'rgba(174,176,206, 0.1)'],
        },
-       borderColor: 'rgba(107,28,178, 1)'
+       borderColor: 'rgba(53,59,134, 0.8)'
     },
     {
        gradients: {
-         backgroundColor: ['rgba(131,129,212, 0.6)', 'rgba(7131,129,212, 0.1)'],
+         backgroundColor: ['rgba(162,187,127, 0.6)', 'rgba(162,187,127, 0.1)'],
        },
-       borderColor: 'rgba(7,3,170, 1)'
+       borderColor: 'rgba(69,120,0, 1)'
     },
     {
        gradients: {
-         backgroundColor: ['rgba(128,177,178, 0.6)', 'rgba(128,177,178, 0.1)'],
+         backgroundColor: ['rgba(228,163,158, 0.6)', 'rgba(228,163,158, 0.1)'],
        },
-       borderColor: 'rgba(1,100,102, 1)'
+       borderColor: 'rgba(188,25,13, 1)'
     }]
 }
 

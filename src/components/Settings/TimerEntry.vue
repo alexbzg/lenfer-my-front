@@ -5,6 +5,7 @@
             :searchable="false" :tabindex="1" label="title"
             :ref="'timer_type_select'" 
             @open="timer_type_select_open" 
+            @input="value[0] = 0"
             >
             <template #selected-option="option">
                 <img :src="'/images/' + option.icon" :title="option.title"/>

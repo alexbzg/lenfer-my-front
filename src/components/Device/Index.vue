@@ -17,12 +17,9 @@
                 <th id="schedule" v-if="schedule && schedule.title">Таблица работы</th>
             </tr>
             <tr v-else>
-                <template v-for="param in sensors_charts">
-                    <th v-for="sensor in param.sensors" class="parameter"
-                        :key="sensor.id">
-                        {{sensor.title ? sensor.title : sensor.default_title}}
-                    </th>
-                </template>
+                <th v-for="sensor in device_sensors" class="parameter" :key="sensor.id">
+                    {{sensor.title ? sensor.title : sensor.default_title}}
+                </th>
             </tr>
             <tr v-if="device_type && device_type.schedule_params">
                 <td v-for="param in sensors_charts" :key="param.id" class="parameter">
@@ -46,14 +43,11 @@
                 </td>
             </tr>
             <tr v-else>
-                <template v-for="param in sensors_charts">
-                    <td v-for="sensor in param.sensors" class="parameter"
-                        :key="sensor.id">
-                        <span class="current_data" v-if="sensor.value">
-                            {{sensor.value}}{{param.unit}}
-                        </span>
-                    </td>
-                </template>
+                <td v-for="sensor in device_sensors" class="parameter" :key="sensor.id">
+                    <span class="current_data" v-if="sensor.value">
+                        {{sensor.value}}{{sensors_params[sensor.type].unit}}
+                    </span>
+                </td>
             </tr>
             <tr>
                 <td colspan="4">
@@ -256,6 +250,18 @@ export default {
         if (device_type) {
           r = device_type
         }
+      }
+      return r
+    },
+
+    device_sensors () {
+      return this.device ? this.device.sensors.filter(sensor => sensor.enabled) : []
+    },
+
+    sensors_params () {
+      let r = {}
+      for (const param of DEVICE_SENSORS_PARAMS) {
+        r[param.id] = param
       }
       return r
     },
