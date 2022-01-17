@@ -9,27 +9,7 @@ import {ru} from 'date-fns/locale'
 
 import {dataPost} from '../../api'
 import LineChart from '../LineChart'
-
-const POWER_SENSOR_SETTINGS = {
-    dataset: [{
-       gradients: {
-         backgroundColor: ['rgba(174,176,206, 0.6)', 'rgba(174,176,206, 0.1)'],
-       },
-       borderColor: 'rgba(53,59,134, 0.8)'
-    },
-    {
-       gradients: {
-         backgroundColor: ['rgba(162,187,127, 0.6)', 'rgba(162,187,127, 0.1)'],
-       },
-       borderColor: 'rgba(69,120,0, 1)'
-    },
-    {
-       gradients: {
-         backgroundColor: ['rgba(228,163,158, 0.6)', 'rgba(228,163,158, 0.1)'],
-       },
-       borderColor: 'rgba(188,25,13, 1)'
-    }]
-}
+import {POWER_SENSOR_SETTINGS} from '../../definitions'
 
 const SENSOR_TYPE_SETTINGS = {
   temperature: {

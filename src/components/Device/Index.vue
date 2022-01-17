@@ -17,8 +17,10 @@
                 <th id="schedule" v-if="schedule && schedule.title">Таблица работы</th>
             </tr>
             <tr v-else>
-                <th v-for="sensor in device_sensors" class="parameter" :key="sensor.id">
-                    {{sensor.title ? sensor.title : sensor.default_title}}
+                <th v-for="(sensors_group, idx) in device_sensors" class="parameter" :key="idx"
+                    :colspan="sensors_group.sensors.length" 
+                    :style="sensors_group.style">
+                    {{sensors_group.title}}
                 </th>
             </tr>
             <tr v-if="device_type && device_type.schedule_params">
@@ -43,14 +45,16 @@
                 </td>
             </tr>
             <tr v-else>
-                <td v-for="sensor in device_sensors" class="parameter" :key="sensor.id">
-                    <span class="current_data" v-if="sensor.value">
-                        {{sensor.value}}{{sensors_params[sensor.type].unit}}
-                    </span>
-                </td>
+                <template v-for="sensors_group in device_sensors">
+                    <td v-for="sensor in sensors_group.sensors" class="parameter" :key="sensor.id">
+                        <span class="current_data" v-if="sensor.value">
+                            {{sensor.value}}{{sensors_params[sensor.type].unit}}
+                        </span>
+                    </td>
+                </template>
             </tr>
             <tr>
-                <td colspan="4">
+                <td :colspan="controller_table_column_count">
                     <span class="current_time" :class="{timeout: sensors_charts[0].timeout}">
                         {{sensors_charts[0].tstamp}}
                     </span>
@@ -221,6 +225,18 @@ export default {
       return this.$store.getters.userLogin
     },
 
+    controller_table_column_count () {
+      let r = 0
+      if (this.device) {
+        if (this.device_type.schedule_params) {
+          r = this.sensors_charts.length
+        } else {
+          r = this.device.sensors.filter(sensor => sensor.enabled).length
+        }
+      }
+      return r
+    },
+
     switches_enabled () {
       return this.device.switches ? this.device.switches.filter(entry => entry.enabled &&
         (!this.device.mode || !entry.modes || entry.modes.includes(this.device.mode))) : []
@@ -255,7 +271,38 @@ export default {
     },
 
     device_sensors () {
-      return this.device ? this.device.sensors.filter(sensor => sensor.enabled) : []
+      const r = []
+      const sensors_types = {}
+      if (this.device) {
+        for (const sensor of this.device.sensors) {
+          if (sensor.enabled) {
+            if (sensor.group !== null) {
+              const group = r.find(item => item.sensors[0].group === sensor.group)
+              if (group) {
+                group.sensors.push(sensor)
+                continue
+              }
+            }
+            if (sensor.type in sensors_types) {
+              sensors_types[sensor.type]++
+            } else {
+              sensors_types[sensor.type] = 0
+            }
+            const style = {}
+            if (sensor.type in this.sensors_params) {
+              if ('colors' in this.sensors_params[sensor.type]) {
+                style.color = this.sensors_params[sensor.type].colors[sensors_types[sensor.type]].borderColor
+              }
+            }
+            r.push({
+                sensors: [sensor], 
+                title: sensor.title ? sensor.title : sensor.default_title,
+                style: style
+            })
+          }
+        }
+      }
+      return r
     },
 
     sensors_params () {

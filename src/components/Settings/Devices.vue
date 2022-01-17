@@ -53,17 +53,32 @@
                     <th>Название датчика на графике</th>
                     <th>Поправка</th>
                 </tr>
-                <tbody v-for="entry in sensors_settings" :key="entry.id">
-                    <tr class="sensor_type">
-                        <td colspan="4">{{entry.title}}</td>
-                    </tr>
-                    <tr class="sensor" v-for="sensor in entry.sensors" :key="sensor.id">
-                        <td class="checkbox">
-                            <input type="checkbox" v-model="sensor.enabled"/>
+                <tbody v-for="(entry, idx) in sensors_settings" :key="idx">
+                    <tr class="sensor" v-if="entry.length > 1">
+                        <td class="checkbox"></td>
+                        <td class="def_title">{{entry[0].sensor.default_title}}</td>
+                        <td class="graph_title">
+                            <input type="text" v-model="entry[0].sensor.title" 
+                                @change="sync_sensors_group_title(idx)"/>
                         </td>
-                        <td class="def_title">{{sensor.default_title}}</td>
-                        <td class="graph_title"><input type="text" v-model="sensor.title"/></td>
-                        <td class="correction"><input type="text" v-model.number="sensor.correction"/></td>
+                        <td class="correction"></td>
+                    </tr>
+                    <tr class="sensor" v-for="sensor in entry" :key="sensor.sensor.id">
+                        <td class="checkbox">
+                            <input type="checkbox" v-model="sensor.sensor.enabled"/>
+                        </td>
+                        <template v-if="entry.length > 1">
+                            <td colspan="2" class="param">{{sensor.param.title}}</td>
+                        </template>
+                        <template v-else>
+                            <td class="def_title">{{sensor.sensor.default_title}}</td>
+                            <td class="graph_title">
+                                <input type="text" v-model="sensor.sensor.title"/>
+                            </td>
+                        </template>
+                        <td class="correction">
+                            <input type="text" v-model.number="sensor.sensor.correction"/>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -155,10 +170,20 @@ export default {
       if (this.device) {
         for (const SENSOR_PARAM of DEVICE_SENSORS_PARAMS) {
           if (SENSOR_PARAM.id in this.device.sensors_params) {
-            r.push({
-              ...SENSOR_PARAM,
-              sensors: this.device.sensors_params[SENSOR_PARAM.id].sensors
-            })
+            for (const sensor of this.device.sensors_params[SENSOR_PARAM.id].sensors) {
+              const sensor_entry = {
+                sensor: sensor, 
+                param: SENSOR_PARAM}
+
+              if (sensor.group !== null) {
+                const group = r.find(item => item[0].sensor.group === sensor.group) 
+                if (group) {
+                  group.push(sensor_entry)
+                  continue
+                } 
+              }
+              r.push([sensor_entry])
+            }
           }
         }
       }
@@ -196,6 +221,13 @@ export default {
     },
     device_custom_prop_validated (prop_id, msg) {
       this.props_validation[prop_id] = msg
+    },
+    sync_sensors_group_title (group_idx) {
+      const group = this.sensors_settings[group_idx]
+      const new_title = group[0].sensor.title
+      for (let c = 1; c < group.length; c++) {
+        group[c].sensor.title = new_title
+      }
     },
     async open_device (device) {
       load_device(device.id)
