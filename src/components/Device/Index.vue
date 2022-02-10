@@ -64,8 +64,8 @@
         </div>
 
         <div class="right" v-if="sensors_charts.length">
-          <div class="btn charts_button" @click="chart_interval = entry.interval" v-for="entry in $options.CHART_INTERVALS_SETTINGS"
-              :class="{active: chart_interval === entry.interval}" :key="entry.interval">
+          <div class="btn charts_button" @click="chart_interval = entry" v-for="entry in $options.CHART_INTERVALS_SETTINGS"
+              :class="{active: chart_interval.interval === entry.interval}" :key="entry.interval">
               {{entry.title}}
           </div>
         </div>
@@ -81,7 +81,7 @@
 
         <div v-for="switch_item in switches_enabled" :key="switch_item.id" class="switch_chart">
             <h4>{{switch_item.title || switch_item.default_title}}</h4>
-            <switch-chart :switch="switch_item" :device_id="device.id" :interval="chart_interval">
+            <switch-chart :switch="switch_item" :device_id="device.id" :interval="chart_interval.interval">
             </switch-chart>
         </div>
 
@@ -149,7 +149,7 @@ const CHART_INTERVALS_SETTINGS = [
   {title: '1 час', interval: '1 hour'},
   {title: '4 часа', interval: '4 hours'},
   {title: '24 часа', interval: '24 hours'},
-  {title: '7 дней', interval: '7 days'}
+  {title: '7 дней', interval: '7 days', group: 'hour', break: 7200000}
 ]
 const DEF_CHART_INTERVAL_IDX = 1
 
@@ -162,7 +162,7 @@ export default {
     return {
       device: {},
       log: null,
-      chart_interval: CHART_INTERVALS_SETTINGS[DEF_CHART_INTERVAL_IDX].interval,
+      chart_interval: CHART_INTERVALS_SETTINGS[DEF_CHART_INTERVAL_IDX],
       sensors_charts: [],
       load_in_progress: false
     }
@@ -243,6 +243,9 @@ export default {
     },
 
     chart_break_interval () {
+      if (this.chart_interval.break) {
+        return this.chart_interval.break
+      }
       if (this.device) {
         let upd_interval = 5
         const upd_interval_prop_idx = this.device.props.findIndex(item => {

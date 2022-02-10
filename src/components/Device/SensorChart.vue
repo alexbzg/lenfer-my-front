@@ -146,11 +146,12 @@ export default {
           let prev_date = null
           let prev_value = null
 
-          this.chart_options.scales.xAxes[0].time.unit = this.interval.includes('days') ? 'day' : 'hour'
+          this.chart_options.scales.xAxes[0].time.unit = this.interval.interval.includes('days') ? 'day' : 'hour'
 
           dataPost('sensor/data', {
             sensor_id: sensor.id,
-            interval: this.interval
+            interval: this.interval.interval,
+            group: this.interval.group
           })
             .then(data => {
 
