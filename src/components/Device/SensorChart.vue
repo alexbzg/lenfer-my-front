@@ -41,7 +41,8 @@ const SENSOR_TYPE_SETTINGS = {
     }]
   },
   voltage: POWER_SENSOR_SETTINGS,
-  current: POWER_SENSOR_SETTINGS
+  current: POWER_SENSOR_SETTINGS,
+  power: POWER_SENSOR_SETTINGS
 }
 
 const DATASET_TMPLT = {
