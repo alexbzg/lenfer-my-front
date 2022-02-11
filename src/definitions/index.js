@@ -1,5 +1,4 @@
-export const POWER_SENSOR_SETTINGS = {
-    dataset: [{
+export const POWER_SENSORS_COLORS = [{
        gradients: {
          backgroundColor: ['rgba(174,176,206, 0.6)', 'rgba(174,176,206, 0.1)'],
        },
@@ -17,15 +16,14 @@ export const POWER_SENSOR_SETTINGS = {
        },
        borderColor: 'rgba(188,25,13, 1)'
     }]
-}
 
 export const DEVICE_SENSORS_PARAMS = [
   {id: 'temperature', title: 'Teмпература', unit:'\xB0'},
   {id: 'humidity', title: 'Влажность', 'unit': '%'},
   {id: 'co2', title: 'CO2', 'unit': 'ppm'},
-  {id: 'power', title: 'Мощность', unit: 'W', colors: POWER_SENSOR_SETTINGS.dataset},
-  {id: 'voltage', title: 'Напряжение', unit: 'V', colors: POWER_SENSOR_SETTINGS.dataset},
-  {id: 'current', title: 'Сила тока', unit: 'A', colors: POWER_SENSOR_SETTINGS.dataset}
+  {id: 'power', title: 'Мощность', unit: 'W', colors: POWER_SENSORS_COLORS},
+  {id: 'voltage', title: 'Напряжение', unit: 'V', colors: POWER_SENSORS_COLORS},
+  {id: 'current', title: 'Сила тока', unit: 'A', colors: POWER_SENSORS_COLORS}
 ]
 
 export const ADDITIONAL_SCHEDULE_PARAMS = [

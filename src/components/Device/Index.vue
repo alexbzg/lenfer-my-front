@@ -47,7 +47,7 @@
             <tr v-else>
                 <template v-for="sensors_group in device_sensors">
                     <td v-for="sensor in sensors_group.sensors" class="parameter" :key="sensor.id">
-                        <span class="current_data" v-if="sensor.value">
+                        <span class="current_data" v-if="sensor.value" :class="sensor.type">
                             {{sensor.value}}{{sensors_params[sensor.type].unit}}
                         </span>
                     </td>
@@ -275,33 +275,29 @@ export default {
 
     device_sensors () {
       const r = []
-      const sensors_types = {}
       if (this.device) {
-        for (const sensor of this.device.sensors) {
-          if (sensor.enabled) {
-            if (sensor.group !== null) {
-              const group = r.find(item => item.sensors[0].group === sensor.group)
-              if (group) {
-                group.sensors.push(sensor)
-                continue
+        for (const param of DEVICE_SENSORS_PARAMS) {
+          if (param.id in this.device.sensors_params) {
+            for (const sensor of this.device.sensors_params[param.id].sensors) {
+              if (sensor.enabled) {
+                if (sensor.group !== null) {
+                  const group = r.find(item => item.sensors[0].group === sensor.group)
+                  if (group) {
+                    group.sensors.push(sensor)
+                    continue
+                  }
+                }
+                const style = {}
+                if ('colors' in param) {
+                  style.color = param.colors[r.length].borderColor
+                }
+                r.push({
+                  sensors: [sensor], 
+                  title: sensor.title ? sensor.title : sensor.default_title,
+                  style: style
+                })
               }
             }
-            if (sensor.type in sensors_types) {
-              sensors_types[sensor.type]++
-            } else {
-              sensors_types[sensor.type] = 0
-            }
-            const style = {}
-            if (sensor.type in this.sensors_params) {
-              if ('colors' in this.sensors_params[sensor.type]) {
-                style.color = this.sensors_params[sensor.type].colors[sensors_types[sensor.type]].borderColor
-              }
-            }
-            r.push({
-                sensors: [sensor], 
-                title: sensor.title ? sensor.title : sensor.default_title,
-                style: style
-            })
           }
         }
       }

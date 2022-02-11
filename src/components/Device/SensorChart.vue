@@ -9,7 +9,7 @@ import {ru} from 'date-fns/locale'
 
 import {dataPost} from '../../api'
 import LineChart from '../LineChart'
-import {POWER_SENSOR_SETTINGS} from '../../definitions'
+import {POWER_SENSORS_COLORS} from '../../definitions'
 
 const SENSOR_TYPE_SETTINGS = {
   temperature: {
@@ -40,9 +40,9 @@ const SENSOR_TYPE_SETTINGS = {
        borderColor: 'rgba(99, 255, 132, 1)'
     }]
   },
-  voltage: POWER_SENSOR_SETTINGS,
-  current: POWER_SENSOR_SETTINGS,
-  power: POWER_SENSOR_SETTINGS
+  voltage: {dataset: POWER_SENSORS_COLORS},
+  current: {dataset: POWER_SENSORS_COLORS},
+  power: {dataset: POWER_SENSORS_COLORS}
 }
 
 const DATASET_TMPLT = {
