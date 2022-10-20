@@ -17,9 +17,12 @@
                 <th id="schedule" v-if="schedule && schedule.title">Таблица работы</th>
             </tr>
             <tr v-else>
-                <th v-for="(sensors_group, idx) in device_sensors" class="parameter" :key="idx"
+                <th 
+                    v-for="(sensors_group, idx) in device_sensors" 
+                    class="parameter" 
+                    :key="idx"
                     :colspan="sensors_group.sensors.length" 
-                    :style="sensors_group.style">
+                    :class="sensors_group.sensors.length > 1 ? 'sensor_' + idx.toString() : ''">
                     {{sensors_group.title}}
                 </th>
             </tr>
@@ -287,14 +290,9 @@ export default {
                     continue
                   }
                 }
-                const style = {}
-                if ('colors' in param) {
-                  style.color = param.colors[r.length].borderColor
-                }
                 r.push({
                   sensors: [sensor], 
-                  title: sensor.title ? sensor.title : sensor.default_title,
-                  style: style
+                  title: sensor.title ? sensor.title : sensor.default_title
                 })
               }
             }

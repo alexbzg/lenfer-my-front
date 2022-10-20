@@ -1,7 +1,19 @@
 <template>
-    <line-chart css-classes="lk_sensor_graf" v-if="ready" 
-        :chart_data="chart_data" :options="chart_options">
-    </line-chart>
+    <div>
+        <div class="total" v-if="total.some(item => item)">
+            <span 
+                :class="'sensor_' + sensors[idx].group.toString()" 
+                v-for="(item, idx) in total" 
+                :key="idx">
+                <span class="sensor">{{sensors[idx].title}}:</span>
+                <span class="value">{{item.value}}</span>
+                <span class="unit">{{item.unit}}</span>
+            </span>
+        </div>
+        <line-chart css-classes="lk_sensor_graf" v-if="ready" 
+            :chart_data="chart_data" :options="chart_options">
+        </line-chart>
+    </div>
 </template>
 
 <script>
@@ -42,7 +54,14 @@ const SENSOR_TYPE_SETTINGS = {
   },
   voltage: {dataset: POWER_SENSORS_COLORS},
   current: {dataset: POWER_SENSORS_COLORS},
-  power: {dataset: POWER_SENSORS_COLORS}
+  power: {dataset: POWER_SENSORS_COLORS, 
+    total: {
+      item_value: (value, duration) => {
+        return value*duration/3600000000
+      },
+      unit: "КВт*ч"
+    }
+  }
 }
 
 const DATASET_TMPLT = {
@@ -63,6 +82,7 @@ export default {
       chart_data: {
         datasets: []
       },
+      total: [],
       chart_options: {
         vertical_cursor: {
           style: 'grey',
@@ -122,6 +142,7 @@ export default {
       let data_min = this.sensors.map(() => null)
       let data_max = this.sensors.map(() => null)
       this.chart_data.datasets = []
+      this.total = this.sensors.map(() => null)
 
       for (let co=0; co < sensors_count; co++) {
 
@@ -132,6 +153,8 @@ export default {
             ...DATASET_TMPLT
           }
           this.chart_data.datasets.push(dataset)
+          let total = null
+          let total_value = 0
             
           if (sensor.type in sensors_idxs) {
             sensors_idxs[sensor.type]++
@@ -142,6 +165,7 @@ export default {
           if (sensor.type in SENSOR_TYPE_SETTINGS) {
             Object.assign(dataset, 
                 JSON.parse(JSON.stringify(SENSOR_TYPE_SETTINGS[sensor.type].dataset[sensors_idxs[sensor.type]])))
+            total = SENSOR_TYPE_SETTINGS[sensor.type].total
           }
 
           let prev_date = null
@@ -180,6 +204,11 @@ export default {
                       y: NaN
                     })
                   }
+                  if (total && prev_date && 
+                    (!this.chart_break_interval || x_date - prev_date <= this.chart_break_interval)) {
+                    total_value += total.item_value((prev_value + x.value)/2, x_date - prev_date)
+                  }
+
                   prev_date = x_date
                   prev_value = x.value
                   dataset.data.push({
@@ -194,6 +223,12 @@ export default {
             }                
             
             ready[co] = true
+            if (total) {
+              this.total[co] = {
+                value: Number(total_value).toFixed(1),
+                unit: total.unit
+              }
+            }
             if (!ready.filter(item => !item).length) {
               data_min = data_min.filter(item => item !== null)
               if (data_min.length) {

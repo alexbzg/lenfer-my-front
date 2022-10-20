@@ -278,17 +278,33 @@ table.controller_table{
 	font-size: 20px;
 	line-height: 18px;
 	color: #777;
-	border-spacing: 20px 0;
+	border-spacing: 10px 0;
 }
 table.controller_table th{
 	padding: 0px 20px;
 	font-weight: bold;
 	font-size: 14px;
 	color: #777;
-	border-bottom: 1px solid #ccc;
+	border: 1px solid #ccc;
+	border-radius: 5px;
 }
+table.controller_table th.sensor_0{
+	background-color: #edeffc;
+	border-color: #575CEA;
+}
+table.controller_table th.sensor_1{
+	background-color: #f2fce5;
+	border-color: #457800
+}
+table.controller_table th.sensor_2{
+	background-color: #fff0ef;
+	border-color: #bc190d
+}
+
+
+
 table.controller_table td{
-	padding: 10px 10px 0px 10px;
+	padding: 5px 10px 0px 10px;
 	font-weight: bold;
 }
 table.controller_table td.schedule_day, table.controller_table td span.current_data{
@@ -311,6 +327,10 @@ table.controller_table td span.current_time.timeout{
 	padding: 3px 10px;
 	line-height: 10px;
 }
+
+
+
+
 
 
 
@@ -1128,5 +1148,51 @@ table#setting_link_devices td.device{
 	text-align: left;
 	padding-left: 10px;
 }
+
+
+
+
+
+.total span{
+	border: 1px solid #eee;
+	border-radius: 5px;
+	padding: 2px 10px;
+	margin: 0 5px;
+}
+.total span.sensor_0{
+	background-color: #edeffc;
+	border-color: #575CEA;
+}
+.total span.sensor_1{
+	background-color: #f2fce5;
+	border-color: #457800
+}
+.total span.sensor_2{
+	background-color: #fff0ef;
+	border-color: #bc190d
+}
+
+.total span span{
+	border: none;
+	padding: 0 3px;
+	margin: 0;
+}
+.total span span.sensor{
+	font-size: 12px;
+	font-weight: bold;
+}
+.total span span.value{
+	font-weight: bold;
+}
+.total span span.unit{
+	font-size: 12px;
+	color: #777;
+}
+
+
+
+
+
+
 
 

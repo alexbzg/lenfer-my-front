@@ -27,7 +27,7 @@ export default async function (title, message, cancel_button) {
           }
         });
       }
-    }).$mount();
-    document.body.appendChild(dialog.$el);
+    }).$mount()
+    document.body.appendChild(dialog.$el)
   });
 }
