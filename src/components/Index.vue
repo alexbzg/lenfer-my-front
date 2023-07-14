@@ -117,7 +117,6 @@ export default {
         })
     },
     def_device () {
-      debugLog(this.devices)
       if (this.devices.length) {
         this.$router.push('/device/' + this.devices[0].id)
       }
@@ -126,8 +125,11 @@ export default {
       this.$router.push('/login')
     },
     logout () {
-      this.$store.commit(SET_USER_MUTATION, {user: null})
-      this.login()
+      messageBox('Выход', 'Вы действительно хотите выйти из аккаунта?', true)
+        .then(() => {
+            this.$store.commit(SET_USER_MUTATION, {user: null})
+            this.login()
+        })
     },
     async register_device_confirm () {
       if (this.register_device_hash.length > 5) {

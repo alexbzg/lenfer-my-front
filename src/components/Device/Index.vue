@@ -22,7 +22,7 @@
                     class="parameter" 
                     :key="idx"
                     :colspan="sensors_group.sensors.length" 
-                    :class="sensors_group.sensors.length > 1 ? 'sensor_' + idx.toString() : ''">
+                    :class="sensors_group.class ? 'sensor_' + idx.toString() : ''">
                     {{sensors_group.title}}
                 </th>
             </tr>
@@ -287,12 +287,14 @@ export default {
                   const group = r.find(item => item.sensors[0].group === sensor.group)
                   if (group) {
                     group.sensors.push(sensor)
+                    group.class = group.class || param.group_class
                     continue
                   }
                 }
                 r.push({
                   sensors: [sensor], 
-                  title: sensor.title ? sensor.title : sensor.default_title
+                  title: sensor.title ? sensor.title : sensor.default_title,
+                  class: param.group_class
                 })
               }
             }

@@ -11,7 +11,7 @@
 
         <template v-if="mode !== 'password_request'">
             <b>Пароль</b> <span class="note">(минимум 8 символов)</span><br/>
-            <input type="text" name="password_input" id="password_input"
+            <input type="password" name="password_input" id="password_input"
                 v-model="post_data.password"><br/>
         </template>
 

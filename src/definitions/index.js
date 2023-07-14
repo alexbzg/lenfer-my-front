@@ -21,7 +21,7 @@ export const DEVICE_SENSORS_PARAMS = [
   {id: 'temperature', title: 'Teмпература', unit:'\xB0'},
   {id: 'humidity', title: 'Влажность', 'unit': '%'},
   {id: 'co2', title: 'CO2', 'unit': 'ppm'},
-  {id: 'power', title: 'Мощность', unit: 'W', colors: POWER_SENSORS_COLORS},
+  {id: 'power', title: 'Мощность', unit: 'W', colors: POWER_SENSORS_COLORS, group_class: true},
   {id: 'voltage', title: 'Напряжение', unit: 'V', colors: POWER_SENSORS_COLORS},
   {id: 'current', title: 'Сила тока', unit: 'A', colors: POWER_SENSORS_COLORS}
 ]
